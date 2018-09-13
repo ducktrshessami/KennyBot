@@ -1,0 +1,46 @@
+{
+    "token": "",
+    "botID": "",
+    "adminID": "",
+    "presence": {
+        "interval": 20,
+        "games": [
+            {
+                "game": {
+                    "type": "PLAYING",
+                    "name": "with himself"
+                }
+            }
+        ]
+    },
+    "prefix": [
+        "",
+        "k!",
+        "<@BOT_CLIENT_ID> ",
+        "<@!BOT_CLIENT_ID> "
+    ],
+    "music": {
+        "shuffle": false,
+        "volume": 1
+    },
+    "similarityReq": {
+        "CSE": 0.25,
+        "playlist": 0.45
+    },
+    "CSE": {
+        "apikey": "",
+        "engineID": "",
+        "safe": false,
+        "titleSuffix": {
+            "www.youtube.com": " - YouTube",
+            "soundcloud.com": " | Free Listening on ..."
+        }
+    },
+    "soundcloud": {
+        "clientID": ""
+    },
+    "gist": {
+        "username": "",
+        "password": ""
+    }
+}
