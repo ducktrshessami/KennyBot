@@ -190,11 +190,11 @@ module.exports = class Music {
 								}
 							}
 							if (title && url) { // Song found
-								playlist.titles.push(title);
-								playlist.urls.push(url);
-								this.update();
+								this.add(url, callback);
 							}
-							callback(title, false);
+							else {
+								callback(title, false);
+							}
 						});
 					}
 				}
@@ -503,6 +503,12 @@ module.exports = class Music {
 					}
 				});
 			}
+		}
+	}
+	
+	url() { // Returns the url of the currently playing song
+		if (this.playing) {
+			return playlist.urls[playlist.titles.indexOf(this.playing)];
 		}
 	}
 }

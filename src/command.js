@@ -76,7 +76,7 @@ var commands = { // Command list
 	},
 	dequeue: {
 		cmd: dequeue,
-		usage: "`Usage: k!dequeue <index|query>",
+		usage: "`Usage: k!dequeue <index|query>`",
 		description: "Removes a song from the user defined song queue."
 	},
 	next: {
@@ -103,6 +103,11 @@ var commands = { // Command list
 		cmd: song,
 		usage: "`Usage: k!playing`",
 		description: "Does the same thing as k!song."
+	},
+	url: {
+		cmd: url,
+		usage: "`Usage: k!url`",
+		description: "Displays the URL of the currently playing song."
 	}
 };
 
@@ -494,5 +499,12 @@ function stop(p, message) { // Stop playing music and leave the voice channel
 function song(p, message) { // Displays currently playing song
 	if (music.playing) {
 		message.channel.send("Now playing `" + music.playing + "`").catch(console.log);
+	}
+}
+
+function url(p, message) { // Displays the URL of the currently playing song
+	var u = music.url();
+	if (u) {
+		message.channel.send(u).catch(console.log);
 	}
 }
