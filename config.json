@@ -23,18 +23,11 @@
         "shuffle": false,
         "volume": 1
     },
-    "similarityReq": {
-        "CSE": 0.25,
-        "playlist": 0.45
-    },
+    "similarityReq": 0.3,
     "CSE": {
         "apikey": "",
         "engineID": "",
-        "safe": false,
-        "titleSuffix": {
-            "www.youtube.com": " - YouTube",
-            "soundcloud.com": " | Free Listening on ..."
-        }
+        "safe": false
     },
     "soundcloud": {
         "clientID": ""
