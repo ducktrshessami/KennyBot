@@ -40,13 +40,13 @@ var commands = { // Command list
 	},
 	add: {
 		cmd: add,
-		usage: "`Usage: k!add <query|url>`",
+		usage: "`Usage: k!add <query|URL>`",
 		description: "Adds a song to the playlist. The user can specify a search query or a URL."
 	},
 	remove: {
 		cmd: remove,
-		usage: "`Usage: k!remove <index|query>`",
-		description: "Removes a song from the playlist. Only takes playist indices."
+		usage: "`Usage: k!remove <index|query|URL>`",
+		description: "Removes a song from the playlist."
 	},
 	join: {
 		cmd: join,
@@ -66,12 +66,12 @@ var commands = { // Command list
 	},
 	play: {
 		cmd: play,
-		usage: "`Usage: k!play [index|query|url]`",
+		usage: "`Usage: k!play [index|query|URL]`",
 		description: "Starts playing a song in the connected voice channel.\nThe user can specify a playlist index, a search query, or a URL to add to the playlist."
 	},
 	queue: {
 		cmd: queue,
-		usage: "`Usage: k!queue [index|query|url]`",
+		usage: "`Usage: k!queue [index|query|URL]`",
 		description: "Displays the user defined song queue or adds a song to said queue."
 	},
 	dequeue: {
@@ -81,7 +81,7 @@ var commands = { // Command list
 	},
 	next: {
 		cmd: next,
-		usage: "`Usage: k!next <index|query|url>`",
+		usage: "`Usage: k!next <index|query|URL>`",
 		description: "Adds a song to the front of the user defined song queue."
 	},
 	skip: {
@@ -147,9 +147,18 @@ exports.handle = function handle(message) { // Handle messages
 	}
 }
 
-function logCommand(message) { // Log bot commands
+async function logCommand(message) { // Log bot commands
 	var user = message.author.username + "#" + message.author.discriminator;
 	console.log((message.author.id == config.adminID ? user.magenta : user.cyan) + ": " + message.content);
+}
+
+function sendMessage(channel, message) { // Log bot messages
+	return new Promise((resolve, reject) => {
+		if (message.length < 200) {
+			console.log((client.user.username + "#" + client.user.discriminator).green + ": " + message);
+		}
+		channel.send(message).then(resolve).catch(reject);
+	});
 }
 
 function prefixCheck(text) { // Check for any prefix
@@ -161,10 +170,15 @@ function prefixCheck(text) { // Check for any prefix
 }
 
 function update() { // Update config.json
-	file.writeFile("../config.json", JSON.stringify(config, null, 4), (error) => {
-		if (error) {
-			console.log(error);
-		}
+	return new Promise((resolve, reject) => {
+		file.writeFile("../config.json", JSON.stringify(config, null, 4), (error) => {
+			if (error) {
+				reject(error);
+			}
+			else {
+				resolve();
+			}
+		});
 	});
 }
 
@@ -172,16 +186,16 @@ function onEndSong() { // When a song stream ends
 	music.readable.destroy();
 	if (client.voiceConnections.has(music.guild) && music.playing) {
 		var connection = client.voiceConnections.get(music.guild);
-		music.skip((stream) => {
+		music.skip().then((stream) => {
 			if (stream) {
-				connection.playStream(music.readable, {volume: config.music.volume}).on("end", onEndSong); // another one begins
+				connection.playStream(stream, {volume: config.music.volume}).on("end", onEndSong); // another one begins
 			}
-		});
+		}).catch(console.log);
 	}
 }
 
 function restart(p, message) { // End program and let CMD handle restarting
-	message.channel.send("Restarting").then(() => {
+	sendMessage(message.channel, "Restarting").then(() => {
 		exports.deinit();
 	}).catch(console.log);
 }
@@ -190,7 +204,7 @@ function help(p, message) { // Command help
 	var args = message.content.substring(p.length).split(' ');
 	if (args.length > 1) {
 		if (commands[args[1]]) {
-			message.channel.send(commands[args[1]].usage + " " + commands[args[1]].description).catch(console.log); // Specific command description
+			sendMessage(message.channel, commands[args[1]].usage + " " + commands[args[1]].description).catch(console.log); // Specific command description
 		}
 	}
 	else {
@@ -201,7 +215,7 @@ function help(p, message) { // Command help
 			}
 		}
 		cl += "```";
-		message.channel.send(cl).catch(console.log);
+		sendMessage(message.channel, cl).catch(console.log);
 	}
 }
 
@@ -209,11 +223,11 @@ function prefix(p, message) { // Change the command prefix
 	var args = message.content.substring(p.length).split(' ');
 	if (args.length > 1) {
 		config.prefix[0] = args[1];
-		update();
-		message.channel.send("Prefix updated to `" + args[1 + "`"]).catch(console.log);
+		update().catch(console.log);
+		sendMessage(message.channel, "Prefix updated to `" + args[1] + "`").catch(console.log);
 	}
 	else {
-		message.channel.send(commands.prefix.usage).catch(console.log); // Incorrect usage
+		sendMessage(message.channel, commands.prefix.usage).catch(console.log); // Incorrect usage
 	}
 }
 
@@ -238,7 +252,7 @@ function prune(p, message) { // Delete messages
 						}).catch(console.log);
 					}
 					else {
-						message.channel.send("User `" + args[2] + "` not found").catch(console.log); // Invalid user
+						sendMessage(message.channel, "User `" + args[2] + "` not found").catch(console.log); // Invalid user
 					}
 				}
 				else {
@@ -246,24 +260,24 @@ function prune(p, message) { // Delete messages
 				}
 			}
 			else {
-				message.channel.send("Number cannot exceed 100").catch(console.log); // Too many messages
+				sendMessage(message.channel, "Number cannot exceed 100").catch(console.log); // Too many messages
 			}
 		}
 		else {
 			if (count != 0) { // User might just be dumb
-				message.channel.send(commands.prune.usage).catch(console.log); // Incorrect usage
+				sendMessage(message.channel, commands.prune.usage).catch(console.log); // Incorrect usage
 			}
 		}
 	}
 	else {
-		message.channel.send(commands.prune.usage).catch(console.log); // Incorrect usage
+		sendMessage(message.channel, commands.prune.usage).catch(console.log); // Incorrect usage
 	}
 }
 
 function list(p, message) { // Displays the playlist
-	music.list((url) => {
-		message.channel.send(url).catch(console.log);
-	});
+	music.list().then((link) => {
+		sendMessage(message.channel, link).catch(console.log);
+	}).catch(console.log);
 }
 
 function add(p, message) { // Add a song to the playlist
@@ -271,22 +285,22 @@ function add(p, message) { // Add a song to the playlist
 	if (args.length > 1) {
 		args.shift();
 		var query = args.join(' ');
-		music.add(query, (title, exist) => {
-			if (title) {
-				if (exist) {
-					message.channel.send("`" + title + "` is already in the playlist").catch(console.log); // Duplicate
+		music.add(query).then((response) => {
+			if (response.title) {
+				if (response.exist) {
+					sendMessage(message.channel, "`" + response.title + "` is already in the playlist").catch(console.log); // Duplicate
 				}
 				else {
-					message.channel.send("Added `" + title + "` to the playlist").catch(console.log); // Success
+					sendMessage(message.channel, "Added `" + response.title + "` to the playlist").catch(console.log); // Success
 				}
 			}
 			else {
-				message.channel.send("Could not find `" + query + "`").catch(console.log); // Failure
+				sendMessage(message.channel, "Could not find `" + query + "`").catch(console.log); // Failure
 			}
-		});
+		}).catch(console.log);
 	}
 	else {
-		message.channel.send(commands.add.usage).catch(console.log); // Incorrect usage
+		sendMessage(message.channel, commands.add.usage).catch(console.log); // Incorrect usage
 	}
 }
 
@@ -295,16 +309,17 @@ function remove(p, message) { // Remove a song from the playlist
 	if (args.length > 1) {
 		args.shift();
 		var query = args.join(' ');
-		var title = music.remove(query);
-		if (title) {
-			message.channel.send("Removed `" + title + "` from the playlist").catch(console.log); // Success
-		}
-		else {
-			message.channel.send("Could not find `" + query + "` in the playlist").catch(console.log); // Failure
-		}
+		music.remove(query).then((title) => {
+			if (title) {
+				sendMessage(message.channel, "Removed `" + title + "` from the playlist").catch(console.log); // Success
+			}
+			else {
+				sendMessage(message.channel, "Could not find `" + query + "` in the playlist").catch(console.log); // Failure
+			}
+		}).catch(console.log);
 	}
 	else {
-		message.channel.send(commands.remove.usage).catch(console.log); // Incorrect usage
+		sendMessage(message.channel, commands.remove.usage).catch(console.log); // Incorrect usage
 	}
 }
 
@@ -313,10 +328,11 @@ function join(p, message) { // Join a voice channel
 		var args = message.content.substring(p.length).split(' ');
 		message.member.voiceChannel.join().then((connection) => {
 			var cmd = args[0].toLowerCase();
-			message.channel.send("Connected to `" + connection.channel.name + "`").catch(console.log);
-			if (cmd != "join") {
-				commands[cmd].cmd(p, message); // Head back to the originally called command
-			}
+			sendMessage(message.channel, "Connected to `" + connection.channel.name + "`").then(() => {
+				if (cmd != "join") {
+					commands[cmd].cmd(p, message); // Head back to the originally called command
+				}
+			}).catch(console.log);
 		}).catch(console.log);
 	}
 }
@@ -328,23 +344,23 @@ function volume(p, message) { // Change the bot's music volume
 		if (vol || vol === 0) {
 			vol = Math.max(0, Math.min(1.5, vol));
 			config.music.volume = vol;
-			update();
-			message.channel.send("Volume updated to `" + vol + "`").catch(console.log);
+			update().catch(console.log);
+			sendMessage(message.channel, "Volume updated to `" + vol + "`").catch(console.log);
 		}
 		else {
-			message.channel.send(commands.volume.usage).catch(console.log); // Incorrect usage
+			sendMessage(message.channel, commands.volume.usage).catch(console.log); // Incorrect usage
 		}
 	}
 	else {
-		message.channel.send(commands.volume.usage).catch(console.log); // Incorrect usage
+		sendMessage(message.channel, commands.volume.usage).catch(console.log); // Incorrect usage
 	}
 }
 
-function shuffle(p, message) { // Toggle shuffle
+async function shuffle(p, message) { // Toggle shuffle
 	config.music.shuffle = !config.music.shuffle;
-	update();
+	await update().catch(console.log);
 	music.shuffle();
-	message.channel.send("Shuffle is now `" + (config.music.shuffle ? "on" : "off") + "`").catch(console.log);
+	sendMessage(message.channel, "Shuffle is now `" + (config.music.shuffle ? "on" : "off") + "`").catch(console.log);
 }
 
 function play(p, message) { // Start playing music
@@ -357,27 +373,27 @@ function play(p, message) { // Start playing music
 				music.playing = null;
 				connection.dispatcher.end(); // Stop currently playing music
 			}
-			music.play(query, (stream) => {
+			music.play(query).then((stream) => {
 				if (stream) {
 					connection.playStream(stream, {volume: config.music.volume}).on("end", onEndSong); // Success
 					song(p, message);
 				}
 				else {
-					message.channel.send("Could not find the specified song").catch(console.log); // Failure
+					sendMessage(message.channel, "Could not find the specified song").catch(console.log); // Failure
 				}
-			});
+			}).catch(console.log);
 		}
 		else {
 			if (!connection.dispatcher) {
-				music.play(null, (stream) => {
+				music.skip().then((stream) => {
 					if (stream) {
 						connection.playStream(stream, {volume: config.music.volume}).on("end", onEndSong); // Success
 						song(p, message);
 					}
 					else {
-						message.channel.send("There are no songs in the playlist").catch(console.log); // Empty playlist
+						sendMessage(message.channel, "There are no songs in the playlist").catch(console.log); // Empty playlist
 					}
-				});
+				}).catch(console.log);
 			}
 		}
 	}
@@ -391,24 +407,31 @@ function queue(p, message) { // Display or add to upcoming song queue
 		var args = message.content.substring(p.length).split(' '), query;
 		args.shift();
 		query = args.join(' ');
-		music.queue(query, (list, title, exist) => {
-			if (list) {
-				message.channel.send(list).catch(console.log); // List of upcoming songs
-			}
-			else {
-				if (title) {
-					if (exist) {
-						message.channel.send("`" + title + "` is already in the song queue").catch(console.log); // Song already in queue
+		music.queue(query).then((response, exist) => {
+			if (query) {
+				if (response) {
+					if (!exist) {
+						sendMessage(message.channel, "Added `" + response + "` to the queue").catch(console.log); // Success
 					}
 					else {
-						message.channel.send("Added `" + title + "` to the queue").catch(console.log); // Success
+						sendMessage(message.channel, "`" + response + "` is already in the song queue").catch(console.log); // Song already in queue
 					}
 				}
 				else {
-					message.channel.send("Could not find the specified song").catch(console.log); // Failure
+					sendMessage(message.channel, "Could not find the specified song").catch(console.log); // Failure
 				}
 			}
-		});
+			else {
+				var length = 7;
+				response = response.filter((element) => { // Don't go over the character limit
+					if (element) {
+						length += element.length;
+					}
+					return length < 2000;
+				});
+				sendMessage(message.channel, "```\n" + response.join("\n") + "```").catch(console.log);
+			}
+		}).catch(console.log);
 	}
 }
 
@@ -420,14 +443,14 @@ function dequeue(p, message) { // Remove songs from upcoming queue
 		if (query) {
 			var title = music.dequeue(query);
 			if (title) {
-				message.channel.send("Removed `" + title + "` from the queue").catch(console.log); // Success
+				sendMessage(message.channel, "Removed `" + title + "` from the queue").catch(console.log); // Success
 			}
 			else {
-				message.channel.send("Could not find `" + query + "` in the user defined queue").catch(console.log); // Failure
+				sendMessage(message.channel, "Could not find `" + query + "` in the user defined queue").catch(console.log); // Failure
 			}
 		}
 		else {
-			message.channel.send(commands.dequeue.usage).catch(console.log); // Incorrect usage
+			sendMessage(message.channel, commands.dequeue.usage).catch(console.log); // Incorrect usage
 		}
 	}
 }
@@ -438,17 +461,17 @@ function next(p, message) { // Add a song to the front of the queue
 		args.shift();
 		query = args.join(' ');
 		if (query) {
-			music.next(query, (title) => {
+			music.next(query).then((title) => {
 				if (title) {
-					message.channel.send("Added `" + title + "` to the front of the queue").catch(console.log); // Success
+					sendMessage(message.channel, "Added `" + title + "` to the front of the queue").catch(console.log); // Success
 				}
 				else {
-					message.channel.send("Could not find the specified song").catch(console.log); // Failure
+					sendMessage(message.channel, "Could not find the specified song").catch(console.log); // Failure
 				}
-			});
+			}).catch(console.log);
 		}
 		else {
-			message.channel.send(commands.next.usage).catch(console.log); // Incorrect usage
+			sendMessage(message.channel, commands.next.usage).catch(console.log); // Incorrect usage
 		}
 	}
 }
@@ -462,15 +485,15 @@ function skip(p, message) { // Skip the currently playing song
 				song(p, message);
 			}
 			else {
-				music.skip((stream) => {
+				music.skip().then((stream) => {
 					if (stream) {
-						connection.playStream(music.readable, {volume: config.music.volume}).on("end", onEndSong); // Success
+						connection.playStream(stream, {volume: config.music.volume}).on("end", onEndSong); // Success
 						song(p, message);
 					}
 					else {
-						message.channel.send("There are no songs in the playlist").catch(console.log); // Empty playlist
+						sendMessage(message.channel, "There are no songs in the playlist").catch(console.log); // Empty playlist
 					}
-				});
+				}).catch(console.log);
 			}
 		}
 		else {
@@ -485,26 +508,25 @@ function stop(p, message) { // Stop playing music and leave the voice channel
 		if (connection.dispatcher) {
 			music.playing = null;
 			connection.dispatcher.on("end", () => {
-				music.readable.destroy();
 				music.recent.clear();
 				music.upcoming.clear();
 			});
 			connection.dispatcher.end();
 		}
 		connection.disconnect();
-		message.channel.send("Disconnected").catch(console.log);
+		sendMessage(message.channel, "Disconnected").catch(console.log);
 	}
 }
 
 function song(p, message) { // Displays currently playing song
 	if (music.playing) {
-		message.channel.send("Now playing `" + music.playing + "`").catch(console.log);
+		sendMessage(message.channel, "Now playing `" + music.playing + "`").catch(console.log);
 	}
 }
 
 function url(p, message) { // Displays the URL of the currently playing song
 	var u = music.url();
 	if (u) {
-		message.channel.send(u).catch(console.log);
+		sendMessage(message.channel, u).catch(console.log);
 	}
 }
