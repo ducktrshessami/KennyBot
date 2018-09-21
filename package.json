@@ -1,12 +1,13 @@
 {
   "name": "KennyBot",
-  "version": "1.0.0",
+  "version": "2.0.1",
   "description": ":Kenny:",
   "main": "src/driver.js",
   "author": "ducktrshessami",
   "repository": "github:ducktrshessami/KennyBot",
   "dependencies": {
     "colors": "^1.3.2",
+    "d20": "^1.4.1",
     "discord.js": "^11.4.2",
     "ffmpeg-binaries": "^4.0.0",
     "fs": "0.0.1-security",

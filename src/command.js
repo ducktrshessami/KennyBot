@@ -1,5 +1,6 @@
 const file = require("fs"); // File I/O
 const colors = require("colors"); // Colored log
+const d20 = require("d20"); // Dice rolls
 const Music = require("./music.js"); // Music handling
 var config = require("../config.json"); // Bot configuration
 
@@ -27,6 +28,11 @@ var commands = { // Command list
 		cmd: prune,
 		usage: "`Usage: k!prune <number> [user]`",
 		description: "Deletes up to a given number of messages. The deleted messages can be filtered to a specified user.\nDiscord only allows up to 100 messages to be deleted at a time."
+	},
+	roll: {
+		cmd: roll,
+		usage: "`Usage: k!roll [die count]d<sides>[modifiers]`",
+		description: "Rolls dice. Defaults to a d20 if nothing is specified."
 	},
 	playlist: {
 		cmd: list,
@@ -271,6 +277,21 @@ function prune(p, message) { // Delete messages
 	}
 	else {
 		sendMessage(message.channel, commands.prune.usage).catch(console.log); // Incorrect usage
+	}
+}
+
+function roll(p, message) { // Roll dice
+	var args = message.content.substring(p.length).split(' '), query = "d20", result;
+	if (args.length > 1) {
+		args.shift();
+		query = args.join();
+	}
+	try {
+		result = d20.roll(query);
+		sendMessage(message.channel, "<@!" + message.author.id + "> rolled a `" + result + "`").catch(console.log);
+	}
+	catch(error) {
+		sendMessage(message.channel, commands.roll.usage).catch(console.log); // Bad args
 	}
 }
 
