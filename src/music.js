@@ -2,7 +2,8 @@ const file = require("fs"); // File I/O
 const stringSimilarity = require('string-similarity'); // String comparison
 const request = require("request"); // HTTP requests
 const rp = require("request-promise"); // Request except with promises
-const YouTube = require("ytdl-core"); // YouTube streaming
+const yas = require("youtube-audio-stream"); // YouTube streaming
+const ytdl = require("ytdl-core"); // Solely for YouTube URL parsing
 const gists = require("gists"); // Gist hosted playlist
 const Queue = require("./queue"); // Last played queue
 var config = require("../config.json"); // Music and search engine config
@@ -123,13 +124,13 @@ module.exports = class Music {
 	add(query) { // Add a song to the playlist
 		return new Promise((resolve, reject) => {
 			var index;
-			if (YouTube.validateURL(query)) { // Is a YouTube URL?
-				var videoID = YouTube.getURLVideoID(query);
+			if (ytdl.validateURL(query)) { // Is a YouTube URL?
+				var videoID = ytdl.getURLVideoID(query);
 				index = playlist.urls.findIndex((element) => { // Check if already in playlist
-					return YouTube.getURLVideoID(element) == videoID;
+					return ytdl.getURLVideoID(element) == videoID;
 				});
 				if (index == -1) { // Not in playlist yet
-					YouTube.getBasicInfo(query).then((info) => { // Get video title
+					ytdl.getBasicInfo(query).then((info) => { // Get video title
 						playlist.urls.push("https://youtube.com/watch?v=" + videoID);
 						playlist.titles.push(info.title);
 						this.update();
@@ -179,9 +180,9 @@ module.exports = class Music {
 							best = stringSimilarity.findBestMatch(query, itemTitles).bestMatch; // Find the best result
 							if (best.rating >= config.similarityReq) {
 								var link = items[itemTitles.indexOf(best.target)].link;
-								if (YouTube.validateURL(link)) { // Is a YouTube video?
-									YouTube.getBasicInfo(link).then((info) => { // Get video title
-										playlist.urls.push("https://youtube.com/watch?v=" + YouTube.getURLVideoID(link));
+								if (ytdl.validateURL(link)) { // Is a YouTube video?
+									ytdl.getBasicInfo(link).then((info) => { // Get video title
+										playlist.urls.push("https://youtube.com/watch?v=" + ytdl.getURLVideoID(link));
 										playlist.titles.push(info.title);
 										this.update();
 										resolve({
@@ -245,7 +246,7 @@ module.exports = class Music {
 	
 	remove(query) { // Remove a song from the playlist
 		return new Promise((resolve, reject) => {
-			var index = Number(query), title;
+			var index = Math.floor(Number(query)), title;
 			if (index > 0 && index <= playlist.urls.length) { // It's a number
 				--index;
 				this.before(index);
@@ -256,10 +257,10 @@ module.exports = class Music {
 				resolve(title);
 			}
 			else {
-				if (YouTube.validateURL(query)) { // Is a YouTube URl?
-					var videoID = YouTube.getURLVideoID(query);
+				if (ytdl.validateURL(query)) { // Is a YouTube URl?
+					var videoID = ytdl.getURLVideoID(query);
 					index = playlist.urls.findIndex((element) => {
-						return YouTube.getURLVideoID(element) == videoID;
+						return ytdl.getURLVideoID(element) == videoID;
 					});
 					if (index != -1) { // Found it
 						this.before(index);
@@ -322,7 +323,7 @@ module.exports = class Music {
 	queue(query) { // Add a song to the upcoming song queue
 		return new Promise((resolve, reject) => {
 			if (query) { // Add a song to the queue
-				var index = Number(query);
+				var index = Math.floor(Number(query));
 				if (index > 0 && index <= playlist.urls.length) { // It's a number
 					--index;
 					if (!this.upcoming.includes(index)) {
@@ -360,7 +361,7 @@ module.exports = class Music {
 	}
 	
 	dequeue(query) { // Remove a song from the upcoming queue
-		var index = Number(query), title;
+		var index = Math.floor(Number(query)), title;
 		if (index > 0 && index <= playlist.urls.length) { // It's a number
 			--index;
 			if (this.upcoming.includes(index)) {
@@ -379,7 +380,7 @@ module.exports = class Music {
 	
 	next(query) { // Add a song to the front of the upcoming queue
 		return new Promise((resolve, reject) => {
-			var index = Number(query);
+			var index = Math.floor(Number(query));
 			if (index > 0 && index <= playlist.urls.length) { // It's a number
 				--index;
 				this.upcoming.elems = this.upcoming.elems.filter((element) => { // Get rid of dupes
@@ -429,11 +430,8 @@ module.exports = class Music {
 					return element != index;
 				});
 				this.recent.push(index); // Put in the recent queue
-				if (YouTube.validateURL(playlist.urls[index])) { // Is a YouTube URL?
-					this.readable = YouTube(playlist.urls[index], {
-						quality: "highestaudio",
-						filter: "audioonly"
-					}).on("error", reject);
+				if (ytdl.validateURL(playlist.urls[index])) { // Is a YouTube URL?
+					this.readable = yas(playlist.urls[index]).on("error", reject);
 					resolve(this.readable); // Success
 				}
 				else {

@@ -1,6 +1,6 @@
 {
   "name": "KennyBot",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": ":Kenny:",
   "main": "src/driver.js",
   "author": "ducktrshessami",
@@ -17,10 +17,11 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "string-similarity": "^1.2.2",
+    "youtube-audio-stream": "^0.2.0",
     "ytdl-core": "^0.25.2"
   },
   "optionalDependencies": {
-    "erlpack": "github:hammerandchisel/erlpack",
+    "erlpack": "github:discordapp/erlpack",
     "libsodium-wrappers": "^0.7.3",
     "uws": "10.148.1"
   }

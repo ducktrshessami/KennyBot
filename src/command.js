@@ -126,9 +126,11 @@ exports.deinit = function deinit() {
 		if (connection.dispatcher) {
 			connection.dispatcher.on("end", () => {
 				music.playing = null;
-				music.readable.destroy();
 				music.recent.clear();
 				music.upcoming.clear();
+				if (music.readable.read) {
+					music.readable.read(music.readable.readableLength);
+				}
 			});
 			connection.dispatcher.end(); // Stop playing audio
 		}
@@ -189,7 +191,9 @@ function update() { // Update config.json
 }
 
 function onEndSong() { // When a song stream ends
-	music.readable.destroy();
+	if (music.readable.read) {
+		music.readable.read(music.readable.readableLength);
+	}
 	if (client.voiceConnections.has(music.guild) && music.playing) {
 		var connection = client.voiceConnections.get(music.guild);
 		music.skip().then((stream) => {
