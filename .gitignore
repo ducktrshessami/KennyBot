@@ -3,3 +3,4 @@ re.bat
 playlist_other.json
 config_other.json
 src/driver_other.js
+src/command_other.js
