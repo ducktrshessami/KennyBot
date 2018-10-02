@@ -45,7 +45,7 @@ module.exports = class Music {
 		this.guild = null;
 		this.playing = null;
 		this.readable = null;
-		this.recent = new Queue(Math.floor(playlist.urls.length / 2));
+		this.recent = new Queue(Math.floor(playlist.urls.length * 0.75));
 		this.upcoming = new Queue();
 		this.backup = null;
 	}
@@ -57,7 +57,7 @@ module.exports = class Music {
 				playlist.urls.splice(i, 1);
 			}
 		}
-		this.recent.length = Math.floor(playlist.urls.length / 2); // Resize recent playlist
+		this.recent.length = Math.floor(playlist.urls.length * 0.75); // Resize recent playlist
 		file.writeFile("../playlist.json", JSON.stringify(playlist, null, 4), (error) => {
 			if (error) {
 				console.log(error);
@@ -431,13 +431,13 @@ module.exports = class Music {
 				});
 				this.recent.push(index); // Put in the recent queue
 				if (ytdl.validateURL(playlist.urls[index])) { // Is a YouTube URL?
-					this.readable = yas(playlist.urls[index]).on("error", reject);
+					this.readable = yas(playlist.urls[index]).on("error", console.log);
 					resolve(this.readable); // Success
 				}
 				else {
 					scResolve(playlist.urls[index]).then((data) => { // Is a SoundCloud URL?
-						this.readable = request.get(data.stream_url + "?client_id=" + config.soundcloud.clientID).on("error", reject);
-						resolve(this.readable);
+						this.readable = request.get(data.stream_url + "?client_id=" + config.soundcloud.clientID).on("error", console.log);
+						resolve(this.readable); // Success
 					}).catch((error) => {
 						reject("URL could not be resolved");
 					});

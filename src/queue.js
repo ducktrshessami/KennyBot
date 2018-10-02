@@ -1,6 +1,6 @@
 module.exports = class Queue {
 	constructor(size = 0) { // Constructor
-		this.length = size;
+		this.length = Math.max(0, size);
 		this.elems = [];
 	}
 	
