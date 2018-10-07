@@ -413,8 +413,10 @@ module.exports = class Music {
 				var index;
 				if (this.upcoming.empty()) { // Upcoming songs not specified
 					if (config.music.shuffle || !this.playing) {
-						index = Math.floor(Math.random() * playlist.urls.length) - 1;
-						while (this.recent.includes(++index < playlist.urls.length ? index : index = 0)); // Deal with recently played songs
+						var foo = playlist.urls.filter((element, i) => { // Deal with recently played songs
+							return !this.recent.includes(i);
+						});
+						index = playlist.urls.indexOf(foo[Math.floor(Math.random() * foo.length)]);
 					}
 					else {
 						if ((index = playlist.titles.indexOf(this.playing) + 1) >= playlist.titles.length) { // Pick next song in playlist

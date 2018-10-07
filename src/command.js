@@ -1,6 +1,6 @@
 const file = require("fs"); // File I/O
 const colors = require("colors"); // Colored log
-const d20 = require("d20"); // Dice rolls
+const rollParser = require("roll-parser"); // Dice rolls
 const Music = require("./music.js"); // Music handling
 var config = require("../config.json"); // Bot configuration
 
@@ -285,16 +285,30 @@ function prune(p, message) { // Delete messages
 }
 
 function roll(p, message) { // Roll dice
-	var args = message.content.substring(p.length).split(' '), query = "d20", result;
+	var args = message.content.substring(p.length).split(' '), query = "d20", parse;
 	if (args.length > 1) {
 		args.shift();
 		query = args.join();
 	}
-	try {
-		result = d20.roll(query);
-		sendMessage(message.channel, "<@!" + message.author.id + "> rolled a `" + result + "`").catch(console.log);
+	if (parse = rollParser.parse(query)) {
+		var min = parse.count, max = parse.count * parse.dice, result = rollParser.roll(parse).value, reply;
+		reply = "<@!" + message.author.id + "> rolled a `" + result + "`";
+		if (min != max) {
+			var natural = result - parse.modifier;
+			if (natural == min) { // Critical failure
+				if (config.roll.failure) {
+					reply += "\n" + config.roll.failure;
+				}
+			}
+			else if (natural == max) { // Critical success
+				if (config.roll.success) {
+					reply += "\n" + config.roll.success;
+				}
+			}
+		}
+		sendMessage(message.channel, reply).catch(console.log); // Success
 	}
-	catch(error) {
+	else {
 		sendMessage(message.channel, commands.roll.usage).catch(console.log); // Bad args
 	}
 }

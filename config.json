@@ -19,6 +19,10 @@
         "<@BOT_CLIENT_ID> ",
         "<@!BOT_CLIENT_ID> "
     ],
+	"roll": {
+		"failure": "",
+		"success": ""
+	},
     "music": {
         "shuffle": false,
         "volume": 1
