@@ -27,7 +27,7 @@
         "shuffle": false,
         "volume": 1
     },
-    "similarityReq": 0.3,
+    "similarityReq": 0.5,
     "CSE": {
         "apikey": "",
         "engineID": "",

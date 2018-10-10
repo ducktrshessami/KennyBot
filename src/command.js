@@ -1,38 +1,47 @@
-const file = require("fs"); // File I/O
+const Discord = require("discord.js"); // Discord
+const fs = require("fs"); // File I/O
 const colors = require("colors"); // Colored log
 const rollParser = require("roll-parser"); // Dice rolls
-const Music = require("./music.js"); // Music handling
+const Music = require("./music"); // Music handling
 var config = require("../config.json"); // Bot configuration
 
 var client; // Discord client
 var music = new Music(); // Music handler
+var cl = new Discord.RichEmbed({ // Embed for k!help command list
+	title: "Commands:",
+	description: ""
+});
 var commands = { // Command list
 	restart: {
 		cmd: restart,
 		usage: "`Usage: k!restart`",
-		description: "Restarts the bot. Botmin only.",
+		description: "Restarts the bot.",
+		subtitle: "Botmin only.",
 		botmin: "sup"
 	},
 	help: {
 		cmd: help,
 		usage: "`Usage: k!help [command]`",
-		description: "Displays a command list or describes a specific command.\n<> denotes a required parameter, while [] denotes an optional one."
+		description: "Displays a command list or describes a specific command.",
+		subtitle: "<> denotes a required parameter, while [] denotes an optional one."
 	},
 	prefix: {
 		cmd: prefix,
 		usage: "`Usage: k!prefix <prefix>`",
-		description: "Sets a user defined command prefix. k! and @KennyBot will always work regardless of the user defined prefix.",
-		botmin: "asdf"
+		description: "Sets a user defined command prefix.",
+		subtitle: "k! and @KennyBot will always work regardless of the user defined prefix."
 	},
 	prune: {
 		cmd: prune,
 		usage: "`Usage: k!prune <number> [user]`",
-		description: "Deletes up to a given number of messages. The deleted messages can be filtered to a specified user.\nDiscord only allows up to 100 messages to be deleted at a time."
+		description: "Deletes up to a given number of messages.",
+		subtitle: "The deleted messages can be filtered to a specified user.\nDiscord only allows up to 100 messages to be deleted at a time."
 	},
 	roll: {
 		cmd: roll,
 		usage: "`Usage: k!roll [die count]d<sides>[modifiers]`",
-		description: "Rolls dice. Defaults to a d20 if nothing is specified."
+		description: "Rolls dice.",
+		subtitle: "Defaults to a d20 if nothing is specified."
 	},
 	playlist: {
 		cmd: list,
@@ -47,7 +56,8 @@ var commands = { // Command list
 	add: {
 		cmd: add,
 		usage: "`Usage: k!add <query|URL>`",
-		description: "Adds a song to the playlist. The user can specify a search query or a URL."
+		description: "Adds a song to the playlist.",
+		subtitle: "The user can specify a search query or a URL."
 	},
 	remove: {
 		cmd: remove,
@@ -62,8 +72,8 @@ var commands = { // Command list
 	volume: {
 		cmd: volume,
 		usage: "`Usage: k!volume <number>`",
-		description: "Changes the bot's music volume. The number is automatically truncated to range from 0 to 1.5. Botmin only.",
-		botmin: "yeah"
+		description: "Changes the bot's music volume.",
+		subtitle: "The number is automatically truncated to range from 0 to 1.5."
 	},
 	shuffle: {
 		cmd: shuffle,
@@ -73,7 +83,8 @@ var commands = { // Command list
 	play: {
 		cmd: play,
 		usage: "`Usage: k!play [index|query|URL]`",
-		description: "Starts playing a song in the connected voice channel.\nThe user can specify a playlist index, a search query, or a URL to add to the playlist."
+		description: "Starts playing a song in the connected voice channel.",
+		subtitle: "The user can specify a playlist index, a search query, or a URL to add to the playlist."
 	},
 	queue: {
 		cmd: queue,
@@ -119,6 +130,11 @@ var commands = { // Command list
 
 exports.init = function init(bot) { // Store the Discord client
 	client = bot;
+	for (var cmd in commands) { // Assemble the command list
+		if (!(commands[cmd].botmin || commands[cmd].hi)) {
+			cl.description += cmd + " - " + commands[cmd].description + "\n";
+		}
+	}
 }
 
 exports.deinit = function deinit() {
@@ -179,7 +195,7 @@ function prefixCheck(text) { // Check for any prefix
 
 function update() { // Update config.json
 	return new Promise((resolve, reject) => {
-		file.writeFile("../config.json", JSON.stringify(config, null, 4), (error) => {
+		fs.writeFile("../config.json", JSON.stringify(config, null, 4), (error) => {
 			if (error) {
 				reject(error);
 			}
@@ -214,18 +230,12 @@ function help(p, message) { // Command help
 	var args = message.content.substring(p.length).split(' ');
 	if (args.length > 1) {
 		if (commands[args[1]]) {
-			sendMessage(message.channel, commands[args[1]].usage + " " + commands[args[1]].description).catch(console.log); // Specific command description
+			sendMessage(message.channel, commands[args[1]].usage + " " + commands[args[1]].description + " " + commands[args[1]].subtitle).catch(console.log); // Specific command description
 		}
 	}
-	else {
-		var cl = "```makefile\n"; // Assemble the command list
-		for (var cmd in commands) {
-			if (!commands[cmd].botmin) {
-				cl += cmd + ":\n" + commands[cmd].description + "\n";
-			}
-		}
-		cl += "```";
-		sendMessage(message.channel, cl).catch(console.log);
+	else { // Send preassembled command list
+		cl.setColor("RANDOM");
+		message.channel.send("", cl).catch(console.log);
 	}
 }
 

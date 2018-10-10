@@ -1,8 +1,7 @@
-const file = require("fs"); // File I/O
+const fs = require("fs"); // File I/O
 const stringSimilarity = require('string-similarity'); // String comparison
 const request = require("request"); // HTTP requests
 const rp = require("request-promise"); // Request except with promises
-const yas = require("youtube-audio-stream"); // YouTube streaming
 const ytdl = require("ytdl-core"); // Solely for YouTube URL parsing
 const gists = require("gists"); // Gist hosted playlist
 const Queue = require("./queue"); // Last played queue
@@ -40,6 +39,26 @@ function scResolve(url) { // SoundCloud API call
 	});
 }
 
+function getBestMatch(query, set) { // Keyword based string searching
+	return set.map((element) => {
+		var keywords = [], test = element.trim().toLowerCase().split(' ');
+		query.trim().toLowerCase().split(' ').forEach((a) => { // Find keywords
+			var index = test.findIndex((b) => {
+				return stringSimilarity.compareTwoStrings(a, b) >= 0.6; // Threshold
+			});
+			if (index != -1) {
+				keywords.push(test.splice(index, 1)); // Target acquired
+			}
+		});
+		return { // Using the same format as string-similarity's bestMatch for simplicity
+			target: element,
+			rating: stringSimilarity.compareTwoStrings(query, keywords.join(' '))
+		};
+	}).sort((a, b) => { // Sort to find the best one
+		return b.rating - a.rating;
+	})[0];
+}
+
 module.exports = class Music {
 	constructor() {
 		this.guild = null;
@@ -58,7 +77,7 @@ module.exports = class Music {
 			}
 		}
 		this.recent.length = Math.floor(playlist.urls.length * 0.75); // Resize recent playlist
-		file.writeFile("../playlist.json", JSON.stringify(playlist, null, 4), (error) => {
+		fs.writeFile("../playlist.json", JSON.stringify(playlist, null, 4), (error) => {
 			if (error) {
 				console.log(error);
 			}
@@ -165,7 +184,7 @@ module.exports = class Music {
 						});
 					}
 				}).catch(() => { // Just a search query
-					var best = stringSimilarity.findBestMatch(query, playlist.titles).bestMatch; // Check if already in playlist
+					var best = getBestMatch(query, playlist.titles); // Check if already in playlist
 					if (best.rating >= config.similarityReq) {
 						resolve({ // Already in playlist
 							title: best.target,
@@ -177,7 +196,7 @@ module.exports = class Music {
 							var itemTitles = items.map((item) => {
 								return item.title;
 							});
-							best = stringSimilarity.findBestMatch(query, itemTitles).bestMatch; // Find the best result
+							best = getBestMatch(query, itemTitles); // Find the best result
 							if (best.rating >= config.similarityReq) {
 								var link = items[itemTitles.indexOf(best.target)].link;
 								if (ytdl.validateURL(link)) { // Is a YouTube video?
@@ -289,7 +308,7 @@ module.exports = class Music {
 							resolve(); //Failure
 						}
 					}).catch(() => { // It's a search query
-						var best = stringSimilarity.findBestMatch(query, playlist.titles).bestMatch;
+						var best = getBestMatch(query, playlist.titles);
 						if (best.rating >= config.similarityReq) { // Found it
 							index = playlist.titles.indexOf(best.target);
 							this.before(index);
@@ -371,7 +390,7 @@ module.exports = class Music {
 			}
 		}
 		else { // It's a search query
-			var best = stringSimilarity.findBestMatch(query, playlist.titles).bestMatch;
+			var best = getBestMatch(query, playlist.titles);
 			if (best.rating >= config.similarityReq) {
 				return this.dequeue(playlist.titles.indexOf(best.target) + 1); // Recurse with number
 			}
@@ -433,7 +452,7 @@ module.exports = class Music {
 				});
 				this.recent.push(index); // Put in the recent queue
 				if (ytdl.validateURL(playlist.urls[index])) { // Is a YouTube URL?
-					this.readable = yas(playlist.urls[index]).on("error", console.log);
+					this.readable = ytdl(playlist.urls[index], {filter: "audio"}).on("error", console.log);
 					resolve(this.readable); // Success
 				}
 				else {
