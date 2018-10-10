@@ -457,7 +457,7 @@ module.exports = class Music {
 				}
 				else {
 					scResolve(playlist.urls[index]).then((data) => { // Is a SoundCloud URL?
-						this.readable = request.get(data.stream_url + "?client_id=" + config.soundcloud.clientID).on("error", console.log);
+						this.readable = request.get(data.stream_url + (data.stream_url.includes('?') ? "&" : "?") + "client_id=" + config.soundcloud.clientID).on("error", console.log);
 						resolve(this.readable); // Success
 					}).catch((error) => {
 						reject("URL could not be resolved");
