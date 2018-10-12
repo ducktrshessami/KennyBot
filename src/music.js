@@ -44,7 +44,7 @@ function getBestMatch(query, set) { // Keyword based string searching
 		var keywords = [], test = element.trim().toLowerCase().split(' ');
 		query.trim().toLowerCase().split(' ').forEach((a) => { // Find keywords
 			var index = test.findIndex((b) => {
-				return stringSimilarity.compareTwoStrings(a, b) >= 0.6; // Threshold
+				return stringSimilarity.compareTwoStrings(a, b) >= 0.8; // Threshold
 			});
 			if (index != -1) {
 				keywords.push(test.splice(index, 1)); // Target acquired

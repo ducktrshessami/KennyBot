@@ -142,7 +142,6 @@ exports.deinit = function deinit() {
 		if (connection.dispatcher) {
 			connection.dispatcher.on("end", () => {
 				music.playing = null;
-				music.recent.clear();
 				music.upcoming.clear();
 				if (music.readable.read) {
 					music.readable.read(music.readable.readableLength);
@@ -230,7 +229,11 @@ function help(p, message) { // Command help
 	var args = message.content.substring(p.length).split(' ');
 	if (args.length > 1) {
 		if (commands[args[1]]) {
-			sendMessage(message.channel, commands[args[1]].usage + " " + commands[args[1]].description + " " + commands[args[1]].subtitle).catch(console.log); // Specific command description
+			var reply = commands[args[1]].usage + " " + commands[args[1]].description;
+			if (commands[args[1]].subtitle) {
+				reply += " " + commands[args[1]].subtitle;
+			}
+			sendMessage(message.channel, reply).catch(console.log); // Specific command description
 		}
 	}
 	else { // Send preassembled command list
@@ -557,7 +560,6 @@ function stop(p, message) { // Stop playing music and leave the voice channel
 		if (connection.dispatcher) {
 			music.playing = null;
 			connection.dispatcher.on("end", () => {
-				music.recent.clear();
 				music.upcoming.clear();
 			});
 			connection.dispatcher.end();
