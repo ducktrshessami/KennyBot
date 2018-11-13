@@ -123,8 +123,8 @@ var commands = { // Command list
 	},
 	url: {
 		cmd: url,
-		usage: "`Usage: k!url`",
-		description: "Displays the URL of the currently playing song."
+		usage: "`Usage: k!url [title|index]`",
+		description: "Displays the URL of the currently playing  or specified song."
 	}
 };
 
@@ -575,9 +575,15 @@ function song(p, message) { // Displays currently playing song
 	}
 }
 
-function url(p, message) { // Displays the URL of the currently playing song
-	var u = music.url();
+function url(p, message) { // Displays the URL of a song
+	var args = message.content.substring(p.length).split(' '), query, u;
+	args.shift();
+	query = args.join(' ');
+	u = music.url(query);
 	if (u) {
-		sendMessage(message.channel, u).catch(console.log);
+		sendMessage(message.channel, u).catch(console.log); // Success
+	}
+	else if (query) {
+		sendMessage(message.channel, "Could not find the specified song").catch(console.log); // Failure
 	}
 }

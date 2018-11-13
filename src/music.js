@@ -89,7 +89,7 @@ module.exports = class Music {
 				files: {}
 			};
 			options.files[this.guild] = {
-				content: playlist.titles.join('\n')
+				content: playlist.titles.join('\n') + "\n"
 			};
 			response.body.forEach((g) => {
 				if (g.files[this.guild] && Object.keys(g.files).length == 1) {
@@ -118,7 +118,7 @@ module.exports = class Music {
 					files: {}
 				};
 				options.files[this.guild] = {
-					content: playlist.titles.join('\n')
+					content: playlist.titles.join('\n') + "\n"
 				};
 				response.body.forEach((g) => {
 					if (g.files[this.guild] && Object.keys(g.files).length == 1) {
@@ -220,12 +220,12 @@ module.exports = class Music {
 											exist: false
 										});
 									}).catch(() => {
-										resolve(); // Failure
+										resolve({}); // Failure
 									});
 								}
 							}
 							else {
-								resolve(); // Failure
+								resolve({}); // Failure
 							}
 						}).catch(reject);
 					}
@@ -470,8 +470,20 @@ module.exports = class Music {
 		});
 	}
 	
-	url() { // Returns the url of the currently playing song
-		if (this.playing) {
+	url(query) { // Returns the url of the currently playing song
+		if (query) {
+			var index = Math.floor(Number(query));
+			if (index > 0 && index <= playlist.urls.length) { // It's a number
+				return playlist.urls[--index];
+			}
+			else {
+				var best = getBestMatch(query, playlist.titles); // Use search query
+				if (best.rating >= config.similarityReq) {
+					return playlist.urls[playlist.titles.indexOf(best.target)];
+				}
+			}
+		}
+		else if (this.playing) {
 			return playlist.urls[playlist.titles.indexOf(this.playing)];
 		}
 	}
