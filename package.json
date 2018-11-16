@@ -1,6 +1,6 @@
 {
   "name": "KennyBot",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": ":Kenny:",
   "main": "src/driver.js",
   "author": "ducktrshessami",
