@@ -29,7 +29,7 @@ client.on("ready", () => { // Green light
 	console.log(("Logged in as " + client.user.username + "#" + client.user.discriminator + " (" + client.user.id + ")").green);
 });
 client.login(config.token).catch((error) => { // Login
-	throw error;
+	throw "Could not login".red;
 });
 
 // Event handling
