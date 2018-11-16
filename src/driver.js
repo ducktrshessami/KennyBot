@@ -28,9 +28,7 @@ client.on("ready", () => { // Green light
 	}, config.presence.interval * 60000);
 	console.log(("Logged in as " + client.user.username + "#" + client.user.discriminator + " (" + client.user.id + ")").green);
 });
-client.login(config.token).catch((error) => { // Login
-	throw "Could not login".red;
-});
+client.login(config.token).catch(console.log); // Login
 
 // Event handling
 client.on("message", (message) => { // Handle messages
