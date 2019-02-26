@@ -5,7 +5,7 @@ const command = require("./command"); // Command handler
 const config = require("../config.json"); // App token
 
 // Setup
-process.chdir(__dirname); // Sync working directory for fs
+process.chdir(__dirname); // Sync working directory for jsonfile
 const client = new Discord.Client(); // Discord client
 const rl = readline.createInterface({ // Console input
 	input: process.stdin,
@@ -30,7 +30,7 @@ client.on("ready", () => { // Green light
 		}
 		pLast = p;
 		client.user.setPresence(config.presence.games[p]); // Set new presence
-		console.log("Set new presence".yellow + ": " + (activityTypes[config.presence.games[p].game.type] ? activityTypes[config.presence.games[p].game.type] : config.presence.games[p].game.type) + config.presence.games[p].game.name);
+		console.log("Set new presence".yellow + ": " + (activityTypes[config.presence.games[p].game.type] ? activityTypes[config.presence.games[p].game.type] : config.presence.games[p].game.type) + " " + config.presence.games[p].game.name);
 	}, config.presence.interval * 60000);
 	console.log(("Logged in as " + client.user.username + "#" + client.user.discriminator + " (" + client.user.id + ")").green);
 	console.log("Set new presence".yellow + ": " + (activityTypes[config.presence.games[pLast].game.type] ? activityTypes[config.presence.games[pLast].game.type] : config.presence.games[pLast].game.type) + " " + config.presence.games[pLast].game.name);
@@ -42,7 +42,7 @@ client.on("guildCreate", (guild) => { // Handle new guild
 	command.newGuild(guild);
 	console.log(("Joined new server: " + guild.name + " (" + guild.id + ")").grey);
 });
-client.on("guildUpdate", (before, after) => {
+client.on("guildUpdate", (before, after) => { // Handle guild name change
 	command.updateGuild(after);
 	console.log(("Updated server: '" + before.name + "' to '" + after.name + "' (" + after.id + ")").grey);
 });

@@ -1,5 +1,5 @@
 const Discord = require("discord.js"); // Discord
-const fs = require("fs"); // File I/O
+const jsonfile = require("jsonfile"); // File I/O
 const colors = require("colors"); // Colored log
 const rollParser = require("roll-parser"); // Dice rolls
 const Music = require("./music"); // Music handling
@@ -222,16 +222,7 @@ function prefixCheck(text, guild) { // Check for any prefix
 }
 
 function update() { // Update config.json
-	return new Promise((resolve, reject) => {
-		fs.writeFile("../config.json", JSON.stringify(config, null, 4), (error) => {
-			if (error) {
-				reject(error);
-			}
-			else {
-				resolve();
-			}
-		});
-	});
+	return jsonfile.writeFile("../config.json", config, {spaces: 4});
 }
 
 function onEndSong(guild, connection) { // Handle ends of songs

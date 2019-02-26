@@ -1,4 +1,4 @@
-const fs = require("fs"); // File I/O
+const jsonfile = require("jsonfile"); // File I/O
 const stringSimilarity = require('string-similarity'); // String comparison
 const request = require("request"); // HTTP requests
 const rp = require("request-promise"); // Request except with promises
@@ -76,7 +76,7 @@ module.exports = class Music {
 		this.update();
 	}
 	
-	update() { // Update playlist.json
+	update() { // Update playlist.json and Gist playlist
 		for (var i = 0; i < playlist[this.guild].titles.length; ++i) { // Get rid of null entries that I never debugged lol
 			if (!playlist[this.guild].titles[i] || !playlist[this.guild].urls[i]) {
 				playlist[this.guild].titles.splice(i, 1);
@@ -84,11 +84,7 @@ module.exports = class Music {
 			}
 		}
 		this.recent.length = Math.floor(playlist[this.guild].urls.length * 0.75); // Resize recent playlist
-		fs.writeFile("../playlist.json", JSON.stringify(playlist, null, 4), (error) => {
-			if (error) {
-				console.log(error);
-			}
-		});
+		jsonfile.writeFile("../playlist.json", playlist, {spaces: 4}).catch(console.log);
 		gist.list(config.gist.username).then((response) => { // Post to Gist
 			var gs = [], options = {
 				description: this.guild,
