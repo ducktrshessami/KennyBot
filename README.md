@@ -1,7 +1,9 @@
 # KennyBot
-### Personal Discord bot
-
-Currently doesn't handle multiple servers because I never really intended to use my bot on multiple servers, but it wouldn't be too hard to add support from here.
+### Features
+- Multi-server audio output
+- Music playlist and queue
+- Dice rolling
+- Minor text channel moderation
 
 ## Setup
 Just hit that `npm install` and fill in the necessary information in config.json
