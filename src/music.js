@@ -5,7 +5,7 @@ const rp = require("request-promise"); // Request except with promises
 const ytdl = require("ytdl-core"); // Solely for YouTube URL parsing
 const gists = require("gists"); // Gist hosted playlist
 const Queue = require("./queue"); // Last played queue
-var config = require("../config.json"); // Music and search engine config
+const config = require("../config.json"); // Music and search engine config
 var playlist = require("../playlist.json"); // List of songs
 
 const gist = new gists({ // Log in to Gist
@@ -60,23 +60,30 @@ function getBestMatch(query, set) { // Keyword based string searching
 }
 
 module.exports = class Music {
-	constructor() {
-		this.guild = null;
+	constructor(guild) { // Initialize variables
+		this.guild = guild;
 		this.playing = null;
 		this.readable = null;
-		this.recent = new Queue(Math.floor(playlist.urls.length * 0.75));
 		this.upcoming = new Queue();
 		this.backup = null;
+		if (!playlist[guild]) { // Initialize new guild
+			playlist[guild] = {
+				titles: [],
+				urls: []
+			};
+		}
+		this.recent = new Queue(Math.floor(playlist[this.guild].urls.length * 0.75));
+		this.update();
 	}
 	
 	update() { // Update playlist.json
-		for (var i = 0; i < playlist.titles.length; ++i) { // Get rid of null entries that I never debugged lol
-			if (!playlist.titles[i] || !playlist.urls[i]) {
-				playlist.titles.splice(i, 1);
-				playlist.urls.splice(i, 1);
+		for (var i = 0; i < playlist[this.guild].titles.length; ++i) { // Get rid of null entries that I never debugged lol
+			if (!playlist[this.guild].titles[i] || !playlist[this.guild].urls[i]) {
+				playlist[this.guild].titles.splice(i, 1);
+				playlist[this.guild].urls.splice(i, 1);
 			}
 		}
-		this.recent.length = Math.floor(playlist.urls.length * 0.75); // Resize recent playlist
+		this.recent.length = Math.floor(playlist[this.guild].urls.length * 0.75); // Resize recent playlist
 		fs.writeFile("../playlist.json", JSON.stringify(playlist, null, 4), (error) => {
 			if (error) {
 				console.log(error);
@@ -89,7 +96,7 @@ module.exports = class Music {
 				files: {}
 			};
 			options.files[this.guild] = {
-				content: playlist.titles.join('\n') + "\n"
+				content: playlist[this.guild].titles.length == 0 ? "Playlist is empty. Try adding some songs with the 'add' command.\n" : playlist[this.guild].titles.join('\n') + "\n"
 			};
 			response.body.forEach((g) => {
 				if (g.files[this.guild] && Object.keys(g.files).length == 1) {
@@ -118,7 +125,7 @@ module.exports = class Music {
 					files: {}
 				};
 				options.files[this.guild] = {
-					content: playlist.titles.join('\n') + "\n"
+					content: playlist[this.guild].titles.join('\n') + "\n"
 				};
 				response.body.forEach((g) => {
 					if (g.files[this.guild] && Object.keys(g.files).length == 1) {
@@ -141,17 +148,18 @@ module.exports = class Music {
 	}
 	
 	add(query) { // Add a song to the playlist
+		playlist = require("../playlist.json");
 		return new Promise((resolve, reject) => {
 			var index;
 			if (ytdl.validateURL(query)) { // Is a YouTube URL?
 				var videoID = ytdl.getURLVideoID(query);
-				index = playlist.urls.findIndex((element) => { // Check if already in playlist
+				index = playlist[this.guild].urls.findIndex((element) => { // Check if already in playlist
 					return ytdl.getURLVideoID(element) == videoID;
 				});
 				if (index == -1) { // Not in playlist yet
 					ytdl.getBasicInfo(query).then((info) => { // Get video title
-						playlist.urls.push("https://youtube.com/watch?v=" + videoID);
-						playlist.titles.push(info.title);
+						playlist[this.guild].urls.push("https://youtube.com/watch?v=" + videoID);
+						playlist[this.guild].titles.push(info.title);
 						this.update();
 						resolve({
 							title: info.title,
@@ -161,16 +169,16 @@ module.exports = class Music {
 				}
 				else {
 					resolve({ // Already in playlist
-						title: playlist.titles[index],
+						title: playlist[this.guild].titles[index],
 						exist: true
 					});
 				}
 			}
 			else {
 				scResolve(query).then((data) => { // Is a SoundCloud URL?
-					if ((index = playlist.urls.indexOf(data.permalink_url)) == -1) { // Check if already in playlist
-						playlist.urls.push(data.permalink_url);
-						playlist.titles.push(data.title);
+					if ((index = playlist[this.guild].urls.indexOf(data.permalink_url)) == -1) { // Check if already in playlist
+						playlist[this.guild].urls.push(data.permalink_url);
+						playlist[this.guild].titles.push(data.title);
 						this.update();
 						resolve({
 							title: data.title,
@@ -179,12 +187,12 @@ module.exports = class Music {
 					}
 					else {
 						resolve({ // Already in playlist
-							title: playlist.titles[index],
+							title: playlist[this.guild].titles[index],
 							exist: true
 						});
 					}
 				}).catch(() => { // Just a search query
-					var best = getBestMatch(query, playlist.titles); // Check if already in playlist
+					var best = getBestMatch(query, playlist[this.guild].titles); // Check if already in playlist
 					if (best.rating >= config.similarityReq) {
 						resolve({ // Already in playlist
 							title: best.target,
@@ -201,8 +209,8 @@ module.exports = class Music {
 								var link = items[itemTitles.indexOf(best.target)].link;
 								if (ytdl.validateURL(link)) { // Is a YouTube video?
 									ytdl.getBasicInfo(link).then((info) => { // Get video title
-										playlist.urls.push("https://youtube.com/watch?v=" + ytdl.getURLVideoID(link));
-										playlist.titles.push(info.title);
+										playlist[this.guild].urls.push("https://youtube.com/watch?v=" + ytdl.getURLVideoID(link));
+										playlist[this.guild].titles.push(info.title);
 										this.update();
 										resolve({
 											title: info.title,
@@ -212,8 +220,8 @@ module.exports = class Music {
 								}
 								else {
 									scResolve(link).then((data) => { // Is a SoundCloud song?
-										playlist.urls.push(data.permalink_url);
-										playlist.titles.push(data.title);
+										playlist[this.guild].urls.push(data.permalink_url);
+										playlist[this.guild].titles.push(data.title);
 										this.update();
 										resolve({
 											title: data.title,
@@ -243,10 +251,10 @@ module.exports = class Music {
 		});
 		this.backup = {
 			recent: this.recent.elems.map((element) => {
-				return playlist.titles[element];
+				return playlist[this.guild].titles[element];
 			}),
 			upcoming: this.upcoming.elems.map((element) => {
-				return playlist.titles[element];
+				return playlist[this.guild].titles[element];
 			})
 		};
 	}
@@ -254,23 +262,24 @@ module.exports = class Music {
 	after() { // Helper for before()
 		if (this.backup) {
 			this.recent.elems = this.backup.recent.map((element) => {
-				return playlist.titles.indexOf(element);
+				return playlist[this.guild].titles.indexOf(element);
 			});
 			this.upcoming.elems = this.backup.upcoming.map((element) => {
-				return playlist.titles.indexOf(element);
+				return playlist[this.guild].titles.indexOf(element);
 			});
 			this.backup = null;
 		}
 	}
 	
 	remove(query) { // Remove a song from the playlist
+		playlist = require("../playlist.json");
 		return new Promise((resolve, reject) => {
 			var index = Math.floor(Number(query)), title;
-			if (index > 0 && index <= playlist.urls.length) { // It's a number
+			if (index > 0 && index <= playlist[this.guild].urls.length) { // It's a number
 				--index;
 				this.before(index);
-				title = playlist.titles.splice(index, 1)[0];
-				playlist.urls.splice(index, 1);
+				title = playlist[this.guild].titles.splice(index, 1)[0];
+				playlist[this.guild].urls.splice(index, 1);
 				this.after();
 				this.update();
 				resolve(title);
@@ -278,13 +287,13 @@ module.exports = class Music {
 			else {
 				if (ytdl.validateURL(query)) { // Is a YouTube URl?
 					var videoID = ytdl.getURLVideoID(query);
-					index = playlist.urls.findIndex((element) => {
+					index = playlist[this.guild].urls.findIndex((element) => {
 						return ytdl.getURLVideoID(element) == videoID;
 					});
 					if (index != -1) { // Found it
 						this.before(index);
-						title = playlist.titles.splice(index, 1)[0];
-						playlist.urls.splice(index, 1);
+						title = playlist[this.guild].titles.splice(index, 1)[0];
+						playlist[this.guild].urls.splice(index, 1);
 						this.after();
 						this.update();
 						resolve(title);
@@ -295,11 +304,11 @@ module.exports = class Music {
 				}
 				else {
 					scResolve(query).then((data) => { // Is a SoundCloud URL?
-						if (playlist.urls.includes(data.permalink_url)) {
-							index = playlist.urls.indexOf(data.permalink_url);
+						if (playlist[this.guild].urls.includes(data.permalink_url)) {
+							index = playlist[this.guild].urls.indexOf(data.permalink_url);
 							this.before(index);
-							title = playlist.titles.splice(index, 1)[0];
-							playlist.urls.splice(index, 1);
+							title = playlist[this.guild].titles.splice(index, 1)[0];
+							playlist[this.guild].urls.splice(index, 1);
 							this.after();
 							this.update();
 							resolve(title);
@@ -308,12 +317,12 @@ module.exports = class Music {
 							resolve(); //Failure
 						}
 					}).catch(() => { // It's a search query
-						var best = getBestMatch(query, playlist.titles);
+						var best = getBestMatch(query, playlist[this.guild].titles);
 						if (best.rating >= config.similarityReq) { // Found it
-							index = playlist.titles.indexOf(best.target);
+							index = playlist[this.guild].titles.indexOf(best.target);
 							this.before(index);
-							title = playlist.titles.splice(index, 1)[0];
-							playlist.urls.splice(index, 1);
+							title = playlist[this.guild].titles.splice(index, 1)[0];
+							playlist[this.guild].urls.splice(index, 1);
 							this.after();
 							this.update();
 							resolve(title);
@@ -327,14 +336,10 @@ module.exports = class Music {
 		});
 	}
 	
-	shuffle() { // Reacquire configuration
-		config = require("../config.json"); // command.js already changed the setting
-	}
-	
-	play(query) { // Play a song, add it the playlist if need be
+	play(shuffle, query) { // Play a song, add it the playlist if need be
 		return new Promise((resolve, reject) => {
 			this.next(query).then(() => {
-				this.skip().then(resolve).catch(reject); // Let skip() handle the streaming
+				this.skip(shuffle).then(resolve).catch(reject); // Let skip() handle the streaming
 			}).catch(reject);
 		});
 	}
@@ -343,20 +348,20 @@ module.exports = class Music {
 		return new Promise((resolve, reject) => {
 			if (query) { // Add a song to the queue
 				var index = Math.floor(Number(query));
-				if (index > 0 && index <= playlist.urls.length) { // It's a number
+				if (index > 0 && index <= playlist[this.guild].urls.length) { // It's a number
 					--index;
 					if (!this.upcoming.includes(index)) {
 						this.upcoming.push(index);
-						resolve(playlist.titles[index], false); // Success
+						resolve(playlist[this.guild].titles[index], false); // Success
 					}
 					else {
-						resolve(playlist.titles[index], true); // Already in queue
+						resolve(playlist[this.guild].titles[index], true); // Already in queue
 					}
 				}
 				else {
 					this.add(query).then((response) => {
 						if (response.title) {
-							index = playlist.titles.indexOf(response.title);
+							index = playlist[this.guild].titles.indexOf(response.title);
 							if (!this.upcoming.includes(index)) {
 								this.upcoming.push(index);
 								resolve(response.title, false); // Success
@@ -373,7 +378,7 @@ module.exports = class Music {
 			}
 			else { // Just get the titles of the songs in the queue
 				resolve(this.upcoming.elems.map((element) => {
-					return playlist.titles[element];
+					return playlist[this.guild].titles[element];
 				}));
 			}
 		});
@@ -381,18 +386,18 @@ module.exports = class Music {
 	
 	dequeue(query) { // Remove a song from the upcoming queue
 		var index = Math.floor(Number(query)), title;
-		if (index > 0 && index <= playlist.urls.length) { // It's a number
+		if (index > 0 && index <= playlist[this.guild].urls.length) { // It's a number
 			--index;
 			if (this.upcoming.includes(index)) {
-				title = playlist.titles[index];
+				title = playlist[this.guild].titles[index];
 				this.upcoming.elems.splice(this.upcoming.elems.indexOf(index), 1);
 				return title;
 			}
 		}
 		else { // It's a search query
-			var best = getBestMatch(query, playlist.titles);
+			var best = getBestMatch(query, playlist[this.guild].titles);
 			if (best.rating >= config.similarityReq) {
-				return this.dequeue(playlist.titles.indexOf(best.target) + 1); // Recurse with number
+				return this.dequeue(playlist[this.guild].titles.indexOf(best.target) + 1); // Recurse with number
 			}
 		}
 	}
@@ -400,18 +405,18 @@ module.exports = class Music {
 	next(query) { // Add a song to the front of the upcoming queue
 		return new Promise((resolve, reject) => {
 			var index = Math.floor(Number(query));
-			if (index > 0 && index <= playlist.urls.length) { // It's a number
+			if (index > 0 && index <= playlist[this.guild].urls.length) { // It's a number
 				--index;
 				this.upcoming.elems = this.upcoming.elems.filter((element) => { // Get rid of dupes
 					return element != index;
 				});
 				this.upcoming.elems.unshift(index);
-				resolve(playlist.titles[index]);
+				resolve(playlist[this.guild].titles[index]);
 			}
 			else {
 				this.add(query).then((response) => { // Let add() handle the query
 					if (response.title) {
-						index = playlist.titles.indexOf(response.title);
+						index = playlist[this.guild].titles.indexOf(response.title);
 						this.upcoming.elems = this.upcoming.elems.filter((element) => { // Get rid of dupes
 							return element != index;
 						});
@@ -426,19 +431,19 @@ module.exports = class Music {
 		});
 	}
 	
-	skip() { // Skip the currently playing song
+	skip(shuffle) { // Skip the currently playing song
 		return new Promise((resolve, reject) => {
-			if (playlist.urls.length) {
+			if (playlist[this.guild].urls.length) {
 				var index;
 				if (this.upcoming.empty()) { // Upcoming songs not specified
-					if (config.music.shuffle || !this.playing) {
-						var foo = playlist.urls.filter((element, i) => { // Deal with recently played songs
+					if (shuffle || !this.playing) {
+						var foo = playlist[this.guild].urls.filter((element, i) => { // Deal with recently played songs
 							return !this.recent.includes(i);
 						});
-						index = playlist.urls.indexOf(foo[Math.floor(Math.random() * foo.length)]);
+						index = playlist[this.guild].urls.indexOf(foo[Math.floor(Math.random() * foo.length)]);
 					}
 					else {
-						if ((index = playlist.titles.indexOf(this.playing) + 1) >= playlist.titles.length) { // Pick next song in playlist
+						if ((index = playlist[this.guild].titles.indexOf(this.playing) + 1) >= playlist[this.guild].titles.length) { // Pick next song in playlist
 							index = 0;
 						}
 					}
@@ -446,17 +451,17 @@ module.exports = class Music {
 				else {
 					index = this.upcoming.pop(); // Pull from the upcoming queue
 				}
-				this.playing = playlist.titles[index];
+				this.playing = playlist[this.guild].titles[index];
 				this.recent.elems = this.recent.elems.filter((element) => { // No dupes in the recent queue
 					return element != index;
 				});
 				this.recent.push(index); // Put in the recent queue
-				if (ytdl.validateURL(playlist.urls[index])) { // Is a YouTube URL?
-					this.readable = ytdl(playlist.urls[index], {filter: "audio"}).on("error", console.log);
+				if (ytdl.validateURL(playlist[this.guild].urls[index])) { // Is a YouTube URL?
+					this.readable = ytdl(playlist[this.guild].urls[index], {filter: "audio"}).on("error", console.log);
 					resolve(this.readable); // Success
 				}
 				else {
-					scResolve(playlist.urls[index]).then((data) => { // Is a SoundCloud URL?
+					scResolve(playlist[this.guild].urls[index]).then((data) => { // Is a SoundCloud URL?
 						this.readable = request.get(data.stream_url + (data.stream_url.includes('?') ? "&" : "?") + "client_id=" + config.soundcloud.clientID).on("error", console.log);
 						resolve(this.readable); // Success
 					}).catch((error) => {
@@ -473,18 +478,18 @@ module.exports = class Music {
 	url(query) { // Returns the url of the currently playing song
 		if (query) {
 			var index = Math.floor(Number(query));
-			if (index > 0 && index <= playlist.urls.length) { // It's a number
-				return playlist.urls[--index];
+			if (index > 0 && index <= playlist[this.guild].urls.length) { // It's a number
+				return playlist[this.guild].urls[--index];
 			}
 			else {
-				var best = getBestMatch(query, playlist.titles); // Use search query
+				var best = getBestMatch(query, playlist[this.guild].titles); // Use search query
 				if (best.rating >= config.similarityReq) {
-					return playlist.urls[playlist.titles.indexOf(best.target)];
+					return playlist[this.guild].urls[playlist[this.guild].titles.indexOf(best.target)];
 				}
 			}
 		}
 		else if (this.playing) {
-			return playlist.urls[playlist.titles.indexOf(this.playing)];
+			return playlist[this.guild].urls[playlist[this.guild].titles.indexOf(this.playing)];
 		}
 	}
 }

@@ -14,7 +14,6 @@
         ]
     },
     "prefix": [
-        "",
         "k!",
         "<@BOT_CLIENT_ID> ",
         "<@!BOT_CLIENT_ID> "
@@ -23,10 +22,6 @@
 		"failure": "",
 		"success": ""
 	},
-    "music": {
-        "shuffle": false,
-        "volume": 1
-    },
     "similarityReq": 0.66,
     "CSE": {
         "apikey": "",
@@ -39,5 +34,6 @@
     "gist": {
         "username": "",
         "password": ""
-    }
+    },
+	"servers": {}
 }

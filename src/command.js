@@ -6,7 +6,7 @@ const Music = require("./music"); // Music handling
 var config = require("../config.json"); // Bot configuration
 
 var client; // Discord client
-var music = new Music(); // Music handler
+var music; // Music handling
 var cl = new Discord.RichEmbed({ // Embed for k!help command list
 	title: "Commands:",
 	description: ""
@@ -24,6 +24,11 @@ var commands = { // Command list
 		usage: "`Usage: k!help [command]`",
 		description: "Displays a command list or describes a specific command.",
 		subtitle: "<> denotes a required parameter, while [] denotes an optional one."
+	},
+	invite: {
+		cmd: invite,
+		usage: "`Usage: k!invite`",
+		description: "Drops a link to invite KennyBot to other servers."
 	},
 	prefix: {
 		cmd: prefix,
@@ -128,38 +133,54 @@ var commands = { // Command list
 	}
 };
 
-exports.init = function init(bot) { // Store the Discord client
+exports.init = function init(bot) { // Initialize the bot
 	client = bot;
+	music = {};
+	for (var guild of client.guilds.values()) { // Initialize music handler
+		exports.newGuild(guild);
+	}
+	update();
 	for (var cmd in commands) { // Assemble the command list
 		if (!(commands[cmd].botmin || commands[cmd].hi)) {
 			cl.description += cmd + " - " + commands[cmd].description + "\n";
 		}
 	}
-}
+};
 
-exports.deinit = function deinit() {
-	client.voiceConnections.tap((connection) => { // Close all voice connections
-		if (connection.dispatcher) {
-			connection.dispatcher.on("end", () => {
-				music.playing = null;
-				music.upcoming.clear();
-				if (music.readable.read) {
-					music.readable.read(music.readable.readableLength);
-				}
-			});
-			connection.dispatcher.end(); // Stop playing audio
-		}
-		connection.disconnect(); // Disconnect from the voice channel
+exports.deinit = function deinit() { // Cleanup and shutdown the bot
+	client.voiceConnections.tap((connection) => {
+		music[connection.channel.guild.id].playing = null;
+		music[connection.channel.guild.id].upcoming.clear();
+		connection.disconnect();
 	});
 	client.destroy(); // Die
-}
+};
+
+exports.newGuild = function newGuild(guild) { // Handle joining a guild
+	music[guild.id] = new Music(guild.id);
+	if (!config.servers[guild.id]) {
+		config.servers[guild.id] = {
+			name: guild.name,
+			music: {
+				shuffle: false,
+				volume: 1
+			}
+		};
+	}
+};
+
+exports.oldGuild = function oldGuild(guild) { // Handle leaving a guild
+	if (music[guild]) {
+		delete music[guild];
+	}
+};
 
 exports.handle = function handle(message) { // Handle messages
 	var prefix;
-	if (!music.guild) {
-		music.guild = message.guild.id;
+	if (!music[message.guild.id]) {
+		exports.newGuild(message.guild);
 	}
-	if (prefix = prefixCheck(message.content)) {
+	if (prefix = prefixCheck(message.content, message.guild.id)) {
 		var cmd = message.content.substring(prefix.length).split(' ')[0].toLowerCase();
 		if (commands[cmd]) {
 			logCommand(message);
@@ -168,28 +189,29 @@ exports.handle = function handle(message) { // Handle messages
 			}
 		}
 	}
-}
+};
 
 async function logCommand(message) { // Log bot commands
 	var user = message.author.username + "#" + message.author.discriminator;
-	console.log((message.author.id == config.adminID ? user.magenta : user.cyan) + ": " + message.content);
+	console.log("[" + message.guild.id + "] " + (message.author.id == config.adminID ? user.magenta : user.cyan) + ": " + message.content);
 }
 
 function sendMessage(channel, message) { // Log bot messages
 	return new Promise((resolve, reject) => {
 		if (message.length < 200) {
-			console.log((client.user.username + "#" + client.user.discriminator).green + ": " + message);
+			console.log("[" + channel.guild.id + "] " + (client.user.username + "#" + client.user.discriminator).green + ": " + message);
 		}
 		channel.send(message).then(resolve).catch(reject);
 	});
 }
 
-function prefixCheck(text) { // Check for any prefix
+function prefixCheck(text, guild) { // Check for any prefix
 	for (var i in config.prefix) {
 		if (config.prefix[i] && text.startsWith(config.prefix[i])) {
 			return config.prefix[i];
 		}
 	}
+	return (config.servers[guild].prefix && text.startsWith(config.servers[guild].prefix)) ? config.servers[guild].prefix : null;
 }
 
 function update() { // Update config.json
@@ -205,19 +227,25 @@ function update() { // Update config.json
 	});
 }
 
-function onEndSong() { // When a song stream ends
-	if (music.readable.read) {
-		music.readable.read(music.readable.readableLength);
+function onEndSong(guild, connection) { // Handle ends of songs
+	if (music[guild].readable.read) {
+		music[guild].readable.read(music[guild].readable.readableLength);
 	}
-	if (client.voiceConnections.has(music.guild) && music.playing) {
-		var connection = client.voiceConnections.get(music.guild);
-		music.skip().then((stream) => {
+	if (connection.dispatcher) {
+		connection.dispatcher.end();
+		delete connection.dispatcher;
+	}
+	delete music[guild].readable;
+	if (music[guild].playing) {
+		music[guild].skip(config.servers[guild].music.shuffle).then((stream) => {
 			if (stream) {
-				connection.playStream(stream, {volume: config.music.volume}).on("end", onEndSong); // another one begins
+				connection.playStream(stream, {volume: config.servers[guild].music.volume}).on("end", () => { // Play another song
+					onEndSong(guild, connection);
+				});
 			}
 		}).catch(console.log);
 	}
-}
+};
 
 function restart(p, message) { // End program and let CMD handle restarting
 	sendMessage(message.channel, "Restarting").then(() => {
@@ -242,10 +270,14 @@ function help(p, message) { // Command help
 	}
 }
 
+function invite(p, message) { // Invite link
+	sendMessage(message.channel, "https://discordapp.com/api/oauth2/authorize?client_id=" + config.botID + "&permissions=8&scope=bot").catch(console.log);
+}
+
 function prefix(p, message) { // Change the command prefix
 	var args = message.content.substring(p.length).split(' ');
 	if (args.length > 1) {
-		config.prefix[0] = args[1];
+		config.servers[message.guild.id].prefix = args[1];
 		update().catch(console.log);
 		sendMessage(message.channel, "Prefix updated to `" + args[1] + "`").catch(console.log);
 	}
@@ -327,7 +359,7 @@ function roll(p, message) { // Roll dice
 }
 
 function list(p, message) { // Displays the playlist
-	music.list().then((link) => {
+	music[message.guild.id].list().then((link) => {
 		sendMessage(message.channel, link).catch(console.log);
 	}).catch(console.log);
 }
@@ -337,7 +369,7 @@ function add(p, message) { // Add a song to the playlist
 	if (args.length > 1) {
 		args.shift();
 		var query = args.join(' ');
-		music.add(query).then((response) => {
+		music[message.guild.id].add(query).then((response) => {
 			if (response.title) {
 				if (response.exist) {
 					sendMessage(message.channel, "`" + response.title + "` is already in the playlist").catch(console.log); // Duplicate
@@ -361,7 +393,7 @@ function remove(p, message) { // Remove a song from the playlist
 	if (args.length > 1) {
 		args.shift();
 		var query = args.join(' ');
-		music.remove(query).then((title) => {
+		music[message.guild.id].remove(query).then((title) => {
 			if (title) {
 				sendMessage(message.channel, "Removed `" + title + "` from the playlist").catch(console.log); // Success
 			}
@@ -380,6 +412,13 @@ function join(p, message) { // Join a voice channel
 		var args = message.content.substring(p.length).split(' ');
 		message.member.voiceChannel.join().then((connection) => {
 			var cmd = args[0].toLowerCase();
+			connection.on("disconnect", () => { // Cleanup on disconnect
+				music[message.guild.id].playing = null;
+				music[message.guild.id].upcoming.clear();
+				if (connection.dispatcher) {
+					connection.dispatcher.end();
+				}
+			});
 			sendMessage(message.channel, "Connected to `" + connection.channel.name + "`").then(() => {
 				if (cmd != "join") {
 					commands[cmd].cmd(p, message); // Head back to the originally called command
@@ -395,7 +434,7 @@ function volume(p, message) { // Change the bot's music volume
 		var vol = Number(args[1]);
 		if (vol || vol === 0) {
 			vol = Math.max(0, Math.min(1.5, vol));
-			config.music.volume = vol;
+			config.servers[message.guild.id].music.volume = vol;
 			update().catch(console.log);
 			sendMessage(message.channel, "Volume updated to `" + vol + "`").catch(console.log);
 		}
@@ -409,10 +448,9 @@ function volume(p, message) { // Change the bot's music volume
 }
 
 async function shuffle(p, message) { // Toggle shuffle
-	config.music.shuffle = !config.music.shuffle;
+	config.servers[message.guild.id].music.shuffle = !config.servers[message.guild.id].music.shuffle;
 	await update().catch(console.log);
-	music.shuffle();
-	sendMessage(message.channel, "Shuffle is now `" + (config.music.shuffle ? "on" : "off") + "`").catch(console.log);
+	sendMessage(message.channel, "Shuffle is now `" + (config.servers[message.guild.id].music.shuffle ? "on" : "off") + "`").catch(console.log);
 }
 
 function play(p, message) { // Start playing music
@@ -422,12 +460,14 @@ function play(p, message) { // Start playing music
 		query = args.join(' ');
 		if (query) { // Specific song request
 			if (connection.dispatcher) {
-				music.playing = null;
+				music[message.guild.id].playing = null;
 				connection.dispatcher.end(); // Stop currently playing music
 			}
-			music.play(query).then((stream) => {
+			music[message.guild.id].play(config.servers[message.guild.id].music.shuffle, query).then((stream) => {
 				if (stream) {
-					connection.playStream(stream, {volume: config.music.volume}).on("end", onEndSong); // Success
+					connection.playStream(stream, {volume: config.servers[message.guild.id].music.volume}).on("end", () => {
+						onEndSong(message.guild.id, connection);
+					}); // Success
 					song(p, message);
 				}
 				else {
@@ -437,9 +477,11 @@ function play(p, message) { // Start playing music
 		}
 		else {
 			if (!connection.dispatcher) {
-				music.skip().then((stream) => {
+				music[message.guild.id].skip(config.servers[message.guild.id].music.shuffle).then((stream) => {
 					if (stream) {
-						connection.playStream(stream, {volume: config.music.volume}).on("end", onEndSong); // Success
+						connection.playStream(stream, {volume: config.servers[message.guild.id].music.volume}).on("end", () => {
+							onEndSong(message.guild.id, connection);
+						}); // Success
 						song(p, message);
 					}
 					else {
@@ -459,7 +501,7 @@ function queue(p, message) { // Display or add to upcoming song queue
 		var args = message.content.substring(p.length).split(' '), query;
 		args.shift();
 		query = args.join(' ');
-		music.queue(query).then((response, exist) => {
+		music[message.guild.id].queue(query).then((response, exist) => {
 			if (query) {
 				if (response) {
 					if (!exist) {
@@ -493,7 +535,7 @@ function dequeue(p, message) { // Remove songs from upcoming queue
 		args.shift();
 		query = args.join(' ');
 		if (query) {
-			var title = music.dequeue(query);
+			var title = music[message.guild.id].dequeue(query);
 			if (title) {
 				sendMessage(message.channel, "Removed `" + title + "` from the queue").catch(console.log); // Success
 			}
@@ -513,7 +555,7 @@ function next(p, message) { // Add a song to the front of the queue
 		args.shift();
 		query = args.join(' ');
 		if (query) {
-			music.next(query).then((title) => {
+			music[message.guild.id].next(query).then((title) => {
 				if (title) {
 					sendMessage(message.channel, "Added `" + title + "` to the front of the queue").catch(console.log); // Success
 				}
@@ -529,17 +571,19 @@ function next(p, message) { // Add a song to the front of the queue
 }
 
 function skip(p, message) { // Skip the currently playing song
-	if (music.playing) {
+	if (music[message.guild.id].playing) {
 		if (client.voiceConnections.has(message.guild.id)) {
 			var connection = client.voiceConnections.get(message.guild.id);
 			if (connection.dispatcher) {
-				connection.dispatcher.end(); // onEndSong will play a new song
+				connection.dispatcher.end(); // Event handling will play a new song
 				song(p, message);
 			}
 			else {
-				music.skip().then((stream) => {
+				music[message.guild.id].skip(config.servers[message.guild.id].music.shuffle).then((stream) => {
 					if (stream) {
-						connection.playStream(stream, {volume: config.music.volume}).on("end", onEndSong); // Success
+						connection.playStream(stream, {volume: config.servers[message.guild.id].music.volume}).on("end", () => {
+							onEndSong(message.guild.id, connection);
+						}); // Success
 						song(p, message);
 					}
 					else {
@@ -557,21 +601,14 @@ function skip(p, message) { // Skip the currently playing song
 function stop(p, message) { // Stop playing music and leave the voice channel
 	if (client.voiceConnections.has(message.guild.id)) {
 		var connection = client.voiceConnections.get(message.guild.id);
-		if (connection.dispatcher) {
-			music.playing = null;
-			connection.dispatcher.on("end", () => {
-				music.upcoming.clear();
-			});
-			connection.dispatcher.end();
-		}
 		connection.disconnect();
 		sendMessage(message.channel, "Disconnected").catch(console.log);
 	}
 }
 
 function song(p, message) { // Displays currently playing song
-	if (music.playing) {
-		sendMessage(message.channel, "Now playing `" + music.playing + "`").catch(console.log);
+	if (music[message.guild.id].playing) {
+		sendMessage(message.channel, "Now playing `" + music[message.guild.id].playing + "`").catch(console.log);
 	}
 }
 
@@ -579,7 +616,7 @@ function url(p, message) { // Displays the URL of a song
 	var args = message.content.substring(p.length).split(' '), query, u;
 	args.shift();
 	query = args.join(' ');
-	u = music.url(query);
+	u = music[message.guild.id].url(query);
 	if (u) {
 		sendMessage(message.channel, u).catch(console.log); // Success
 	}
