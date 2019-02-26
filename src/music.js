@@ -192,7 +192,10 @@ module.exports = class Music {
 						});
 					}
 				}).catch(() => { // Just a search query
-					var best = getBestMatch(query, playlist[this.guild].titles); // Check if already in playlist
+					var best = playlist[this.guild].titles.length > 0 ? getBestMatch(query, playlist[this.guild].titles) : { // Check if already in playlist
+						target: null,
+						rating: 0
+					};
 					if (best.rating >= config.similarityReq) {
 						resolve({ // Already in playlist
 							title: best.target,

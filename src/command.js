@@ -169,6 +169,13 @@ exports.newGuild = function newGuild(guild) { // Handle joining a guild
 	}
 };
 
+exports.updateGuild = function updateGuild(guild) { // Update a guild's name
+	if (!config.servers[guild.id]) {
+		exports.newGuild(guild);
+	}
+	config.servers[guild.id].name = guild.name;
+}
+
 exports.oldGuild = function oldGuild(guild) { // Handle leaving a guild
 	if (music[guild]) {
 		delete music[guild];

@@ -42,6 +42,10 @@ client.on("guildCreate", (guild) => { // Handle new guild
 	command.newGuild(guild);
 	console.log(("Joined new server: " + guild.name + " (" + guild.id + ")").grey);
 });
+client.on("guildUpdate", (before, after) => {
+	command.updateGuild(after);
+	console.log(("Updated server: '" + before.name + "' to '" + after.name + "' (" + after.id + ")").grey);
+});
 client.on("guildDelete", (guild) => { // Handle leaving guild
 	command.oldGuild(guild);
 	console.log(("Left server: " + guild.name + " (" + guild.id + ")").grey);
