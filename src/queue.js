@@ -15,7 +15,18 @@ module.exports = class Queue {
 	
 	includes(value) { // Checks to see if a value is an element
 		if (this.length) {
-			//DO THIS
+			for (var i = (this.front <= this.back ? this.front : 0); i <= this.back; ++i) {
+				if (this.elems[i] == value) {
+					return true;
+				}
+			}
+			if (this.front > this.back && !this.empty()) {
+				for (var i = this.front; i < this.length; ++i) {
+					if (this.elems[i] == value) {
+						return true;
+					}
+				}
+			}
 		}
 		else {
 			return this.elems.includes(value);

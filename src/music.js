@@ -41,8 +41,8 @@ function scResolve(url) { // SoundCloud API call
 
 function getBestMatch(query, set) { // Keyword based string searching
 	return set.map((element) => {
-		var keywords = [], test = element.trim().toLowerCase().split(' ');
-		query.trim().toLowerCase().split(' ').forEach((a) => { // Find keywords
+		var keywords = [], test = element.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(' ');
+		query.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(' ').forEach((a) => { // Find keywords
 			var index = test.findIndex((b) => {
 				return stringSimilarity.compareTwoStrings(a, b) >= 0.8; // Threshold
 			});

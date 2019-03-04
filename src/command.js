@@ -226,14 +226,14 @@ function update() { // Update config.json
 }
 
 function onEndSong(guild, connection) { // Handle ends of songs
-	if (music[guild].readable.read) {
-		music[guild].readable.read(music[guild].readable.readableLength);
+	if (music[guild].readable) {
+		music[guild].readable.destroy();
 	}
 	if (connection.dispatcher) {
 		connection.dispatcher.end();
-		delete connection.dispatcher;
 	}
-	delete music[guild].readable;
+	music[guild].readable = null;
+	connection.dispatcher = null;
 	if (music[guild].playing) {
 		music[guild].skip(config.servers[guild].music.shuffle).then((stream) => {
 			if (stream) {
