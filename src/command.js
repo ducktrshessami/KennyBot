@@ -241,7 +241,10 @@ function onEndSong(guild, connection) { // Handle ends of songs
 					onEndSong(guild, connection);
 				});
 			}
-		}).catch(console.log);
+		}).catch((error) => {
+			console.log(error);
+			onEndSong(guild, connection);
+		});
 	}
 };
 
@@ -471,7 +474,10 @@ function play(p, message) { // Start playing music
 				else {
 					sendMessage(message.channel, "Could not find the specified song").catch(console.log); // Failure
 				}
-			}).catch(console.log);
+			}).catch((error) => {
+				sendMessage(message.channel, error).catch(console.log);
+				skip(p, message);
+			});
 		}
 		else {
 			if (!connection.dispatcher) {
@@ -485,7 +491,10 @@ function play(p, message) { // Start playing music
 					else {
 						sendMessage(message.channel, "There are no songs in the playlist").catch(console.log); // Empty playlist
 					}
-				}).catch(console.log);
+				}).catch((error) => {
+					sendMessage(message.channel, error).catch(console.log);
+					skip(p, message);
+				});
 			}
 		}
 	}
@@ -587,7 +596,10 @@ function skip(p, message) { // Skip the currently playing song
 					else {
 						sendMessage(message.channel, "There are no songs in the playlist").catch(console.log); // Empty playlist
 					}
-				}).catch(console.log);
+				}).catch((error) => {
+					sendMessage(message.channel, error).catch(console.log);
+					skip(p, message);
+				});
 			}
 		}
 		else {
