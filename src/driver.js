@@ -56,7 +56,7 @@ client.on("message", (message) => { // Handle messages
 	}
 });
 rl.on("line", (line) => { // Wait for exit command
-	if (line == "exit") {
+	if (line.trim() == "exit") {
 		command.deinit();
 	}
 });

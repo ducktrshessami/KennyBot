@@ -87,15 +87,14 @@ module.exports = class Music {
 		jsonfile.writeFile("../playlist.json", playlist, {spaces: 4}).catch(console.log);
 		gist.list(config.gist.username).then((response) => { // Post to Gist
 			var gs = [], options = {
-				description: this.guild,
 				public: false,
 				files: {}
 			};
-			options.files[this.guild] = {
-				content: playlist[this.guild].titles.length == 0 ? "Playlist is empty. Try adding some songs with the 'add' command.\n" : playlist[this.guild].titles.join('\n') + "\n"
+			options.files[this.guild + ".md"] = {
+				content: playlist[this.guild].titles.length == 0 ? "Playlist is empty. Try adding some songs with the 'add' command.\n" : playlist[this.guild].titles.map((title, i) => "1. [" + title + "](" + playlist[this.guild].urls[i] + ")").join('\n') + "\n"
 			};
 			response.body.forEach((g) => {
-				if (g.files[this.guild] && Object.keys(g.files).length == 1) {
+				if (g.files[this.guild + ".md"] && Object.keys(g.files).length == 1) {
 					gs.push(g);
 				}
 			});
@@ -116,15 +115,14 @@ module.exports = class Music {
 		return new Promise((resolve, reject) => {
 			gist.list(config.gist.username).then((response) => {
 				var gs = [], options = {
-					description: this.guild,
 					public: false,
 					files: {}
 				};
-				options.files[this.guild] = {
-					content: playlist[this.guild].titles.join('\n') + "\n"
+				options.files[this.guild + ".md"] = {
+					content: playlist[this.guild].titles.map((title, i) => "1. [" + title + "](" + playlist[this.guild].urls[i] + ")").join('\n') + "\n"
 				};
 				response.body.forEach((g) => {
-					if (g.files[this.guild] && Object.keys(g.files).length == 1) {
+					if (g.files[this.guild + ".md"] && Object.keys(g.files).length == 1) {
 						gs.push(g);
 					}
 				});

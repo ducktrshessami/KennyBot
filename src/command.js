@@ -11,7 +11,7 @@ var cl = new Discord.RichEmbed({ // Embed for k!help command list
 	title: "Commands:",
 	description: ""
 });
-var commands = { // Command list
+const commands = { // Command list
 	restart: {
 		cmd: restart,
 		usage: "`Usage: k!restart`",
