@@ -1,27 +1,26 @@
 {
   "name": "KennyBot",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": ":Kenny:",
   "main": "src/driver.js",
   "author": "ducktrshessami",
   "repository": "github:ducktrshessami/KennyBot",
   "dependencies": {
-    "colors": "^1.3.2",
-    "discord.js": "^11.4.2",
+    "colors": "^1.3.3",
+    "discord.js": "^11.5.1",
     "ffmpeg-binaries": "^4.0.0",
     "gists": "^2.0.0",
     "jsonfile": "^5.0.0",
     "opusscript": "0.0.6",
     "readline": "^1.3.0",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2",
+    "request-promise": "^4.2.4",
     "roll-parser": "^2.3.2",
     "string-similarity": "^1.2.2",
-    "ytdl-core": "^0.25.2"
+    "ytdl-core": "^0.29.2"
   },
   "optionalDependencies": {
-    "erlpack": "github:discordapp/erlpack",
-    "libsodium-wrappers": "^0.7.3",
-    "uws": "10.148.1"
+    "bufferutil": "^4.0.1",
+    "libsodium-wrappers": "^0.7.3"
   }
 }

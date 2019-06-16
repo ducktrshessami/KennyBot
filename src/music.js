@@ -28,11 +28,11 @@ function scResolve(url) { // SoundCloud API call
 				reject(data.errors);
 			}
 			else {
-				if (data.kind == "track") {
+				if (data.kind == "track" && data.streamable) {
 					resolve(data);
 				}
 				else {
-					reject("URL is for a " + data.kind);
+					reject("Bad URL");
 				}
 			}
 		}).catch(reject);

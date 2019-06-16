@@ -14,7 +14,7 @@ const rl = readline.createInterface({ // Console input
 const activityTypes = [
 	"PLAYING",
 	"STREAMING",
-	"LISTENING",
+	"LISTENING to",
 	"WATCHING"
 ];
 var pInterval, pLast = Math.floor(Math.random() * config.presence.games.length); // Presence stuff
