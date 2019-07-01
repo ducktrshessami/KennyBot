@@ -148,6 +148,9 @@ exports.init = function init(bot) { // Initialize the bot
 };
 
 exports.deinit = function deinit() { // Cleanup and shutdown the bot
+	for (var guild in music) {
+		music[guild].update();
+	}
 	client.voiceConnections.tap((connection) => {
 		music[connection.channel.guild.id].playing = null;
 		music[connection.channel.guild.id].upcoming.clear();

@@ -73,7 +73,6 @@ module.exports = class Music {
 			};
 		}
 		this.recent = new Queue(Math.floor(playlist[this.guild].urls.length * 0.75));
-		this.update();
 	}
 	
 	update() { // Update playlist.json and Gist playlist
