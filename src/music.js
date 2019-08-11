@@ -76,38 +76,51 @@ module.exports = class Music {
 	}
 	
 	update() { // Update playlist.json and Gist playlist
-		for (var i = 0; i < playlist[this.guild].titles.length; ++i) { // Get rid of null entries that I never debugged lol
-			if (!playlist[this.guild].titles[i] || !playlist[this.guild].urls[i]) {
-				playlist[this.guild].titles.splice(i, 1);
-				playlist[this.guild].urls.splice(i, 1);
-			}
-		}
-		this.recent.length = Math.floor(playlist[this.guild].urls.length * 0.75); // Resize recent playlist
-		jsonfile.writeFile("../playlist.json", playlist, {spaces: 4}).catch(console.log);
-		gist.list(config.gist.username).then((response) => { // Post to Gist
-			var gs = [], options = {
-				public: false,
-				files: {}
-			};
-			options.files[this.guild + ".md"] = {
-				content: playlist[this.guild].titles.length == 0 ? "Playlist is empty. Try adding some songs with the 'add' command.\n" : playlist[this.guild].titles.map((title, i) => "1. [" + title + "](" + playlist[this.guild].urls[i] + ")").join('\n') + "\n"
-			};
-			response.body.forEach((g) => {
-				if (g.files[this.guild + ".md"] && Object.keys(g.files).length == 1) {
-					gs.push(g);
+		return new Promise((resolve, reject) => {
+			var a = false, b = false;
+			for (var i = 0; i < playlist[this.guild].titles.length; ++i) { // Get rid of null entries that I never debugged lol
+				if (!playlist[this.guild].titles[i] || !playlist[this.guild].urls[i]) {
+					playlist[this.guild].titles.splice(i, 1);
+					playlist[this.guild].urls.splice(i, 1);
 				}
-			});
-			if (gs.length == 1) { // List found
-				gs = gs[0];
-				gist.edit(gs.id, options).catch(console.log);
 			}
-			else {
-				gs.forEach((g) => { // Delete dupes (not a known bug, just precautionary)
-					gist.delete(g.id);
+			this.recent.length = Math.floor(playlist[this.guild].urls.length * 0.75); // Resize recent playlist
+			jsonfile.writeFile("../playlist.json", playlist, {spaces: 4}).then(() => {
+				a = true;
+				if (b) {
+					resolve();
+				}
+			}).catch(reject);
+			gist.list(config.gist.username).then((response) => { // Post to Gist
+				var gs = [], options = {
+					public: false,
+					files: {}
+				};
+				options.files[this.guild + ".md"] = {
+					content: playlist[this.guild].titles.length == 0 ? "Playlist is empty. Try adding some songs with the 'add' command.\n" : playlist[this.guild].titles.map((title, i) => "1. [" + title + "](" + playlist[this.guild].urls[i] + ")").join('\n') + "\n"
+				};
+				response.body.forEach((g) => {
+					if (g.files[this.guild + ".md"] && Object.keys(g.files).length == 1) {
+						gs.push(g);
+					}
 				});
-				gist.create(options).catch(console.log); // Create correct one
-			}
-		}).catch(console.log);
+				if (gs.length == 1) { // List found
+					gs = gs[0];
+					gist.edit(gs.id, options).catch(reject);
+				}
+				else {
+					gs.forEach((g) => { // Delete dupes (not a known bug, just precautionary)
+						gist.delete(g.id);
+					});
+					gist.create(options).catch(reject); // Create correct one
+				}
+			}).then(() => {
+				b = true;
+				if (a) {
+					resolve();
+				}
+			}).catch(reject);
+		});
 	}
 	
 	list() { // Get Gist playlist URL
@@ -153,7 +166,7 @@ module.exports = class Music {
 					ytdl.getBasicInfo(query).then((info) => { // Get video title
 						playlist[this.guild].urls.push("https://youtube.com/watch?v=" + videoID);
 						playlist[this.guild].titles.push(info.title);
-						this.update();
+						this.update().catch(console.log);
 						resolve({
 							title: info.title,
 							exist: false
@@ -172,7 +185,7 @@ module.exports = class Music {
 					if ((index = playlist[this.guild].urls.indexOf(data.permalink_url)) == -1) { // Check if already in playlist
 						playlist[this.guild].urls.push(data.permalink_url);
 						playlist[this.guild].titles.push(data.title);
-						this.update();
+						this.update().catch(console.log);
 						resolve({
 							title: data.title,
 							exist: false
@@ -207,7 +220,7 @@ module.exports = class Music {
 									ytdl.getBasicInfo(link).then((info) => { // Get video title
 										playlist[this.guild].urls.push("https://youtube.com/watch?v=" + ytdl.getURLVideoID(link));
 										playlist[this.guild].titles.push(info.title);
-										this.update();
+										this.update().catch(console.log);
 										resolve({
 											title: info.title,
 											exist: false
@@ -218,7 +231,7 @@ module.exports = class Music {
 									scResolve(link).then((data) => { // Is a SoundCloud song?
 										playlist[this.guild].urls.push(data.permalink_url);
 										playlist[this.guild].titles.push(data.title);
-										this.update();
+										this.update().catch(console.log);
 										resolve({
 											title: data.title,
 											exist: false
@@ -277,7 +290,7 @@ module.exports = class Music {
 				title = playlist[this.guild].titles.splice(index, 1)[0];
 				playlist[this.guild].urls.splice(index, 1);
 				this.after();
-				this.update();
+				this.update().catch(console.log);
 				resolve(title);
 			}
 			else {
@@ -291,7 +304,7 @@ module.exports = class Music {
 						title = playlist[this.guild].titles.splice(index, 1)[0];
 						playlist[this.guild].urls.splice(index, 1);
 						this.after();
-						this.update();
+						this.update().catch(console.log);
 						resolve(title);
 					}
 					else {
@@ -306,7 +319,7 @@ module.exports = class Music {
 							title = playlist[this.guild].titles.splice(index, 1)[0];
 							playlist[this.guild].urls.splice(index, 1);
 							this.after();
-							this.update();
+							this.update().catch(console.log);
 							resolve(title);
 						}
 						else {
@@ -320,7 +333,7 @@ module.exports = class Music {
 							title = playlist[this.guild].titles.splice(index, 1)[0];
 							playlist[this.guild].urls.splice(index, 1);
 							this.after();
-							this.update();
+							this.update().catch(console.log);
 							resolve(title);
 						}
 						else {
