@@ -20,6 +20,8 @@
     "ffmpeg-static": "^4.2.8",
     "roll-parser": "^2.3.2",
     "scdl-core": "github:ducktrshessami/scdl-core",
+    "sequelize": "^6.6.2",
+    "sqlite3": "^5.0.2",
     "ytdl-core": "^4.5.0"
   },
   "optionalDependencies": {
@@ -29,7 +31,6 @@
     "utf-8-validate": "^5.0.4",
     "zlib-sync": "^0.1.7"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }
