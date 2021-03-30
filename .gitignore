@@ -109,3 +109,6 @@ dist
 # Sequelize fluff
 migrations/
 seeders/
+
+# Local database files
+db/
