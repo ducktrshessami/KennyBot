@@ -15,19 +15,18 @@
   "homepage": "https://github.com/ducktrshessami/KennyBot#readme",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
-    "@octokit/rest": "^18.0.11",
+    "@octokit/rest": "^18.5.2",
     "discord-bot": "github:ducktrshessami/discord-bot",
-    "ffmpeg-static": "^4.2.7",
-    "node-fetch": "^2.6.1",
+    "ffmpeg-static": "^4.2.8",
     "roll-parser": "^2.3.2",
     "scdl-core": "github:ducktrshessami/scdl-core",
-    "ytdl-core": "^4.1.2"
+    "ytdl-core": "^4.5.0"
   },
   "optionalDependencies": {
-    "bufferutil": "^4.0.2",
+    "bufferutil": "^4.0.3",
     "erlpack": "github:discord/erlpack",
-    "libsodium-wrappers": "^0.7.8",
-    "utf-8-validate": "^5.0.3",
+    "libsodium-wrappers": "^0.7.9",
+    "utf-8-validate": "^5.0.4",
     "zlib-sync": "^0.1.7"
   }
 }
