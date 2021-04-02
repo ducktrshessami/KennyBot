@@ -103,9 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-# Windows CMD scripts
-**/*.bat
-
 # Sequelize fluff
 migrations/
 seeders/
