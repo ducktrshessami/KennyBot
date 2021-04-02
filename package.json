@@ -18,10 +18,11 @@
     "express": "^4.17.1",
     "express-cycle": "github:ducktrshessami/express-cycle",
     "ffmpeg-static": "^4.3.0",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
     "roll-parser": "^2.3.2",
     "scdl-core": "github:ducktrshessami/scdl-core",
     "sequelize": "^6.6.2",
-    "sqlite3": "^5.0.2",
     "ytdl-core": "^4.5.0"
   },
   "optionalDependencies": {
