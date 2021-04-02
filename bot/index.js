@@ -4,6 +4,17 @@ const commands = require("./commands");
 
 var client;
 
+try {
+    let parsedAdmins = JSON.parse(process.env.BOT_ADMINS);
+    if (parsedAdmins) {
+        config.admin = parsedAdmins;
+    }
+}
+catch {
+    console.warn("Could not parse env BOT_ADMINS as JSON");
+}
+
+config.token = process.env.BOT_TOKEN || config.token;
 client = new DiscordBot(config, commands);
 
 client.on("ready", function () {
