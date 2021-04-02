@@ -5,16 +5,25 @@ catch {
     console.warn("Not using dotenv. Make sure environment variables are set");
 }
 
-process.bot = require("./bot");
-process.api = require("./api");
-process.ios = require("./ios");
+const db = require("./models");
 
-function failed() {
-    process.exit();
-}
+db.sequelize.sync({ force: process.env.DB_FORCE && process.env.DB_FORCE.trim().toLowerCase() !== "false" })
+    .then(() => {
+        process.bot = require("./bot");
+        process.api = require("./api");
+        process.ios = require("./ios");
 
-process.bot.on("ready", () => {
-    process.bot.off("error", failed);
-});
+        function failed() {
+            process.exit();
+        }
 
-process.bot.on("error", failed);
+        process.bot.on("ready", () => {
+            process.bot.off("error", failed);
+        });
+
+        process.bot.on("error", failed);
+    })
+    .catch(err => {
+        console.error(err);
+        process.exit();
+    });
