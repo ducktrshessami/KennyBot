@@ -2,7 +2,6 @@
   "name": "kennybot",
   "version": "0.0.1",
   "description": "Another music/dice bot for Discord",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/ducktrshessami/KennyBot.git"
@@ -32,9 +31,14 @@
     "zlib-sync": "^0.1.7"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-react": "cd react-client && npm run build",
+    "start-react": "cd react-blient && npm run start",
+    "start": "node server.js"
   },
   "devDependencies": {
     "dotenv": "^8.2.0"
-  }
+  },
+  "main": "server.js",
+  "keywords": []
 }
