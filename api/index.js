@@ -10,6 +10,7 @@ const cycler = Cycle({
 });
 
 app.use(cycler);
+app.use(require("./routes"));
 
 module.exports = app.listen(PORT, function () {
     console.log(`API listening on PORT ${PORT}`);
