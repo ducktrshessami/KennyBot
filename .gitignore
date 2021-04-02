@@ -112,3 +112,6 @@ seeders/
 
 # Local database files
 db/
+
+# Heroku package-lock github dependency bug
+package-lock.json
