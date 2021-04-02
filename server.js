@@ -11,7 +11,7 @@ db.sequelize.sync({ force: process.env.DB_FORCE && process.env.DB_FORCE.trim().t
     .then(() => {
         process.bot = require("./bot");
         process.api = require("./api");
-        process.ios = require("./ios");
+        process.ios = require("./console");
 
         function failed() {
             process.exit();
