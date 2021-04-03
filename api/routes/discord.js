@@ -26,7 +26,11 @@ module.exports = function (router) {
     });
 
     router.get("/api/unauth", function (req, res) {
-        req.session.regenerate();
-        res.status(401).redirect(process.env.API_REDIRECT + "?error=1");
+        req.session.regenerate(function (err) {
+            if (err) {
+                console.error(err);
+            }
+            res.status(401).redirect(process.env.API_REDIRECT + "?error=1");
+        });
     });
 };
