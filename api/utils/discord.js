@@ -12,7 +12,17 @@ function preLogin(req, res, next) {
     }
 }
 
+function preAuth(req, res, next) {
+    if (req.query.code && req.query.state === req.session.discord.state) {
+        next();
+    }
+    else {
+        res.redirect("/api/unauth");
+    }
+}
+
 module.exports = {
     authUrl,
-    preLogin
+    preLogin,
+    preAuth
 };
