@@ -1,5 +1,8 @@
 export default function Footer() {
+    let year = (new Date()).getFullYear();
     return (
-        <footer></footer>
+        <footer>
+            <span>Copyright ducktrshessami {year}</span>
+        </footer>
     );
 };
