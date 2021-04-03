@@ -20,6 +20,7 @@
     "ffmpeg-static": "^4.3.0",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
+    "phin": "^3.5.1",
     "roll-parser": "^2.3.2",
     "scdl-core": "github:ducktrshessami/scdl-core",
     "sequelize": "^6.6.2",
