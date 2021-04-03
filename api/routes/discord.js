@@ -29,6 +29,7 @@ module.exports = function (router) {
                 req.session.discord.access_token = tokenRes.body.access_token;
                 req.session.discord.expiry = new Date(Date.now() + (tokenRes.body.expires_in * 1000));
                 req.session.discord.refresh_token = tokenRes.body.refresh_token;
+                req.session.cookie.expires = req.session.discord.expiry;
                 res.status(200).redirect(process.env.API_REDIRECT + "?status=0");
             });
     });
