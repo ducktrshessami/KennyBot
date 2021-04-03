@@ -6,8 +6,17 @@ module.exports = function (router) {
         res.end();
     });
 
-    router.get("/api/login", discord.preLogin, function (req, res) {
+    router.get("/login", discord.preLogin, function (req, res) {
         res.redirect(discord.authUrl + `&state=${req.session.discord.state}`);
+    });
+
+    router.get("/logout", function (req, res) {
+        req.session.regenerate(function (err) {
+            if (err) {
+                console.error(err);
+            }
+            res.status(200).redirect(process.env.API_REDIRECT);
+        });
     });
 
     router.get("/api/auth", discord.preAuth, function (req, res) {
