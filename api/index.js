@@ -1,6 +1,7 @@
 const express = require("express");
 const Cycle = require("express-cycle");
-const { resolve } = require("path");
+const session = require("express-session");
+const MemoryStore = require("memorystore")(session);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -11,6 +12,12 @@ const cycler = Cycle({
 });
 
 app.use(cycler);
+app.use(session({
+    secret: process.env.API_SECRET,
+    store: new MemoryStore({ checkPeriod: 86400000 }),
+    resave: true,
+    saveUninitialized: true
+}));
 app.use(require("./routes"));
 app.use(require("./public"));
 
