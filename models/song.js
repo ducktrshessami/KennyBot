@@ -14,7 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Song.init({
-    url: DataTypes.STRING
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      primaryKey: true
+    }
   }, {
     sequelize,
     modelName: 'Song',
