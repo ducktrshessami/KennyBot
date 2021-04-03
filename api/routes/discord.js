@@ -14,14 +14,15 @@ module.exports = function (router) {
         phin({
             url: "https://discord.com/api/oauth2/token",
             method: "post",
-            data: {
+            data: (new URLSearchParams({
                 client_id: process.env.CLIENT_ID,
                 client_secret: process.env.CLIENT_SECRET,
                 grant_type: "authorization_code",
                 code: req.query.code,
                 redirect_uri: process.env.CLIENT_REDIRECT,
                 scope: discord.scope
-            },
+            })).toString(),
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             parse: "json"
         })
             .then(tokenRes => {
