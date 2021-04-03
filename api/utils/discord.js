@@ -56,10 +56,15 @@ function refreshCheck(req, res, next) {
 function refresh(req, res, next) {
     refreshToken(req.session.discord.refresh_token)
         .then(tokenRes => {
-            req.session.discord.access_token = tokenRes.access_token;
-            req.session.discord.expiry = new Date(Date.now() + (tokenRes.expires_in * 1000));
-            req.session.discord.refresh_token = tokenRes.refresh_token;
-            next();
+            if (tokenRes.statusCode === 200) {
+                req.session.discord.access_token = tokenRes.body.access_token;
+                req.session.discord.expiry = new Date(Date.now() + (tokenRes.body.expires_in * 1000));
+                req.session.discord.refresh_token = tokenRes.body.refresh_token;
+                next();
+            }
+            else {
+                res.redirect("/api/unauth");
+            }
         });
 }
 
@@ -77,8 +82,7 @@ function getToken(code) {
         })).toString(),
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         parse: "json"
-    })
-        .then(res => res.body);
+    });
 }
 
 function refreshToken(refresh_token) {
@@ -95,8 +99,7 @@ function refreshToken(refresh_token) {
         })).toString(),
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         parse: "json"
-    })
-        .then(res => res.body);
+    });
 }
 
 function revokeToken(access_token, refresh_token) {
