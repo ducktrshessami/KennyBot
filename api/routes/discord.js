@@ -6,7 +6,12 @@ module.exports = function (router) {
         res.redirect(discord.authUrl + `&state=${req.session.discord.state}`);
     });
 
-    router.get("/api/auth", function (req, res) {
+    router.get("/api/auth", discord.preAuth, function (req, res) {
 
+    });
+
+    router.get("/api/unauth", function (req, res) {
+        req.session.regenerate();
+        res.status(401).redirect(process.env.API_REDIRECT + "?error=1");
     });
 };
