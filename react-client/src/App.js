@@ -6,23 +6,29 @@ import {
 } from "react-router-dom";
 
 import Home from "./pages/Home";
+
+import Footer from "./components/Footer";
+
 import './App.css';
 
 
 class App extends Component {
   componentDidMount() {
-    
+
   }
 
   render() {
     return (
-      <Router>
-        <Switch>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </Router >
+      <div className="App">
+        <Router>
+          <Switch>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+          <Footer />
+        </Router >
+      </div>
     );
   }
 }
