@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.Playlist.belongsTo(models.Guild);
+      models.Playlist.hasMany(models.Song, { onDelete: "cascade" });
     }
   };
   Playlist.init({
