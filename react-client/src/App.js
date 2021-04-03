@@ -7,6 +7,8 @@ import {
 import toast from "./utils/toast";
 
 import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Logout from "./pages/Logout";
 
 import Footer from "./components/Footer";
 
@@ -34,9 +36,9 @@ class App extends Component {
       <div className="App">
         <Router>
           <Switch>
-            <Route path="/">
-              <Home />
-            </Route>
+            <Route path="/login" component={Login} />
+            <Route path="/logout" component={Logout} />
+            <Route path="/" component={Home} />
           </Switch>
           <Footer />
         </Router >
