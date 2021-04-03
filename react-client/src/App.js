@@ -9,8 +9,8 @@ import Home from "./pages/Home";
 
 import Footer from "./components/Footer";
 
+import "materialize-css/dist/css/materialize.min.css";
 import './App.css';
-
 
 class App extends Component {
   componentDidMount() {
