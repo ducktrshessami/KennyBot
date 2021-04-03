@@ -1,3 +1,5 @@
+const hash = require("./hash");
+
 const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.CLIENT_REDIRECT}&response_type=code&scope=identify%20guilds`
 
 function preLogin(req, res, next) {
@@ -5,6 +7,7 @@ function preLogin(req, res, next) {
         res.redirect(process.env.API_REDIRECT);
     }
     else {
+        req.session.discord.state = hash(req.session.id);
         next();
     }
 }
