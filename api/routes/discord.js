@@ -21,7 +21,9 @@ module.exports = function (router) {
             parse: "json"
         })
             .then(tokenRes => {
-
+                req.session.discord.access_token = tokenRes.access_token;
+                req.session.discord.expiry = new Date(Date.now() + (tokenRes.expires_in * 1000));
+                req.session.discord.refresh_token = tokenRes.refresh_token;
             });
     });
 
