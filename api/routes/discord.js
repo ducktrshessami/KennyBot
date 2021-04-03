@@ -19,7 +19,7 @@ module.exports = function (router) {
         });
     });
 
-    router.get("/api/auth", discord.preAuth, function (req, res) {
+    router.get("/auth", discord.preAuth, function (req, res) {
         phin({
             url: "https://discord.com/api/oauth2/token",
             method: "post",
