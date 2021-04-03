@@ -19,6 +19,7 @@
     "express-cycle": "github:ducktrshessami/express-cycle",
     "express-session": "^1.17.1",
     "ffmpeg-static": "^4.3.0",
+    "memorystore": "^1.6.6",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "phin": "^3.5.1",
