@@ -17,6 +17,7 @@
     "discord-bot": "github:ducktrshessami/discord-bot",
     "express": "^4.17.1",
     "express-cycle": "github:ducktrshessami/express-cycle",
+    "express-session": "^1.17.1",
     "ffmpeg-static": "^4.3.0",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
