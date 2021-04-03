@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true
+    },
+    order: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     sequelize,
