@@ -35,7 +35,7 @@ function authCheck(req, res, next) {
         refreshCheck(req, res, next);
     }
     else {
-        res.status(401).redirect(process.env.API_REDIRECT + "?status=1");
+        res.status(401).end();
     }
 }
 
@@ -121,9 +121,15 @@ function revokeHelper(token, type) {
 
 function preLogout(req, res, next) {
     revokeToken(req.session.discord.access_token, req.session.discord.refresh_token)
-        .then(() => {
-            next();
-        });
+        .then(() => next());
+}
+
+function getUser(access_token) {
+    return phin({
+        url: "https://discord.com/api/users/@me",
+        headers: { Authorization: `Bearer ${access_token}` },
+        parse: "json"
+    });
 }
 
 module.exports = {
@@ -138,5 +144,6 @@ module.exports = {
     getToken,
     refreshToken,
     revokeToken,
-    preLogout
+    preLogout,
+    getUser
 };
