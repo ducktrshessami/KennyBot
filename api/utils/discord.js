@@ -54,24 +54,74 @@ function refreshCheck(req, res, next) {
 }
 
 function refresh(req, res, next) {
-    phin({
+    refreshToken(req.session.discord.refresh_token)
+        .then(tokenRes => {
+            req.session.discord.access_token = tokenRes.access_token;
+            req.session.discord.expiry = new Date(Date.now() + (tokenRes.expires_in * 1000));
+            req.session.discord.refresh_token = tokenRes.refresh_token;
+            next();
+        });
+}
+
+function getToken(code) {
+    return phin({
+        url: "https://discord.com/api/oauth2/token",
+        method: "post",
+        data: (new URLSearchParams({
+            client_id: process.env.CLIENT_ID,
+            client_secret: process.env.CLIENT_SECRET,
+            grant_type: "authorization_code",
+            code: code,
+            redirect_uri: process.env.CLIENT_REDIRECT,
+            scope: scope
+        })).toString(),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        parse: "json"
+    })
+        .then(res => res.body);
+}
+
+function refreshToken(refresh_token) {
+    return phin({
         url: "https://discord.com/api/oauth2/token",
         method: "post",
         data: (new URLSearchParams({
             client_id: process.env.CLIENT_ID,
             client_secret: process.env.CLIENT_SECRET,
             grant_type: "refresh_token",
-            refresh_token: req.session.discord.refresh_token,
+            refresh_token: refresh_token,
             redirect_uri: process.env.CLIENT_REDIRECT,
-            scope: discord.scope
+            scope: scope
         })).toString(),
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         parse: "json"
     })
-        .then(tokenRes => {
-            req.session.discord.access_token = tokenRes.body.access_token;
-            req.session.discord.expiry = new Date(Date.now() + (tokenRes.body.expires_in * 1000));
-            req.session.discord.refresh_token = tokenRes.body.refresh_token;
+        .then(res => res.body);
+}
+
+function revokeToken(access_token, refresh_token) {
+    return Promise.all([
+        revokeHelper(access_token, "access_token"),
+        revokeHelper(refresh_token, "refresh_token")
+    ]);
+}
+
+function revokeHelper(token, type) {
+    return phin({
+        url: "https://discord.com/api/oauth2/token/revoke",
+        method: "post",
+        data: (new URLSearchParams({
+            token: token,
+            token_type_hint: type
+        })).toString(),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        parse: "json"
+    });
+}
+
+function preLogout(req, res, next) {
+    revokeToken(req.session.discord.access_token, req.session.discord.refresh_token)
+        .then(() => {
             next();
         });
 }
@@ -84,5 +134,9 @@ module.exports = {
     authCheck,
     refresh,
     init,
-    refreshCheck
+    refreshCheck,
+    getToken,
+    refreshToken,
+    revokeToken,
+    preLogout
 };
