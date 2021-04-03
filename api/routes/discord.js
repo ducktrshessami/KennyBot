@@ -7,7 +7,22 @@ module.exports = function (router) {
     });
 
     router.get("/api/auth", discord.preAuth, function (req, res) {
+        phin({
+            url: "https://discord.com/api/oauth2/token",
+            method: "post",
+            data: {
+                client_id: process.env.CLIENT_ID,
+                client_secret: process.env.CLIENT_SECRET,
+                grant_type: "authorization_code",
+                code: req.query.code,
+                redirect_uri: process.env.CLIENT_REDIRECT,
+                scope: discord.scope
+            },
+            parse: "json"
+        })
+            .then(tokenRes => {
 
+            });
     });
 
     router.get("/api/unauth", function (req, res) {
