@@ -32,15 +32,24 @@ function preAuth(req, res, next) {
 
 function authCheck(req, res, next) {
     if (req.session.discord.access_token) {
-        if ((new Date(req.session.discord.expiry)) - Date.now()) {
-            refresh(req, res, next);
-        }
-        else {
-            next();
-        }
+        refreshCheck(req, res, next);
     }
     else {
         res.status(401).redirect(process.env.API_REDIRECT + "?status=1");
+    }
+}
+
+function refreshCheck(req, res, next) {
+    if (req.session.discord.access_token) {
+        if ((new Date(req.session.discord.expiry)) - Date.now() > 0) {
+            next();
+        }
+        else {
+            refresh(req, res, next);
+        }
+    }
+    else {
+        next();
     }
 }
 
@@ -74,5 +83,6 @@ module.exports = {
     scope,
     authCheck,
     refresh,
-    init
+    init,
+    refreshCheck
 };

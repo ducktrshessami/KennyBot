@@ -2,6 +2,10 @@ const phin = require("phin");
 const discord = require("../utils/discord");
 
 module.exports = function (router) {
+    router.get("/api/authorized", discord.refreshCheck, function (req, res) {
+        res.status(200).json({ authorized: Boolean(req.session.discord.access_token) });
+    });
+
     router.get("/api/user", discord.authCheck, function (req, res) {
         res.end();
     });
