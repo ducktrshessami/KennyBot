@@ -2,6 +2,7 @@ const express = require("express");
 const Cycle = require("express-cycle");
 const session = require("express-session");
 const MemoryStore = require("memorystore")(session);
+const discord = require("./utils/discord");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -18,6 +19,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+app.use(discord.init);
 app.use(require("./routes"));
 app.use(require("./public"));
 

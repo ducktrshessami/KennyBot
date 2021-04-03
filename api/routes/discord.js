@@ -2,6 +2,10 @@ const phin = require("phin");
 const discord = require("../utils/discord");
 
 module.exports = function (router) {
+    router.get("/api/user", discord.authCheck, function (req, res) {
+        res.end();
+    });
+
     router.get("/api/login", discord.preLogin, function (req, res) {
         res.redirect(discord.authUrl + `&state=${req.session.discord.state}`);
     });
@@ -21,9 +25,10 @@ module.exports = function (router) {
             parse: "json"
         })
             .then(tokenRes => {
-                req.session.discord.access_token = tokenRes.access_token;
-                req.session.discord.expiry = new Date(Date.now() + (tokenRes.expires_in * 1000));
-                req.session.discord.refresh_token = tokenRes.refresh_token;
+                req.session.discord.access_token = tokenRes.body.access_token;
+                req.session.discord.expiry = new Date(Date.now() + (tokenRes.body.expires_in * 1000));
+                req.session.discord.refresh_token = tokenRes.body.refresh_token;
+                res.status(200).redirect(process.env.API_REDIRECT + "?status=0");
             });
     });
 
@@ -32,7 +37,7 @@ module.exports = function (router) {
             if (err) {
                 console.error(err);
             }
-            res.status(401).redirect(process.env.API_REDIRECT + "?error=1");
+            res.status(401).redirect(process.env.API_REDIRECT + "?status=2");
         });
     });
 };
