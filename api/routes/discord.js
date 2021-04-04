@@ -14,7 +14,7 @@ module.exports = function (router) {
             if (err) {
                 console.error(err);
             }
-            res.status(200).redirect(process.env.API_REDIRECT);
+            res.status(200).redirect(process.env.API_REDIRECT + "?status=0");
         });
     });
 
