@@ -1,4 +1,4 @@
-const db = require("../../models");
+const db = require("../models");
 
 function initUser(userData) {
     return db.User.findByPk(userData.id)

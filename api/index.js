@@ -2,7 +2,7 @@ const express = require("express");
 const Cycle = require("express-cycle");
 const session = require("express-session");
 const MemoryStore = require("memorystore")(session);
-const discord = require("./utils/discord");
+const discord = require("../utils/discord");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
