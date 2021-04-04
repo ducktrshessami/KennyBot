@@ -14,9 +14,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   User.init({
-    id: DataTypes.STRING,
-    username: DataTypes.STRING,
-    discriminator: DataTypes.INTEGER,
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    discriminator: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     avatar: DataTypes.STRING
   }, {
     sequelize,
