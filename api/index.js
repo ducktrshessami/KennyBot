@@ -2,7 +2,7 @@ const express = require("express");
 const Cycle = require("express-cycle");
 const session = require("express-session");
 const MemoryStore = require("memorystore")(session);
-const discord = require("../utils/discord");
+const auth = require("./middleware/auth");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -19,7 +19,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
-app.use(discord.init);
+app.use(auth.init);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(require("./routes"));
