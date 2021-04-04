@@ -1,4 +1,5 @@
 const db = require("../models");
+const discord = require("./discord");
 
 function initUser(userData) {
     return db.User.findByPk(userData.id)
@@ -12,6 +13,28 @@ function initUser(userData) {
         })
 }
 
+function getAuthGuilds(access_token) {
+    return Promise.all([
+        discord.getUserGuilds(access_token),
+        db.Guild.findAll({
+            attributes: [
+                "id",
+                "name",
+                "icon",
+                "ownerId"
+            ]
+        })
+    ])
+        .then(([guildRes, kennyGuilds]) => {
+            if (guildRes.statusCode === 200) {
+                return guildRes.body
+                    .filter(userGuild => kennyGuilds.some(kennyGuild => userGuild.id === kennyGuild.id))
+                    .map(({ id, name, icon, owner }) => ({ id, name, icon, owner }));
+            }
+        });
+}
+
 module.exports = {
-    initUser
+    initUser,
+    getAuthGuilds
 };

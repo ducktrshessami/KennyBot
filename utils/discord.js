@@ -135,6 +135,14 @@ function getUser(access_token) {
     });
 }
 
+function getUserGuilds(access_token) {
+    return phin({
+        url: "https://discord.com/api/users/@me/guilds",
+        headers: { Authorization: `Bearer ${access_token}` },
+        parse: "json"
+    });
+}
+
 module.exports = {
     authUrl,
     preLogin,
@@ -148,5 +156,6 @@ module.exports = {
     refreshToken,
     revokeToken,
     preLogout,
-    getUser
+    getUser,
+    getUserGuilds
 };
