@@ -14,8 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   UserAction.init({
-    id: DataTypes.UUID,
-    action: DataTypes.STRING
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
+    action: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'UserAction',
