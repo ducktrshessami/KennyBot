@@ -1,4 +1,4 @@
-const discord = require("../utils/discord");
+const discord = require("../../utils/discord");
 
 module.exports = function (router) {
     router.get("/api/authorized", discord.refreshCheck, function (req, res) {

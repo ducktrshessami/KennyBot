@@ -1,5 +1,5 @@
-const discord = require("../utils/discord");
-const user = require("../utils/user");
+const discord = require("../../utils/discord");
+const user = require("../../utils/user");
 
 module.exports = function (router) {
     router.get("/api/user", discord.authCheck, function (req, res) {
