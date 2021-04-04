@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     icon: DataTypes.STRING,
-    ownerId: {
+    ownerID: {
       type: DataTypes.STRING,
       allowNull: false
     }
