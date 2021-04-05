@@ -2,6 +2,7 @@ const phin = require("phin");
 
 const scope = "identify guilds";
 const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.CLIENT_REDIRECT}&response_type=code&scope=${scope}`;
+const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=3468352&scope=bot`;
 
 function getToken(code) {
     return phin({
@@ -74,6 +75,7 @@ function getUserGuilds(access_token) {
 }
 
 module.exports = {
+    inviteUrl,
     authUrl,
     scope,
     getToken,

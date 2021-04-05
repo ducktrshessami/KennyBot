@@ -43,4 +43,8 @@ module.exports = function (router) {
             res.status(401).redirect(process.env.API_REDIRECT + "?status=2");
         });
     });
+
+    router.get("/invite", function (req, res) {
+        res.redirect(discord.inviteUrl);
+    });
 };

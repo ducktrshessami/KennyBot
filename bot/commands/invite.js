@@ -1,7 +1,8 @@
 const { Command, utils } = require("discord-bot");
+const { inviteUrl } = require("../../utils/discord");
 
 module.exports = new Command("invite", function (message) {
-    utils.sendVerbose(message.channel, `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=3468352&scope=bot`)
+    utils.sendVerbose(message.channel, inviteUrl)
         .catch(console.error);
 }, {
     usage: "@kennybot invite",

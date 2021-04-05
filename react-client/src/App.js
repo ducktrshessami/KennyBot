@@ -10,6 +10,7 @@ import API from "./utils/API";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
+import Invite from "./pages/Invite";
 
 import Footer from "./components/Footer";
 
@@ -53,6 +54,7 @@ class App extends Component {
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
+            <Route path="/invite" component={Invite} />
             <Route path="/" component={Home} />
           </Switch>
           <Footer />
