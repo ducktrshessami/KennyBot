@@ -1,7 +1,7 @@
 const rollParser = require("roll-parser"); // Dice rolls
 const config = require("../../config/dice.json");
 
-const maxDice = 10000; // Hard limit
+const maxDice = process.env.BOT_MAXDICE || config.maxDice; // Hard limit
 const operators = ['+', '-']; // Operators to parse
 
 function roll(query) { // Roll dice
@@ -158,12 +158,12 @@ function generateReply(user, result, secondValue, explode) { // Generate the res
         full += "\nModifier: `" + result.modifier + "`";
     }
     if (result.minNat == result.maxNat) { // You suck
-        reply += " " + config.neutral;
+        reply += " " + config.message.neutral;
     }
     else if (!explode) {
         switch (result.natural) { // Crit
-            case result.maxNat: reply += " " + config.success; break;
-            case result.minNat: reply += " " + config.failure; break;
+            case result.maxNat: reply += " " + config.message.success; break;
+            case result.minNat: reply += " " + config.message.failure; break;
             default:
         }
     }
