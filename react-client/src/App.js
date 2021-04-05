@@ -5,6 +5,7 @@ import {
   Switch
 } from "react-router-dom";
 import toast from "./utils/toast";
+import API from "./utils/API";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -16,8 +17,11 @@ import "materialize-css/dist/css/materialize.min.css";
 import './App.css';
 
 class App extends Component {
+  state = {}
+
   componentDidMount() {
     this.handleStatus();
+    this.getAuth();
   }
 
   handleStatus() {
@@ -29,6 +33,17 @@ class App extends Component {
       case "2": toast("Failed to authorize", 1); break;
       default:
     }
+  }
+
+  getAuth() {
+    API.getUser()
+      .then(user => {
+        if (user) {
+          this.setState({
+            user: user
+          });
+        }
+      });
   }
 
   render() {
