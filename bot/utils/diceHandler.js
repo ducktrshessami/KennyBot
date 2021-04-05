@@ -1,51 +1,50 @@
 const rollParser = require("roll-parser"); // Dice rolls
 
+const maxDice = 10000; // Hard limit
 const operators = ['+', '-']; // Operators to parse
 
-exports.maxDice = 10000;
-
-exports.roll = function roll(query) { // Roll dice
+function roll(query) { // Roll dice
     var parse = parseQuery(query);
     if (parse) {
         return rollParse(parse);
     }
 }
 
-exports.advantage = function advantage(query) { // Roll with advantage
+function advantage(query) { // Roll with advantage
     var parse = parseQuery(query);
     if (parse) {
         return [rollParse(parse), rollParse(parse)].sort((a, b) => b.value - a.value);
     }
 }
 
-exports.disadvantage = function disadvantage(query) { // Roll with disadvantage
+function disadvantage(query) { // Roll with disadvantage
     var parse = parseQuery(query);
     if (parse) {
         return [rollParse(parse), rollParse(parse)].sort((a, b) => a.value - b.value);
     }
 }
 
-exports.exploding = function exploding(query) { // Roll exploding dice
+function exploding(query) { // Roll exploding dice
     var parse = parseQuery(query);
     if (parse) {
         return rollParse(parse, true);
     }
 }
 
-exports.hits = function hits(query) { // Roll dice with a threshold
+function hits(query) { // Roll dice with a threshold
     var parse = rollParser.parse(query);
     if (parse && parse.success) {
-        
+
     }
 }
 
-exports.stat = function stat(count) { // Roll a single stat
+function stat(count) { // Roll a single stat
     if (count <= exports.maxDice) {
         return rollStat(count);
     }
 }
 
-exports.stats = function stats(count) { // Roll six stats
+function stats(count) { // Roll six stats
     if (count <= exports.maxDice) {
         var results = [];
         for (let i = 0; i < 6; i++) {
@@ -148,3 +147,14 @@ function rollStat(count) { // Best three of nd6, reroll 1s once
     }
     return results.sort((a, b) => b - a).slice(0, 3).reduce((a, b) => a + b);
 }
+
+module.exports = {
+    maxDice,
+    roll,
+    advantage,
+    disadvantage,
+    exploding,
+    hits,
+    stat,
+    stats
+};
