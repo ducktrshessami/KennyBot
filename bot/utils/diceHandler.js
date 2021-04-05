@@ -1,4 +1,5 @@
 const rollParser = require("roll-parser"); // Dice rolls
+const config = require("../../config/dice.json");
 
 const maxDice = 10000; // Hard limit
 const operators = ['+', '-']; // Operators to parse
@@ -149,6 +150,7 @@ function rollStat(count) { // Best three of nd6, reroll 1s once
 }
 
 module.exports = {
+    config,
     maxDice,
     roll,
     advantage,
