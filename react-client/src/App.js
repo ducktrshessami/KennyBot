@@ -48,7 +48,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App white-text">
         <Router>
           <Switch>
             <Route path="/login" component={Login} />
