@@ -1,6 +1,10 @@
-.btn-login {
+.btn.btn-login {
     background-color: #7289DA;
     border-radius: 3px;
+}
+
+.btn.btn-login:hover {
+    background-color: #4e5d94;
 }
 
 .btn-login-logo {
