@@ -3,6 +3,6 @@
     border-radius: 3px;
 }
 
-.btn.btn-invite:hover {
+.btn.btn-invite:hover, .btn.btn-invite:focus {
     background-color: #6b767e;
 }
