@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.Song.belongsTo(models.Playlist);
+      models.Song.hasOne(models.Queue, { onDelete: "cascade" });
     }
   };
   Song.init({

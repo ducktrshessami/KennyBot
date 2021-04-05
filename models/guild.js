@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       models.Guild.hasMany(models.Playlist, { onDelete: "cascade" });
       models.Guild.hasMany(models.UserAction, { onDelete: "cascade" });
+      models.Guild.hasMany(models.Queue, { onDelete: "cascade" });
     }
   };
   Guild.init({

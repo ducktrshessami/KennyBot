@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.Queue.belongsTo(models.Guild);
+      models.Queue.belongsTo(models.Song);
     }
   };
   Queue.init({
