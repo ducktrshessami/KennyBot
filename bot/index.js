@@ -17,7 +17,8 @@ catch {
 }
 
 // Special tailored help command
-commands.push(helpCmd(commands));
+// commands.push(helpCmd(commands));
+commands.sort();
 
 config.token = process.env.BOT_TOKEN || config.token;
 client = new DiscordBot(config, commands);

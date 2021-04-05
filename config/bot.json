@@ -2,6 +2,7 @@
     "token": null,
     "admin": [],
     "generateCmd": {
+        "help": true,
         "prefix": true
     }
 }
