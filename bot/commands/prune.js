@@ -1,19 +1,21 @@
 const { Command, utils } = require("discord-bot");
 
-function getFilteredMessages(channel, filterIDs) {
-
+function getFilteredMessages(channel, filterIDs, limit) {
+    return channel.messages.cache
+        .filter(message => (Date.now() - message.createdAt < 1209600000) && filterIDs.includes(message.author.id))
+        .last(limit);
 }
 
 module.exports = new Command("prune", function (message, args) {
     let count = Number(args[1]);
-    if (count && count <= 100) {
+    if (count && count > 0 && count <= 100) {
         let targets = count;
         let filterIDs = args.slice(2)
             .join(" ")
             .match(/<@[0-9]+>|<@![0-9]+>/g)
             .map(mention => mention.match(/[0-9]+/)[0]);
         if (filterIDs.length) {
-            targets = getFilteredMessages(message.channel, filterIDs);
+            targets = getFilteredMessages(message.channel, filterIDs, count);
         }
         message.channel.bulkDelete(targets, true)
             .then(deleted => {
