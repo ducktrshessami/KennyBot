@@ -3,6 +3,6 @@ import "./InviteButton.css";
 
 export default function InviteButton() {
     return (
-        <Link className="btn btn-invite" to="/invite">Invite KennyBot to your server</Link>
+        <Link className="btn btn-invite" to="/invite" target="_blank">Invite KennyBot to your server</Link>
     );
 };
