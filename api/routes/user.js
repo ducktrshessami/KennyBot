@@ -19,16 +19,7 @@ module.exports = function (router) {
             .catch(console.error);
     });
 
-    router.get("/api/user/guilds", auth.authCheck, function (req, res) {
-        user.getAuthGuilds(req.session.discord.access_token)
-            .then(guilds => {
-                if (guilds) {
-                    res.status(200).json(guilds);
-                }
-                else {
-                    res.status(401).end();
-                }
-            })
-            .catch(console.error);
+    router.get("/api/user/guilds", auth.authCheck, auth.authGuilds, function (req, res) {
+        res.status(200).json(req.authGuilds);
     });
 };

@@ -1,5 +1,6 @@
 const hash = require("../../utils/hash");
 const { refreshToken, revokeToken } = require("../../utils/discord");
+const { getAuthGuilds } = require("../../utils/user");
 
 function init(req, res, next) {
     if (!req.session.discord) {
@@ -70,6 +71,23 @@ function preLogout(req, res, next) {
         .then(() => next());
 }
 
+function authGuilds(req, res, next) {
+    getAuthGuilds(req.session.discord.access_token)
+        .then(guilds => {
+            if (guilds) {
+                req.authGuilds = guilds;
+                next();
+            }
+            else {
+                res.status(401).end();
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).end();
+        });
+}
+
 module.exports = {
     init,
     preLogin,
@@ -77,5 +95,6 @@ module.exports = {
     preLogout,
     authCheck,
     refreshCheck,
-    refresh
+    refresh,
+    authGuilds
 };
