@@ -1,5 +1,10 @@
 const API_ORIGIN = "http://localhost:3001";
 
+const API = {
+    getUser,
+    getUserGuilds
+};
+
 function resJSON(res) {
     if (res.status === 200) {
         return res.json();
@@ -16,7 +21,4 @@ function getUserGuilds() {
         .then(resJSON);
 }
 
-export default {
-    getUser,
-    getUserGuilds
-};
+export default API;
