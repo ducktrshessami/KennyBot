@@ -14,7 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Queue.init({
-    id: DataTypes.UUID
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    }
   }, {
     sequelize,
     modelName: 'Queue',
