@@ -12,7 +12,7 @@ module.exports = new Command("roll", function (message, args) {
             .catch(console.log);
     }
     else {
-        utils.sendVerbose(message.channel, `${this.usage}\n${this.subtitle}`)
+        utils.sendVerbose(message.channel, `\`${this.usage}\`\n${this.subtitle}`)
             .catch(console.log);
     }
 }, {
