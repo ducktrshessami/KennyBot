@@ -26,7 +26,7 @@ module.exports = new Command("poll", function (message) {
                     else {
                         response += `${top.map(result => result.emoji).join(' ')} tied with \`${top[0].votes}\` ${top[0].votes === 1 ? "vote" : "votes"}`;
                     }
-                    return utils.sendVerbose(message.channel, response);
+                    return Promise.all([utils.sendVerbose(message.channel, response), message.unpin()]);
                 }
             })
             .catch(console.error);
