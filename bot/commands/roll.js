@@ -18,5 +18,6 @@ module.exports = new Command("roll", function (message, args) {
 }, {
     usage: "@kennybot roll [die count]d<sides>[modifiers]",
     description: "Rolls dice. Defaults to a d20 if nothing is specified",
-    subtitle: `Max dice count is ${maxDice}`
+    subtitle: `Max dice count is ${maxDice}`,
+    aliases: ["r", "rolll", "rol", "d20", "1d20"]
 });
