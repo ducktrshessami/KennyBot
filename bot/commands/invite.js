@@ -2,7 +2,7 @@ const { Command, utils } = require("discord-bot");
 const { inviteUrl } = require("../../utils/discord");
 
 module.exports = new Command("invite", function (message) {
-    utils.sendVerbose(message.channel, inviteUrl)
+    utils.sendVerbose(message.channel, `${message.author} ${inviteUrl}`)
         .catch(console.error);
 }, {
     usage: "@kennybot invite",

@@ -4,11 +4,11 @@ const { maxDice, stat } = require("../utils/diceHandler");
 module.exports = new Command("stat", function (message, args) {
     let count = Number(args[1]) || 4, result;
     if (result = stat(count)) {
-        utils.sendVerbose(message.channel, "<@" + message.author.id + "> `" + result + "`")
+        utils.sendVerbose(message.channel, `${message.author} \`${result}\``)
             .catch(console.log);
     }
     else {
-        utils.sendVerbose(message.channel, `\`${this.usage}\`\n${this.subtitle}`)
+        utils.sendVerbose(message.channel, `${message.author}\n\`${this.usage}\`\n${this.subtitle}`)
             .catch(console.log);
     }
 }, {

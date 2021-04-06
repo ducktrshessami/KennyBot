@@ -29,7 +29,7 @@ module.exports = new Command("prune", function (message, args) {
             });
     }
     else {
-        utils.sendVerbose(message.channel, `${this.usage}\n${this.subtitle}`)
+        utils.sendVerbose(message.channel, `${message.author}\n\`${this.usage}\`\n${this.subtitle}`)
             .catch(console.log);
     }
 }, {

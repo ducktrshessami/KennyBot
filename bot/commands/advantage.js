@@ -4,11 +4,11 @@ const { maxDice, advantage, generateReply } = require("../utils/diceHandler");
 module.exports = new Command("advantage", function (message, args) {
     let query = args.slice(1).join("") || "d20", results;
     if (results = advantage(query)) {
-        utils.sendVerbose(message.channel, generateReply(message.author.id, results[0], results[1].value))
+        utils.sendVerbose(message.channel, generateReply(message.author, results[0], results[1].value))
             .catch(console.log);
     }
     else {
-        utils.sendVerbose(message.channel, `\`${this.usage}\`\n${this.subtitle}`)
+        utils.sendVerbose(message.channel, `${message.author}\n\`${this.usage}\`\n${this.subtitle}`)
             .catch(console.log);
     }
 }, {
