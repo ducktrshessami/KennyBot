@@ -102,7 +102,7 @@ function parseQuery(query) { // Parse a query into rolls and modifiers
 }
 
 function dupeNumber(obj, key, n = 2) { // Find the number of dupes there are
-    return obj[key + " (" + n + ")"] ? dupeNumber(obj, key, n + 1) : n;
+    return obj[`${key} (${n})`] ? dupeNumber(obj, key, n + 1) : n;
 }
 
 function diceRoller(dice, explode) { // Actually roll the dice
@@ -124,7 +124,7 @@ function rollParse(parse, explode = false) { // Roll all dice from a parsed quer
         results.minNat += current.min;
         results.maxNat += current.max;
         if (results.rolls[current.query]) {
-            results.rolls[current.query + " (" + dupeNumber(results.rolls) + ")"] = foo;
+            results.rolls[`${current.query} (${dupeNumber(results.rolls)})`] = foo;
         }
         else {
             results.rolls[current.query] = foo;
@@ -150,12 +150,12 @@ function rollStat(count) { // Best three of nd6, reroll 1s once
 }
 
 function generateReply(user, result, secondValue, explode) { // Generate the response for dice rolls
-    var reply = "<@" + user + "> rolled a `" + result.value + "`", full = "";
+    var reply = `${user} rolled a \`${result.value}\``, full = "";
     if (result.modifier || result.natural == result.maxNat || result.natural == result.minNat) { // Only show natural value if it's significant
-        reply += "\nNatural: `" + result.natural + "`";
+        reply += `\nNatural: \`${result.natural}\``;
     }
     if (result.modifier) {
-        full += "\nModifier: `" + result.modifier + "`";
+        full += `\nModifier: \`${result.modifier}\``;
     }
     if (result.minNat == result.maxNat) { // You suck
         reply += " " + config.message.neutral;
@@ -168,10 +168,10 @@ function generateReply(user, result, secondValue, explode) { // Generate the res
         }
     }
     if (secondValue || secondValue === 0) { // Advantage/disadvantage
-        reply += "\nSecondary roll: `" + secondValue + "`";
+        reply += `\nSecondary roll: \`${secondValue}\``;
     }
     for (let dice in result.rolls) { // Individual rolls
-        full += "\n`" + dice + (dice[0] == '-' ? " = -" : " = ") + result.rolls[dice].reduce((a, b) => a + b) + "`: `" + result.rolls[dice].join(", ") + "`";
+        full += `\n\`${dice}${dice[0] == '-' ? " = -" : " = "}${result.rolls[dice].reduce((a, b) => a + b)}\`: \`${result.rolls[dice].join(", ")}\``;
     }
     return reply.length + full.length < 200 ? reply + full : reply;
 }
