@@ -10,10 +10,13 @@ module.exports = new Command("prune", function (message, args) {
     let count = Number(args[1]);
     if (count && count > 0 && count <= 100) {
         let targets = count;
-        let filterIDs = args.slice(2)
+        let filterIDs = (args.slice(2)
             .join(" ")
-            .match(/<@[0-9]+>|<@![0-9]+>/g)
-            .map(mention => mention.match(/[0-9]+/)[0]);
+            .match(/<@[0-9]+>|<@![0-9]+>/g) || [])
+            .map(mention => {
+                let id = mention.match(/[0-9]+/);
+                return id ? id[0] : null;
+            });
         if (filterIDs.length) {
             targets = getFilteredMessages(message.channel, filterIDs, count);
         }
