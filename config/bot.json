@@ -9,10 +9,5 @@
         "poll": {
             "duration": 86400000
         }
-    },
-    "resOptions": {
-        "default": {
-            "servers": []
-        }
     }
 }
