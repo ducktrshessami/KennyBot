@@ -11,7 +11,7 @@ catch {
     console.warn("Could not parse env BOT_DEFRESLIST as JSON");
 }
 
-module.exports = new Response("kenny", undefined, undefined, function (message) {
+module.exports = new Response(["kenny"], undefined, undefined, function (message) {
     utils.sendVerbose(message.channel, this.client.emojis.cache.random().toString())
         .catch(console.error);
 }, {
