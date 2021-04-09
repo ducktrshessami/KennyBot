@@ -12,7 +12,7 @@ catch {
     console.warn("Could not parse env BOT_DRAGONS as JSON");
 }
 
-module.exports = new Response(["imagine"], "Just imagine", undefined, cooldown(60000, function (message, response) {
+module.exports = new Response(["imagine"], "Just imagine", undefined, cooldown(config.resOptions.cooldown, function (message, response) {
     utils.sendVerbose(message.channel, response)
         .catch(console.error);
 }), {

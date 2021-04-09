@@ -11,6 +11,7 @@
         }
     },
     "resOptions": {
+        "cooldown": 60000,
         "imagine": {
             "dragons": []
         }
