@@ -1,6 +1,7 @@
 const DiscordBot = require("discord-bot");
 const config = require("../config/bot.json");
 const commands = require("./commands");
+const responses = require("./responses");
 const helpCmd = require("./helpCmd");
 const initGuild = require("./utils/initGuild");
 
@@ -21,7 +22,7 @@ catch {
 commands.sort();
 
 config.token = process.env.BOT_TOKEN || config.token;
-client = new DiscordBot(config, commands);
+client = new DiscordBot(config, commands, responses);
 
 // Event handlers
 client.on("ready", function () {
