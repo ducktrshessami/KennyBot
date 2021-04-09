@@ -9,5 +9,10 @@
         "poll": {
             "duration": 86400000
         }
+    },
+    "resOptions": {
+        "imagine": {
+            "dragons": []
+        }
     }
 }
