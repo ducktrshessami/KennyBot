@@ -7,7 +7,8 @@ const pageTemplates = {
         "invite",
         "poll",
         "prune",
-        "prefix"
+        "prefix",
+        "help"
     ],
     Dice: [
         "advantage",
@@ -25,10 +26,6 @@ const pageTemplates = {
 };
 
 module.exports = function (commandList) {
-    for (let section in pageTemplates) {
-        pageTemplates[section].sort();
-    }
-
     const pages = Object.keys(pageTemplates)
         .map(template => ({
             options: new MessageEmbed({
@@ -44,12 +41,37 @@ module.exports = function (commandList) {
                         }
                     })
                     .filter(line => line)
+                    .sort()
                     .join("\n")
             })
         }));
 
     return new Command("help", function (message, args) {
-        utils.sendPages(message.channel, pages, config.cmdOptions.help.ms)
-            .catch(console.error);
+        if (args[1]) {
+            let target = commandList.find(command => command.name.toLowerCase() === args[1].toLowerCase());
+            if (target) {
+                utils.sendVerbose(message.channel, [
+                    message.author.toString(),
+                    `\`${target.usage}\``,
+                    target.description,
+                    target.subtitle
+                ]
+                    .filter(line => line)
+                    .join("\n")
+                )
+                    .catch(console.error);
+            }
+            else {
+                utils.sendVerbose(message.channel, `Could not find command \`${args[1]}\``)
+                    .catch(console.error);
+            }
+        }
+        else {
+            utils.sendPages(message.channel, pages, config.cmdOptions.help.ms)
+                .catch(console.error);
+        }
+    }, {
+        usage: "@kennybot help [command]",
+        description: "Display a command list or a specific command's info"
     });
 };
