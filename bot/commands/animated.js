@@ -19,5 +19,6 @@ module.exports = new Command("animated", function (message, args) {
 }, {
     admin: true,
     usage: "@kennybot animated <emoji names>",
-    description: "Get the id of an animated emoji"
+    description: "Get the id of an animated emoji",
+    aliases: ["anim"]
 });
