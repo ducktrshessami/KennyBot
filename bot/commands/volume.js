@@ -8,7 +8,7 @@ module.exports = new Command("volume", function (message, args) {
         vol = Math.max(0, Math.min(1.5, vol));
         db.Guild.findByPk(message.guild.id)
             .then(guild => guild.update({ volume: vol }))
-            .then(() => changeVolume(message.guild, vol))
+            .then(() => changeVolume(this.client, message.guild.id, vol))
             .then(() => utils.sendVerbose(message.channel, `Volume updated to \`${vol}\``))
             .catch(console.error);
     }
