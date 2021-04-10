@@ -33,7 +33,8 @@ module.exports = (sequelize, DataTypes) => {
     volume: {
       type: DataTypes.FLOAT,
       defaultValue: 1
-    }
+    },
+    prefix: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Guild',
