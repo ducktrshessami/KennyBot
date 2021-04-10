@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
     ownerID: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    volume: {
+      type: DataTypes.FLOAT,
+      defaultValue: 1
     }
   }, {
     sequelize,
