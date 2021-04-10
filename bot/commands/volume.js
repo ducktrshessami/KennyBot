@@ -15,5 +15,8 @@ module.exports = new Command("volume", function (message, args) {
             .catch(console.error);
     }
 }, {
-    aliases: ["vol"]
+    aliases: ["vol"],
+    usage: "@kennybot volume <value>",
+    description: "Change the volume of the music player",
+    subtitle: "Value is truncated to range from `0` to `1.5`"
 });
