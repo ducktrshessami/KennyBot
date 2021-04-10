@@ -12,5 +12,6 @@ module.exports = new Command("leave", function (message) {
     }
 }, {
     usage: "@kennybot leave",
-    description: "Disconnects from this server's voice channels"
+    description: "Disconnects from this server's voice channels",
+    aliases: ["stop"]
 });

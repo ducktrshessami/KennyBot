@@ -6,5 +6,6 @@ module.exports = new Command("invite", function (message) {
         .catch(console.error);
 }, {
     usage: "@kennybot invite",
-    description: "Send a link to invite KennyBot to a server"
+    description: "Send a link to invite KennyBot to a server",
+    aliases: ["inv"]
 });
