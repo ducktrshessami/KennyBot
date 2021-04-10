@@ -2,6 +2,9 @@
     "token": null,
     "admin": [],
     "cmdOptions": {
+        "help": {
+            "ms": 60000
+        },
         "poll": {
             "duration": 86400000
         }
