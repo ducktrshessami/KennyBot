@@ -1,6 +1,18 @@
 const path = require("path");
 
 const priority = [
+    "bless",
+    "crit",
+    "fuck",
+    "imagine",
+    "imagineDragons",
+    "left",
+    "owo",
+    "puy",
+    "right",
+    "sleep",
+    "uwu",
+    "yup",
     "default"
 ];
 
