@@ -4,7 +4,6 @@ const config = require("../config/bot.json");
 
 const pageTemplates = {
     General: [
-        "invite",
         "poll",
         "prune",
         "prefix",
@@ -21,7 +20,9 @@ const pageTemplates = {
     Music: [
         "join",
         "leave",
-        "volume"
+        "volume",
+        "pause",
+        "resume"
     ]
 };
 
