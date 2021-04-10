@@ -11,5 +11,6 @@ module.exports = new Command("leave", function (message) {
             .catch(console.error);
     }
 }, {
-
+    usage: "@kennybot leave",
+    description: "Disconnects from this server's voice channels"
 });

@@ -11,5 +11,6 @@ module.exports = new Command("join", function (message) {
             .catch(console.error);
     }
 }, {
-
+    usage: "@kennybot join",
+    description: "Joins the user's voice channel"
 });
