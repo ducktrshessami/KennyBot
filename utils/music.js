@@ -2,12 +2,12 @@ module.exports = {
     changeVolume
 };
 
-function findGuild(client, guildID) {
-    return client.guilds.cache.get(guildID);
+function findGuild(guildID) {
+    return process.bot.guilds.cache.get(guildID);
 }
 
-function changeVolume(client, guildID, volume) {
-    let guild = findGuild(client, guildID);
+function changeVolume(guildID, volume) {
+    let guild = findGuild(guildID);
     if (guild && guild.voice.connection && guild.voice.connection.dispatcher) {
         guild.voice.connection.dispatcher.setVolume(volume);
     }
