@@ -1,5 +1,5 @@
 const { Command, utils } = require("discord-bot");
-const { maxDice, stat } = require("../utils/diceHandler");
+const { maxDice, stat } = require("../utils/dice");
 
 module.exports = new Command("stat", function (message, args) {
     let count = Number(args[1]) || 4, result;

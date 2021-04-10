@@ -1,5 +1,5 @@
 const { Command, utils } = require("discord-bot");
-const { maxDice, disadvantage, generateReply } = require("../utils/diceHandler");
+const { maxDice, disadvantage, generateReply } = require("../utils/dice");
 
 module.exports = new Command("disadvantage", function (message, args) {
     let query = args.slice(1).join("") || "d20", results;

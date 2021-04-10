@@ -1,5 +1,5 @@
 const { Command, utils } = require("discord-bot");
-const { maxDice, exploding, generateReply } = require("../utils/diceHandler");
+const { maxDice, exploding, generateReply } = require("../utils/dice");
 
 module.exports = new Command("exploding", function (message, args) {
     let query = args.slice(1).join("") || "d20", result;
