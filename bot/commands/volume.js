@@ -1,6 +1,6 @@
 const { Command, utils } = require("discord-bot");
 const db = require("../../models");
-const { changeVolume } = require("../utils/music");
+const { changeVolume } = require("../../utils/music");
 
 module.exports = new Command("volume", function (message, args) {
     let vol = Number(args[1]);
