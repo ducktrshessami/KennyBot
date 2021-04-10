@@ -1,7 +1,7 @@
 const { Command, utils } = require("discord-bot");
 
 module.exports = new Command("join", function (message) {
-    if (message.member.voice.channel && !message.member.voice.channel.members.has(client.user.id)) {
+    if (message.member.voice.channel && !message.member.voice.channel.members.has(this.client.user.id)) {
         message.member.voice.channel.join()
             .then(connection => utils.sendVerbose(message.channel, `Connected to \`${connection.channel.name}\``))
             .catch(console.error);
