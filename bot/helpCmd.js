@@ -26,27 +26,8 @@ const pageTemplates = {
 };
 
 module.exports = function (commandList) {
-    const pages = Object.keys(pageTemplates)
-        .map(template => ({
-            options: new MessageEmbed({
-                title: `${template} Commands:`,
-                description: pageTemplates[template]
-                    .map(cmdName => {
-                        let target = commandList.find(command => command.name.toLowerCase() === cmdName.toLowerCase());
-                        if (target) {
-                            return `**${target.name}:** ${target.description}`;
-                        }
-                        else {
-                            return "";
-                        }
-                    })
-                    .filter(line => line)
-                    .sort()
-                    .join("\n")
-            })
-        }));
-
-    return new Command("help", function (message, args) {
+    let pages;
+    commandList.push(new Command("help", function (message, args) {
         if (args[1]) {
             let target = commandList.find(command => command.name.toLowerCase() === args[1].toLowerCase());
             if (target) {
@@ -73,5 +54,25 @@ module.exports = function (commandList) {
     }, {
         usage: "@kennybot help [command]",
         description: "Display a command list or a specific command's info"
-    });
+    }));
+
+    pages = Object.keys(pageTemplates)
+        .map(template => ({
+            options: new MessageEmbed({
+                title: `${template} Commands:`,
+                description: pageTemplates[template]
+                    .map(cmdName => {
+                        let target = commandList.find(command => command.name.toLowerCase() === cmdName.toLowerCase());
+                        if (target) {
+                            return `**${target.name}:** ${target.description}`;
+                        }
+                        else {
+                            return "";
+                        }
+                    })
+                    .filter(line => line)
+                    .sort()
+                    .join("\n")
+            })
+        }));
 };
