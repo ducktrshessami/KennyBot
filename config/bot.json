@@ -1,10 +1,6 @@
 {
     "token": null,
     "admin": [],
-    "generateCmd": {
-        "help": true,
-        "prefix": true
-    },
     "cmdOptions": {
         "poll": {
             "duration": 86400000
