@@ -5,11 +5,11 @@ module.exports = new Command("disadvantage", function (message, args) {
     let query = args.slice(1).join("") || "d20", results;
     if (results = disadvantage(query)) {
         utils.sendVerbose(message.channel, generateReply(message.author, results[0], results[1].value))
-            .catch(console.log);
+            .catch(console.error);
     }
     else {
         utils.sendVerbose(message.channel, `${message.author}\n\`${this.usage}\`\n${this.subtitle}`)
-            .catch(console.log);
+            .catch(console.error);
     }
 }, {
     usage: "@kennybot disadvantage [die count]d<sides>[modifiers]",

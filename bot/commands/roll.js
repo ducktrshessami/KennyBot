@@ -5,11 +5,11 @@ module.exports = new Command("roll", function (message, args) {
     let query = args.slice(1).join("") || "d20", result;
     if (result = roll(query)) {
         utils.sendVerbose(message.channel, generateReply(message.author.id, result))
-            .catch(console.log);
+            .catch(console.error);
     }
     else {
         utils.sendVerbose(message.channel, `${message.author}\n\`${this.usage}\`\n${this.subtitle}`)
-            .catch(console.log);
+            .catch(console.error);
     }
 }, {
     usage: "@kennybot roll [die count]d<sides>[modifiers]",

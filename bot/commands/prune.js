@@ -33,7 +33,7 @@ module.exports = new Command("prune", function (message, args) {
     }
     else {
         utils.sendVerbose(message.channel, `${message.author}\n\`${this.usage}\`\n${this.subtitle}`)
-            .catch(console.log);
+            .catch(console.error);
     }
 }, {
     usage: "@kennybot prune <number> [user]",

@@ -5,11 +5,11 @@ module.exports = new Command("exploding", function (message, args) {
     let query = args.slice(1).join("") || "d20", result;
     if (result = exploding(query)) {
         utils.sendVerbose(message.channel, generateReply(message.author, result, null, true))
-            .catch(console.log);
+            .catch(console.error);
     }
     else {
         utils.sendVerbose(message.channel, `${message.author}\n\`${this.usage}\`\n${this.subtitle}`)
-            .catch(console.log);
+            .catch(console.error);
     }
 }, {
     usage: "@kennybot exploding [die count]d<sides>[modifiers]",

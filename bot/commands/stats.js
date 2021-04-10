@@ -5,11 +5,11 @@ module.exports = new Command("stat", function (message, args) {
     let count = Number(args[1]) || 4, results;
     if (results = stats(count)) {
         utils.sendVerbose(message.channel, `${message.author} \`${results}\``)
-            .catch(console.log);
+            .catch(console.error);
     }
     else {
         utils.sendVerbose(message.channel, `${message.author}\n\`${this.usage}\`\n${this.subtitle}`)
-            .catch(console.log);
+            .catch(console.error);
     }
 }, {
     usage: "@kennybot stat [dice count]",
