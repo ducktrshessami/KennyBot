@@ -1,6 +1,5 @@
 import { useHistory } from "react-router-dom";
 import LoginButton from "../../components/LoginButton";
-import API from "../../utils/API";
 
 export default function Home(props) {
     const history = useHistory();
