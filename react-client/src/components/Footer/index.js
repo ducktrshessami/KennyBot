@@ -3,10 +3,11 @@ import {
     Route,
     Switch
 } from "react-router-dom";
+import "./Footer.css";
 
 export default function Footer(props) {
     return (
-        <footer>
+        <footer className="nqb-bg">
             <div className="center row">
                 <div className="col s12 m8 l6 offset-m2 offset-l3 row">
                     <span className="col s6">
