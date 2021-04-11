@@ -56,11 +56,11 @@ class App extends Component {
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
-            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/dashboard" render={() => <Dashboard user={this.state.user} />} />
             <Route path="/disclaimer" component={Disclaimer} />
-            <Route path="/" component={Home} />
+            <Route path="/" render={() => <Home user={this.state.user} />} />
           </Switch>
-          <Footer />
+          <Footer user={this.state.user} />
         </Router >
       </div>
     );
