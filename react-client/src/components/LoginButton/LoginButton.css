@@ -8,5 +8,8 @@
 }
 
 .btn-login-logo {
-    max-height: 100%;
+    content: url("./Discord-Logo-White.svg");
+    height: 1.25rem;
+    vertical-align: text-top;
+    margin-left: 0.5ch;
 }
