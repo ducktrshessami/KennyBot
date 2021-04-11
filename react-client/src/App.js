@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import Disclaimer from "./pages/Disclaimer";
 
 import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
 
 import "materialize-css/dist/css/materialize.min.css";
 import "./App.css";
@@ -53,6 +54,7 @@ class App extends Component {
     return (
       <div className="App dbnb-bg white-text">
         <Router>
+          {this.state.user ? <Navbar /> : undefined}
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
