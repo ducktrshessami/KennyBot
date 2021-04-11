@@ -1,11 +1,9 @@
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 export default function Dashboard(props) {
-    const history = useHistory();
-    if (!props.user) {
-        history.push("/");
-    }
     return (
-        <main></main>
+        <main>
+            {!props.user ? <Redirect to="/" /> : undefined}
+        </main>
     );
 };

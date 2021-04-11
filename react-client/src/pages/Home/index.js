@@ -1,13 +1,10 @@
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import LoginButton from "../../components/LoginButton";
 
 export default function Home(props) {
-    const history = useHistory();
-    if (props.user) {
-        history.push("/dashboard")
-    }
     return (
         <main>
+            {props.user ? <Redirect to="/dashboard" /> : undefined}
             <LoginButton />
         </main>
     );
