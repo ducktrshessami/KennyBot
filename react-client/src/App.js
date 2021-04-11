@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import Dashboard from "./pages/Dashboard";
+import Disclaimer from "./pages/Disclaimer";
 
 import Footer from "./components/Footer";
 
@@ -55,6 +56,7 @@ class App extends Component {
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
             <Route path="/dashboard" component={Dashboard} />
+            <Route path="/disclaimer" component={Disclaimer} />
             <Route path="/" component={Home} />
           </Switch>
           <Footer />
