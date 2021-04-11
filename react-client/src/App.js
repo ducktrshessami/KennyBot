@@ -16,7 +16,8 @@ import Disclaimer from "./pages/Disclaimer";
 import Footer from "./components/Footer";
 
 import "materialize-css/dist/css/materialize.min.css";
-import './App.css';
+import "./App.css";
+import "./Discord.css";
 
 class App extends Component {
   state = {}
@@ -50,7 +51,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App white-text">
+      <div className="App dbnb-bg white-text">
         <Router>
           <Switch>
             <Route path="/login" component={Login} />
