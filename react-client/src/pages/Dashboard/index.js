@@ -20,13 +20,11 @@ export default class Dashboard extends Component {
     render() {
         return (
             <main>
-                <div className="dashboard">
-                    {!this.props.user && this.props.ready ? <Redirect to="/" /> : undefined}
-                    <h4>Servers</h4>
-                    <ul className="server-list row">
-                        {this.state.guilds.map(guild => <ServerCard key={guild.id} {...guild} />)}
-                    </ul>
-                </div>
+                {!this.props.user && this.props.ready ? <Redirect to="/" /> : undefined}
+                <h4 className="dashboard-header">Servers</h4>
+                <ul id="server-list" className="row">
+                    {this.state.guilds.map(guild => <ServerCard key={guild.id} {...guild} />)}
+                </ul>
             </main>
         );
     }
