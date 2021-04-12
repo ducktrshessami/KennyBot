@@ -14,7 +14,6 @@
   "homepage": "https://github.com/ducktrshessami/KennyBot#readme",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
-    "cors": "^2.8.5",
     "discord-bot": "github:ducktrshessami/discord-bot",
     "express": "^4.17.1",
     "express-cycle": "github:ducktrshessami/express-cycle",
