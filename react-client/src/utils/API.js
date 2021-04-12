@@ -1,7 +1,4 @@
-const API_ORIGIN = "https://discord-kennybot.herokuapp.com";
-
 const API = {
-    ORIGIN: API_ORIGIN,
     getUser,
     getUserGuilds
 };
@@ -13,12 +10,12 @@ function resJSON(res) {
 }
 
 function getUser() {
-    return fetch(API_ORIGIN + "/api/user")
+    return fetch("/api/user")
         .then(resJSON);
 }
 
 function getUserGuilds() {
-    return fetch(API_ORIGIN + "/api/user/guilds")
+    return fetch("/api/user/guilds")
         .then(resJSON);
 }
 
