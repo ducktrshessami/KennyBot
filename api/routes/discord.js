@@ -6,11 +6,11 @@ module.exports = function (router) {
         res.status(200).json({ authorized: Boolean(req.session.discord.access_token) });
     });
 
-    router.get("/login", auth.preLogin, function (req, res) {
+    router.get("/api/login", auth.preLogin, function (req, res) {
         res.redirect(discord.authUrl + `&state=${req.session.discord.state}`);
     });
 
-    router.get("/logout", auth.preLogout, function (req, res) {
+    router.get("/api/logout", auth.preLogout, function (req, res) {
         req.session.regenerate(function (err) {
             if (err) {
                 console.error(err);
@@ -19,7 +19,7 @@ module.exports = function (router) {
         });
     });
 
-    router.get("/auth", auth.preAuth, function (req, res) {
+    router.get("/api/auth", auth.preAuth, function (req, res) {
         discord.getToken(req.query.code)
             .then(tokenRes => {
                 if (tokenRes.statusCode === 200) {
