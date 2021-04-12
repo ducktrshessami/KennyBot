@@ -1,0 +1,18 @@
+nav {
+    background-color: #9C2B2F!important;
+}
+
+.logout {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.logo {
+    height: 3rem;
+    vertical-align: middle;
+    margin-right: 0.75rem;
+}
+
+.dash-link {
+    padding: 0 0.75rem 0 0.75rem;
+}

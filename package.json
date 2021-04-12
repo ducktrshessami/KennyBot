@@ -2,7 +2,6 @@
   "name": "kennybot",
   "version": "0.0.1",
   "description": "Another music/dice bot for Discord",
-  "main": "./src/index.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/ducktrshessami/KennyBot.git"
@@ -15,19 +14,39 @@
   "homepage": "https://github.com/ducktrshessami/KennyBot#readme",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
-    "@octokit/rest": "^18.0.11",
     "discord-bot": "github:ducktrshessami/discord-bot",
-    "ffmpeg-static": "^4.2.7",
-    "node-fetch": "^2.6.1",
+    "express": "^4.17.1",
+    "express-cycle": "github:ducktrshessami/express-cycle",
+    "express-session": "^1.17.1",
+    "ffmpeg-static": "^4.3.0",
+    "memorystore": "^1.6.6",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "phin": "^3.5.1",
     "roll-parser": "^2.3.2",
     "scdl-core": "github:ducktrshessami/scdl-core",
-    "ytdl-core": "^4.1.2"
+    "sequelize": "^6.6.2",
+    "with-cooldown": "^1.0.0",
+    "ytdl-core": "^4.5.0"
   },
   "optionalDependencies": {
-    "bufferutil": "^4.0.2",
+    "bufferutil": "^4.0.3",
     "erlpack": "github:discord/erlpack",
-    "libsodium-wrappers": "^0.7.8",
-    "utf-8-validate": "^5.0.3",
+    "libsodium-wrappers": "^0.7.9",
+    "utf-8-validate": "^5.0.4",
     "zlib-sync": "^0.1.7"
-  }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-react": "cd react-client && npm install",
+    "build-react": "cd react-client && npm run build",
+    "start-react": "cd react-client && npm run start",
+    "start": "node server.js"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "sqlite3": "^5.0.2"
+  },
+  "main": "server.js",
+  "keywords": []
 }
