@@ -2,10 +2,6 @@
     border-radius: 3px;
 }
 
-.btn.btn-login:hover, .btn.btn-login:focus {
-    background-color: #4e5d94;
-}
-
 .btn-login-logo {
     content: url("./Discord-Logo-White.svg");
     height: 1.25rem;

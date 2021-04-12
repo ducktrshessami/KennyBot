@@ -6,6 +6,10 @@
     background-color: #7289DA!important;
 }
 
+.blurple-bg.focus-darken:hover, .blurple-bg.focus-darken:focus {
+    background-color: #4e5d94!important;
+}
+
 .greyple-text {
     color: #99AAB5!important;
 }
