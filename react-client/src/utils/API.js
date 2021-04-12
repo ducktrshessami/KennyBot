@@ -1,4 +1,4 @@
-const API_ORIGIN = "http://localhost:3000";
+const API_ORIGIN = "https://discord-kennybot.herokuapp.com";
 
 const API = {
     getUser,
