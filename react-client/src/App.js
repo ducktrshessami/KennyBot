@@ -21,7 +21,7 @@ import "./App.css";
 import "./Discord.css";
 
 class App extends Component {
-  state = {}
+  state = { ready: false }
 
   componentDidMount() {
     this.handleStatus();
@@ -42,11 +42,11 @@ class App extends Component {
   getAuth() {
     API.getUser()
       .then(user => {
+        let newState = { ready: true };
         if (user) {
-          this.setState({
-            user: user
-          });
+          newState.user = user;
         }
+        this.setState(newState);
       });
   }
 
@@ -58,9 +58,9 @@ class App extends Component {
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
-            <Route path="/dashboard" render={() => <Dashboard user={this.state.user} />} />
+            <Route path="/dashboard" render={() => <Dashboard user={this.state.user} ready={this.state.ready} />} />
             <Route path="/disclaimer" component={Disclaimer} />
-            <Route path="/" render={() => <Home user={this.state.user} />} />
+            <Route path="/" render={() => <Home user={this.state.user} ready={this.state.ready} />} />
           </Switch>
           <Footer user={this.state.user} />
         </Router >
