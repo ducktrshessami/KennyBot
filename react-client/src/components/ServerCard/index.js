@@ -1,7 +1,14 @@
-import { Link } from "react-router-dom";
+import "./ServerCard.css";
 
 export default function ServerCard(props) {
     return (
-        <Link className="card" to={`/server/${props.id}`}>{props.name}</Link>
+        <img
+            role="button"
+            onClick={() => props.select(props.id)}
+            className="server-icon circle col s6 m1"
+            src={`https://cdn.discordapp.com/icons/${props.id}/${props.icon}`}
+            alt={`${props.name} icon`}
+            data-tooltip={props.name}
+        />
     );
 };

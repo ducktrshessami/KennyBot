@@ -1,0 +1,9 @@
+.server-icon {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    transition: border-radius 0.2s;
+}
+
+.server-icon:hover, .server-icon:focus {
+    border-radius: 33%;
+}
