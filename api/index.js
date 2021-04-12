@@ -2,6 +2,7 @@ const express = require("express");
 const Cycle = require("express-cycle");
 const session = require("express-session");
 const MemoryStore = require("memorystore")(session);
+const cors = require("cors");
 const auth = require("./middleware/auth");
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+app.use(cors({ origin: process.env.API_CORS || "http://localhost:3000" }));
 app.use(auth.init);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
