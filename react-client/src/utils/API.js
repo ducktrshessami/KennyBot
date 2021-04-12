@@ -1,6 +1,7 @@
 const API_ORIGIN = "https://discord-kennybot.herokuapp.com";
 
 const API = {
+    ORIGIN: API_ORIGIN,
     getUser,
     getUserGuilds
 };

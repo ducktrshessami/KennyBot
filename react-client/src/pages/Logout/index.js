@@ -1,5 +1,7 @@
+import API from "../../utils/API";
+
 export default function Logout() {
-    window.location.replace("http://localhost:3001/logout");
+    window.location.replace(API.ORIGIN + "/logout");
     return (
         <main />
     );
