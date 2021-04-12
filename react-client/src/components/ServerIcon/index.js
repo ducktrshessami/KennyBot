@@ -1,6 +1,6 @@
-import "./ServerCard.css";
+import "./ServerIcon.css";
 
-export default function ServerCard(props) {
+export default function ServerIcon(props) {
     return (
         <img
             role="button"

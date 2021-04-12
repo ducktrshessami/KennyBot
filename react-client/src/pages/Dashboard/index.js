@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Redirect } from "react-router-dom";
 import M from "materialize-css";
-import ServerCard from "../../components/ServerCard";
+import ServerIcon from "../../components/ServerIcon";
 import API from "../../utils/API";
 import "./Dashboard.css";
 
@@ -45,7 +45,7 @@ export default class Dashboard extends Component {
                 {!this.props.user && this.props.ready ? <Redirect to="/" /> : undefined}
                 <h4 className="dashboard-header">Servers</h4>
                 <div id="server-list" className="row">
-                    {this.state.guilds.map(guild => <ServerCard key={guild.id} select={id => this.selectGuild(id)} {...guild} />)}
+                    {this.state.guilds.map(guild => <ServerIcon key={guild.id} select={id => this.selectGuild(id)} {...guild} />)}
                 </div>
             </main>
         );
