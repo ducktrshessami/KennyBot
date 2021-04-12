@@ -38,5 +38,5 @@
     ]
   },
   "proxy": "http://localhost:3001",
-  "homepage": "https://ducktrshessami.github.io/kennybot"
+  "homepage": "https://discord-kennybot.herokuapp.com"
 }
