@@ -22,7 +22,10 @@ import "./App.css";
 import "./Discord.css";
 
 class App extends Component {
-  state = { ready: false }
+  state = {
+    ready: false,
+    guilds: []
+  }
 
   componentDidMount() {
     this.handleStatus();
