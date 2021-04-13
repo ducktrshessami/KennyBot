@@ -30,7 +30,6 @@ module.exports = function (router) {
                                 response.voice = {
                                     channel: guild.voice.channel.name,
                                     users: guild.voice.channel.members
-                                        .filter(member => member.user.id !== process.bot.user.id)
                                         .map(member => member.nickname || member.user.username)
                                 };
                             }
