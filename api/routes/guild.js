@@ -26,7 +26,7 @@ module.exports = function (router) {
                                 volume: dbGuild.volume,
                                 playlists: dbGuild.Playlists
                             };
-                            if (guild.voice) {
+                            if (guild.voice && guild.voice.channel) {
                                 response.voice = {
                                     channel: guild.voice.channel.name,
                                     users: guild.voice.channel.members
