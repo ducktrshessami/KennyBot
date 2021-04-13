@@ -35,17 +35,13 @@ export default class Dashboard extends Component {
             .catch(console.error);
     }
 
-    selectGuild(guildID) {
-
-    }
-
     render() {
         return (
             <main>
                 {!this.props.user && this.props.ready ? <Redirect to="/" /> : undefined}
                 <h4 className="dashboard-header">Servers</h4>
                 <div id="server-list" className="row">
-                    {this.state.guilds.map(guild => <ServerIcon key={guild.id} select={id => this.selectGuild(id)} {...guild} />)}
+                    {this.state.guilds.map(guild => <ServerIcon key={guild.id} {...guild} />)}
                 </div>
             </main>
         );

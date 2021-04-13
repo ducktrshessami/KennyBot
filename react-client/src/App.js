@@ -12,6 +12,7 @@ import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import Dashboard from "./pages/Dashboard";
 import Disclaimer from "./pages/Disclaimer";
+import Server from "./pages/Server";
 
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -60,6 +61,7 @@ class App extends Component {
             <Route path="/logout" component={Logout} />
             <Route path="/dashboard" render={() => <Dashboard user={this.state.user} ready={this.state.ready} />} />
             <Route path="/disclaimer" component={Disclaimer} />
+            <Route path="/server" render={() => <Server user={this.state.user} ready={this.state.ready} />} />
             <Route path="/" render={() => <Home user={this.state.user} ready={this.state.ready} />} />
           </Switch>
           <Footer user={this.state.user} />
