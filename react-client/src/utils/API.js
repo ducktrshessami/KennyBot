@@ -2,7 +2,8 @@ const API = {
     gotoLogin,
     gotoLogout,
     getUser,
-    getUserGuilds
+    getUserGuilds,
+    getGuildInfo
 };
 
 function gotoLogin() {
@@ -26,6 +27,11 @@ function getUser() {
 
 function getUserGuilds() {
     return fetch("/api/user/guilds")
+        .then(resJSON);
+}
+
+function getGuildInfo(id) {
+    return fetch(`/api/guild/${id}`)
         .then(resJSON);
 }
 
