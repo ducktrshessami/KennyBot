@@ -1,0 +1,13 @@
+.server-wrapper {
+    padding: 2rem;
+}
+
+@media only screen and (min-width: 601px) {
+    .server-wrapper {
+        padding: 3.5rem 4rem 2rem 4rem;
+    }
+
+    .server-container {
+        padding: 1.5rem 1rem 1.5rem 1rem;
+    }
+}
