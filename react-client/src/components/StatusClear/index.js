@@ -1,13 +1,9 @@
-import { Component } from "react";
+import { useLocation } from "react-router-dom";
 
-export default class StatusClear extends Component {
-    componentDidMount() {
-        if (window.location.search) {
-            window.location.search = "";
-        }
+export default function StatusClear() {
+    const location = useLocation();
+    if (location.search) {
+        location.search.replace("");
     }
-
-    render() {
-        return null;
-    }
+    return null;
 };
