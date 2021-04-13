@@ -1,9 +1,30 @@
-.server-icon {
+.server-select {
     margin-top: 1rem;
     margin-bottom: 1rem;
+}
+
+.server-icon {
+    max-width: 100%;
+    height: auto;
     transition: border-radius 0.2s;
 }
 
 .server-icon:hover, .server-icon:focus {
     border-radius: 33%;
+}
+
+.server-name {
+    padding: 0.1rem;
+    word-wrap: break-word;
+    border-radius: 8px;
+    pointer-events: none;
+    transition: opacity 0.2s!important;
+}
+
+.server-name.active {
+    opacity: 100%;
+}
+
+.server-name.disabled {
+    opacity: 0%;
 }

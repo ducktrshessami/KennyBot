@@ -41,14 +41,16 @@ class App extends Component {
   }
 
   getAuth() {
-    API.getUser()
-      .then(user => {
+    Promise.all([API.getUser(), API.getUserGuilds()])
+      .then(([user, guilds]) => {
         let newState = { ready: true };
-        if (user) {
+        if (user && guilds) {
           newState.user = user;
+          newState.guilds = guilds;
         }
         this.setState(newState);
-      });
+      })
+      .catch(console.error);
   }
 
   render() {
@@ -59,10 +61,10 @@ class App extends Component {
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
-            <Route path="/dashboard" render={() => <Dashboard user={this.state.user} ready={this.state.ready} />} />
+            <Route path="/dashboard" render={() => <Dashboard {...this.state} />} />
             <Route path="/disclaimer" component={Disclaimer} />
-            <Route path="/server" render={() => <Server user={this.state.user} ready={this.state.ready} />} />
-            <Route path="/" render={() => <Home user={this.state.user} ready={this.state.ready} />} />
+            <Route path="/server" render={() => <Server {...this.state} />} />
+            <Route path="/" render={() => <Home {...this.state} />} />
           </Switch>
           <Footer user={this.state.user} />
         </Router >

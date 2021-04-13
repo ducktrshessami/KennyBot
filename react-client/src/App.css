@@ -7,8 +7,3 @@
 main {
     flex: 1 0 auto;
 }
-
-.material-tooltip {
-    background-color: #18191C;
-    border-radius: 8px;
-}
