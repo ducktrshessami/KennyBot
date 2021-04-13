@@ -15,10 +15,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Song.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     url: {
       type: DataTypes.STRING,
-      allowNull: false,
-      primaryKey: true
+      allowNull: false
     },
     order: {
       type: DataTypes.INTEGER,
