@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 export default function Server(props) {
     return (
         <main>
-            <Link to="/dashboard" className="greyple-bg white-text btn">❮ Back</Link>
+            <section>
+                <Link to="/dashboard" className="greyple-bg focus-darken white-text btn">❮ Back</Link>
+            </section>
         </main>
     );
 };
