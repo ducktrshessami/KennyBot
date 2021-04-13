@@ -27,5 +27,7 @@ app.use(require("./public"));
 
 module.exports = app.listen(PORT, function () {
     console.log(`API listening on PORT ${PORT}`);
-    cycler.startLoop();
+    if (!process.env.API_NOCYCLE || (process.env.API_NOCYCLE || "").trim().toLowerCase() === "false") {
+        cycler.startLoop();
+    }
 });
