@@ -1,10 +1,12 @@
 import { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
+import VoiceChannel from "../../components/VoiceChannel";
 import API from "../../utils/API";
 import "./Server.css";
 
 export default class Server extends Component {
     state = {
+        ready: false,
         failed: false,
         guild: { name: "" }
     }
@@ -13,6 +15,11 @@ export default class Server extends Component {
         this.handleUrl()
             .then(() => this.getGuildFromDb())
             .catch(console.error);
+    }
+
+    componentDidUpdate() {
+        console.log(this.state);
+        console.log(this.props);
     }
 
     handleUrl() {
@@ -30,7 +37,8 @@ export default class Server extends Component {
                 else {
                     this.setState({
                         ...this.state,
-                        failed: true
+                        failed: true,
+                        ready: true
                     }, resolve);
                 }
             }
@@ -48,7 +56,8 @@ export default class Server extends Component {
                                 guild: {
                                     ...this.state.guild,
                                     ...dbGuild
-                                }
+                                },
+                                ready: true
                             })
                         });
                     }
@@ -61,12 +70,17 @@ export default class Server extends Component {
             <main>
                 {!this.props.user && this.props.ready ? <Redirect to="/" /> : undefined}
                 {this.state.failed && this.props.ready ? <Redirect to="/dashboard" /> : undefined}
-                <section className="server-wrapper">
+                <div className="server-wrapper">
                     <Link to="/dashboard" className="greyple-bg focus-darken white-text btn">❮ Back</Link>
-                    <div className="server-container">
-                        <h4>{this.state.guild.name}</h4>
+                    <div className="server-container row">
+                        <section className="col s12 m6 l4">
+                            <h4>{this.state.guild.name}</h4>
+                            <br />
+                            {this.state.guild.voice ? <VoiceChannel {...this.state.guild.voice} /> : this.state.ready ? <span>Not connected to a voice channel</span> : undefined}
+                        </section>
+                        <section className="col s12 m6 l8"></section>
                     </div>
-                </section>
+                </div>
             </main>
         );
     }
