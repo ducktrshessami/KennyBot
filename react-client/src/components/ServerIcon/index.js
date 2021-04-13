@@ -22,7 +22,7 @@ export default function ServerIcon(props) {
                 onMouseEnter={() => setActive(true)}
                 onMouseLeave={() => setActive(false)}
             />
-            <div className={`server-name ${active ? "active" : "disabled"} dtnqb-bg`}>aaaaaaaaaaaaaaaaaaaaaaaaa</div>
+            <div className={`server-name ${active ? "active" : "disabled"} dtnqb-bg`}>{props.name}</div>
         </div>
     );
 };
