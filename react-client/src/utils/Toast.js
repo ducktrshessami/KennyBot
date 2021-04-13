@@ -1,6 +1,6 @@
 import M from "materialize-css";
 
-export default function toast(message, type = 0) {
+export default function Toast(message, type = 0) {
     return new Promise((resolve, reject) => {
         M.toast({
             html: `
