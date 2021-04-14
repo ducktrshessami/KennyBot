@@ -1,5 +1,5 @@
 .playlist, .playlist > * {
-    border-radius: 6px;
+    border-radius: 6px!important;
 }
 
 .playlist > * {
@@ -8,4 +8,9 @@
 
 .playlist-title {
     transition: background-color 0.2s;
+}
+
+.playlist-title.open {
+    border-bottom-left-radius: 0px!important;
+    border-bottom-right-radius: 0px!important;
 }
