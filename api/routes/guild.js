@@ -10,14 +10,16 @@ module.exports = function (router) {
                     attributes: ["id", "volume"],
                     include: {
                         model: db.Playlist,
-                        order: ["name"],
                         attributes: ["id", "name"],
                         include: {
                             model: db.Song,
-                            order: ["order"],
                             attributes: ["id", "title", "url", "source", "order"]
                         }
-                    }
+                    },
+                    order: [
+                        [db.Playlist, "name"],
+                        [db.Playlist, db.Song, "order"]
+                    ]
                 })
                     .then(dbGuild => {
                         if (dbGuild) {
