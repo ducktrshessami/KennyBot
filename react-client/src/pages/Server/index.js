@@ -84,8 +84,9 @@ export default class Server extends Component {
                             {this.state.guild.voice ? <VoiceChannel {...this.state.guild.voice} /> : this.state.ready ? <h6>Not connected to a voice channel</h6> : undefined}
                         </section>
                         <section className="col s12 m6 l8">
+                            <h5 className="playlist-header">Playlists</h5>
                             <ul>
-                                {this.state.ready && this.state.guild.playlists ? this.state.guild.playlists.map(playlist => <Playlist key={playlist.id} {...playlist} />) : undefined}
+                                {this.state.ready && this.state.guild.playlists ? this.state.guild.playlists.map(playlist => <Playlist key={playlist.id} {...playlist} />) : <h6>This server has no playlists</h6>}
                             </ul>
                         </section>
                     </div>

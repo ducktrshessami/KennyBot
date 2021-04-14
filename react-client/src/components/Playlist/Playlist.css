@@ -1,0 +1,11 @@
+.playlist, .playlist > * {
+    border-radius: 6px;
+}
+
+.playlist > * {
+    padding: 1rem;
+}
+
+.playlist-title {
+    transition: background-color 0.2s;
+}

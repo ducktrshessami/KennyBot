@@ -8,6 +8,11 @@
     margin-left: 1ch;
 }
 
+.playlist-header {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
 @media only screen and (min-width: 601px) {
     .server-wrapper {
         padding: 3.5rem 4rem 2rem 4rem;
@@ -15,5 +20,9 @@
 
     .server-container {
         padding: 1.5rem 1rem 1.5rem 1rem;
+    }
+
+    .playlist-header {
+        margin-bottom: 3rem;
     }
 }
