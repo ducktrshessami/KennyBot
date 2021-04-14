@@ -12,3 +12,19 @@
     border-bottom-left-radius: 0px!important;
     border-bottom-right-radius: 0px!important;
 }
+
+.playlist-arrow {
+    width: 1ch;
+    margin-right: 0.5ch;
+}
+
+.open > .playlist-arrow {
+    margin-left: 0.3ch;
+    margin-right: 0.3ch;
+    writing-mode: vertical-rl;
+}
+
+.song-list {
+    border-top-left-radius: 0px!important;
+    border-top-right-radius: 0px!important;
+}
