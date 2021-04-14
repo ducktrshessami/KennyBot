@@ -2,11 +2,10 @@ import "./Loading.css";
 
 export default function Loading(props) {
     let propClass = props.className || "";
-    let propColor = props.color || "";
     return (
         <div className={`loading-${props.size} ${propClass}`}>
             <div className={`preloader-wrapper ${props.size} active`}>
-                <div className={`spinner-layer ${propColor}-loading`}>
+                <div className={`spinner-layer kenny-loading`}>
                     <div className="circle-clipper left">
                         <div className="circle"></div>
                     </div><div className="gap-patch">
