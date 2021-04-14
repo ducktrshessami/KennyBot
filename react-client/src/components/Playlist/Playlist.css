@@ -2,11 +2,9 @@
     border-radius: 6px!important;
 }
 
-.playlist > * {
-    padding: 1rem;
-}
-
 .playlist-title {
+    margin: 0;
+    padding: 1rem;
     transition: background-color 0.2s;
 }
 
