@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
+import Loading from "../../components/Loading";
 import VoiceChannel from "../../components/VoiceChannel";
 import API from "../../utils/API";
 import "./Server.css";
@@ -74,7 +75,10 @@ export default class Server extends Component {
                     <Link to="/dashboard" className="greyple-bg focus-darken white-text btn">❮ Back</Link>
                     <div className="server-container row">
                         <section className="col s12 m6 l4">
-                            <h4>{this.state.guild.name}</h4>
+                            <h4>
+                                {this.state.guild.name}
+                                {!this.state.ready || !this.props.ready ? <Loading className="server-loader" size="small" /> : undefined}
+                            </h4>
                             <br />
                             {this.state.guild.voice ? <VoiceChannel {...this.state.guild.voice} /> : this.state.ready ? <span>Not connected to a voice channel</span> : undefined}
                         </section>
