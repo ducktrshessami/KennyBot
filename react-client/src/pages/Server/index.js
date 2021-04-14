@@ -2,6 +2,7 @@ import { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import Loading from "../../components/Loading";
 import VoiceChannel from "../../components/VoiceChannel";
+import Playlist from "../../components/Playlist";
 import API from "../../utils/API";
 import "./Server.css";
 
@@ -80,9 +81,13 @@ export default class Server extends Component {
                                 {!this.state.ready || !this.props.ready ? <Loading className="server-loader" size="small" /> : undefined}
                             </h4>
                             <br />
-                            {this.state.guild.voice ? <VoiceChannel {...this.state.guild.voice} /> : this.state.ready ? <span>Not connected to a voice channel</span> : undefined}
+                            {this.state.guild.voice ? <VoiceChannel {...this.state.guild.voice} /> : this.state.ready ? <h6>Not connected to a voice channel</h6> : undefined}
                         </section>
-                        <section className="col s12 m6 l8"></section>
+                        <section className="col s12 m6 l8">
+                            <ul>
+                                {this.state.ready && this.state.guild.playlists ? this.state.guild.playlists.map(playlist => <Playlist key={playlist.id} {...playlist} />) : undefined}
+                            </ul>
+                        </section>
                     </div>
                 </div>
             </main>
