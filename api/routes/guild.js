@@ -15,7 +15,7 @@ module.exports = function (router) {
                         include: {
                             model: db.Song,
                             order: ["order"],
-                            attributes: ["id", "url", "order"]
+                            attributes: ["id", "title", "url", "source", "order"]
                         }
                     }
                 })
