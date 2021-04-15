@@ -12,11 +12,7 @@ export default class Handler extends Component {
                     .then(callback)
                     .catch(console.error);
                     break;
-                case "1": Toast("You gotta log in bro", 1)
-                    .then(callback)
-                    .catch(console.error);
-                    break;
-                case "2": Toast("Failed to authorize", 1)
+                case "1": Toast("Failed to authorize", 1)
                     .then(callback)
                     .catch(console.error);
                     break;

@@ -40,7 +40,7 @@ module.exports = function (router) {
             if (err) {
                 console.error(err);
             }
-            res.status(401).redirect(process.env.API_REDIRECT + "?status=2");
+            res.status(401).redirect(process.env.API_REDIRECT + "?status=1");
         });
     });
 };
