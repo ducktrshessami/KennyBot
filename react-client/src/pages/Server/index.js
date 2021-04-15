@@ -126,7 +126,7 @@ export default class Server extends Component {
                                 <h5>Playlists</h5>
                                 {this.createButton()}
                             </div>
-                            {this.state.creating ? <CreatePlaylist onSuccess={() => this.createSucc()} /> : undefined}
+                            {this.state.creating ? <CreatePlaylist guildId={this.state.guild.id} onSuccess={() => this.createSucc()} onError={() => this.failSucc()} /> : undefined}
                             <ul className="playlist-wrapper">
                                 {this.state.guild.playlists && this.state.guild.playlists.length ? this.state.guild.playlists.map(playlist => <Playlist key={playlist.id} {...playlist} />) : this.state.ready ? <h6>This server has no playlists</h6> : undefined}
                             </ul>
