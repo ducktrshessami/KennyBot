@@ -8,7 +8,7 @@ export default function Playlist(props) {
         <li>
             <div className="playlist">
                 <div className="playlist-title-wrapper">
-                    <div className={`kenny-bg focus-lighten ${active ? "open" : ""}`.trim()} role="button" onClick={() => setActive(!active)}>
+                    <div className={`playlist-title kenny-bg focus-lighten ${active ? "open" : ""}`.trim()} role="button" onClick={() => setActive(!active)}>
                         <i className="minimal-text">&nbsp;</i>
                         <i className="playlist-arrow" />
                         {props.name}
