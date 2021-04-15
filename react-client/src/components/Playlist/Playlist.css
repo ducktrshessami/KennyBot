@@ -9,18 +9,19 @@
     font-size: 1.3rem;
 }
 
-.playlist-title {
-    flex: 1 0 auto;
-}
-
 .playlist-title-wrapper > * {
     padding: 1rem;
 }
 
-/* .open {
-    border-bottom-left-radius: 0px!important;
-    border-bottom-right-radius: 0px!important;
-} */
+.playlist-title {
+    flex: 1 0 auto;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.open .playlist-title {
+    border-bottom-left-radius: 0;
+}
 
 .playlist-arrow {
     content: url("./collapse-arrow.png");
@@ -30,16 +31,25 @@
     margin-right: 0.5ch;
 }
 
-.open > .playlist-arrow {
+.open .playlist-arrow {
     content: url("./collapse-arrow-down.png");
 }
 
-.song-list {
-    border-top-left-radius: 0px!important;
-    border-top-right-radius: 0px!important;
+.playlist-title-menu {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.open .playlist-title-menu {
+    border-bottom-right-radius: 0;
 }
 
 .kebab-menu {
     content: url("./kebab-icon.png");
     height: 1.23rem;
+}
+
+.song-list {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
