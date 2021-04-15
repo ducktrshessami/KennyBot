@@ -21,3 +21,15 @@
 .dark-kenny-bg.focus-lighten:hover, .dark-kenny-bg.focus-lighten:focus {
     background-color: #7d4649!important;
 }
+
+.light-kenny-bg {
+    background-color: #b96a6d!important;
+}
+
+.light-kenny-bg.focus-darken:hover, .light-kenny-bg.focus-darken:focus {
+    background-color: #945457!important;
+}
+
+.light-kenny-bg.focus-lighten:hover, .light-kenny-bg.focus-lighten:focus {
+    background-color: #c7878a!important;
+}
