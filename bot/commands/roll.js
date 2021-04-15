@@ -4,7 +4,7 @@ const { maxDice, roll, generateReply } = require("../utils/dice");
 module.exports = new Command("roll", function (message, args) {
     let query = args.slice(1).join("") || "d20", result;
     if (result = roll(query)) {
-        utils.sendVerbose(message.channel, generateReply(message.author.id, result))
+        utils.sendVerbose(message.channel, generateReply(message.author, result))
             .catch(console.error);
     }
     else {

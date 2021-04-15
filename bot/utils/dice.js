@@ -40,13 +40,13 @@ function hits(query) { // Roll dice with a threshold
 }
 
 function stat(count) { // Roll a single stat
-    if (count <= exports.maxDice) {
+    if (count <= maxDice) {
         return rollStat(count);
     }
 }
 
 function stats(count) { // Roll six stats
-    if (count <= exports.maxDice) {
+    if (count <= maxDice) {
         var results = [];
         for (let i = 0; i < 6; i++) {
             results.push(rollStat(count));
@@ -57,7 +57,7 @@ function stats(count) { // Roll six stats
 
 function customParse(query) { // Modify roll-parser's parse result
     var parse = rollParser.parse(query.substring(operators.includes(query[0])));
-    if (parse && parse.count <= exports.maxDice) {
+    if (parse && parse.count <= maxDice) {
         return {
             query: query,
             positive: query[0] != '-',
