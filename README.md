@@ -10,6 +10,6 @@ I originally named this bot "KennyBot" following an inside joke with some of my 
 
 # Deployment
 
-This bot is deployed privately with [Heroku](https://www.heroku.com/)
+This bot is deployed privately at [discord-kennybot](https://discord-kennybot.herokuapp.com/)
 
 A proper public production deployment of this bot would require different response and config handling
