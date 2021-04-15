@@ -1,0 +1,14 @@
+.new-playlist-input {
+    border-radius: 5px;
+    outline: none;
+    width: 100%;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    font-size: 1.3rem;
+}
+
+@media only screen and (min-width: 601px) {
+    .new-playlist-input {
+        margin-bottom: 1rem;
+    }
+}

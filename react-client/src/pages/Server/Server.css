@@ -38,6 +38,10 @@
     }
 
     .playlist-header {
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
+    }
+    
+    .playlist-wrapper {
+        margin-top: 1rem;
     }
 }

@@ -3,14 +3,17 @@ import { Link, Redirect } from "react-router-dom";
 import Loading from "../../components/Loading";
 import VoiceChannel from "../../components/VoiceChannel";
 import Playlist from "../../components/Playlist";
+import CreatePlaylist from "../../components/CreatePlaylist";
 import API from "../../utils/API";
+import Toast from "../../utils/Toast";
 import "./Server.css";
 
 export default class Server extends Component {
     state = {
         ready: false,
         failed: false,
-        guild: { name: "" }
+        guild: { name: "" },
+        creating: false
     }
 
     componentDidMount() {
@@ -67,6 +70,41 @@ export default class Server extends Component {
         }
     }
 
+    createButton() {
+        if (this.state.creating) {
+            return (
+                <button className="create-playlist-button btn btn-small greyple-bg focus-lighten" onClick={() => this.swapCreateState()}>Cancel</button>
+            );
+        }
+        else {
+            return (
+                <button className="create-playlist-button btn btn-small greyple-bg focus-lighten" onClick={() => this.swapCreateState()}>
+                    +
+                    <span className="hide-on-med-and-up"> Create</span>
+                </button>
+            );
+        }
+    }
+
+    swapCreateState() {
+        this.setState({
+            ...this.state,
+            creating: !this.state.creating
+        });
+    }
+
+    createSucc() {
+        Toast("Success!");
+        this.setState({
+            ...this.state,
+            creating: false
+        });
+    }
+
+    failSucc() {
+        Toast("Failed to create playlist");
+    }
+
     render() {
         return (
             <main>
@@ -86,11 +124,9 @@ export default class Server extends Component {
                         <section className="col s12 m6 l8">
                             <div className="playlist-header">
                                 <h5>Playlists</h5>
-                                <button className="create-playlist-button btn btn-small greyple-bg focus-lighten">
-                                    +
-                                    <span className="hide-on-med-and-up"> Create</span>
-                                </button>
+                                {this.createButton()}
                             </div>
+                            {this.state.creating ? <CreatePlaylist onSuccess={() => this.createSucc()} /> : undefined}
                             <ul className="playlist-wrapper">
                                 {this.state.guild.playlists && this.state.guild.playlists.length ? this.state.guild.playlists.map(playlist => <Playlist key={playlist.id} {...playlist} />) : this.state.ready ? <h6>This server has no playlists</h6> : undefined}
                             </ul>
