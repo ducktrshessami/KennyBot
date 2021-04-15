@@ -43,7 +43,7 @@ module.exports = function (router) {
                     })
                     .catch(err => {
                         console.error(err);
-                        res.status(500);
+                        res.status(500).end();
                     });
             }
             else {
@@ -52,6 +52,23 @@ module.exports = function (router) {
         }
         else {
             res.status(401).end();
+        }
+    });
+
+    router.post("/api/guild/playlist/:guildId", auth.authCheck, auth.authGuilds, function (req, res) {
+        if (req.authGuilds.find(server => server.id === req.params.guildId)) {
+            db.Playlist.create({
+                name: req.body.name,
+                GuildId: req.params.guildId
+            })
+                .then(playlist => res.status(200).json({
+                    id: playlist.id,
+                    name: playlist.name
+                }))
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).end();
+                });
         }
     });
 };

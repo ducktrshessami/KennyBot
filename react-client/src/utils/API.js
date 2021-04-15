@@ -3,7 +3,8 @@ const API = {
     gotoLogout,
     getUser,
     getUserGuilds,
-    getGuildInfo
+    getGuildInfo,
+    createPlaylist
 };
 
 function gotoLogin() {
@@ -32,6 +33,15 @@ function getUserGuilds() {
 
 function getGuildInfo(id) {
     return fetch(`/api/guild/${id}`)
+        .then(resJSON);
+}
+
+function createPlaylist(guildId, playlistName) {
+    return fetch(`/api/guild/playlist/${guildId}`, {
+        method: "post",
+        body: `{"name": "${playlistName}"}`,
+        headers: { "Content-Type": "application/json" }
+    })
         .then(resJSON);
 }
 
