@@ -13,6 +13,10 @@
     margin-bottom: 2rem;
 }
 
+.playlist-wrapper {
+    margin: 0;
+}
+
 @media only screen and (min-width: 601px) {
     .server-wrapper {
         padding: 3.5rem 4rem 2rem 4rem;

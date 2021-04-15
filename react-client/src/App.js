@@ -20,6 +20,7 @@ import Status from "./components/Status";
 import "materialize-css/dist/css/materialize.min.css";
 import "./App.css";
 import "./Discord.css";
+import "./Kenny.css";
 
 class App extends Component {
   state = {

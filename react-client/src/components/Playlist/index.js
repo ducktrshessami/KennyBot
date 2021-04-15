@@ -6,11 +6,19 @@ export default function Playlist(props) {
     const [active, setActive] = useState(false);
     return (
         <li>
-            <div className="playlist card dark-kenny-bg">
-                <h5 role="button" className={`playlist-title ${active ? "open " : ""}card-title kenny-bg focus-lighten`} onClick={() => setActive(!active)}>
-                    <span className="playlist-arrow">❯</span>
-                    {props.name}
-                </h5>
+            <div className="playlist">
+                <div className="playlist-title-wrapper">
+                    <div className={`kenny-bg focus-lighten ${active ? "open" : ""}`.trim()} role="button" onClick={() => setActive(!active)}>
+                        <i className="minimal-text">&nbsp;</i>
+                        <i className="playlist-arrow" />
+                        {props.name}
+                    </div>
+                    <div className="kenny-bg focus-lighten" role="button">▶</div>
+                    <div className="kenny-bg focus-lighten" role="button">
+                        <i className="minimal-text">&nbsp;</i>
+                        <i className="kebab-menu" />
+                    </div>
+                </div>
                 {active ? <SongList songs={props.Songs} /> : undefined}
             </div>
         </li>

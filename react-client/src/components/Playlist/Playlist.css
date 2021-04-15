@@ -1,30 +1,39 @@
-.playlist, .playlist > * {
-    border-radius: 6px!important;
+.playlist {
+    margin-bottom: 1.75rem;
 }
 
-.playlist-title {
-    margin: 0;
+.playlist-title-wrapper {
+    font-size: 1.3rem;
+}
+
+.playlist-title-wrapper > * {
+    display: inline-flex;
     padding: 1rem;
-    transition: background-color 0.2s;
 }
 
-.playlist-title.open {
+/* .open {
     border-bottom-left-radius: 0px!important;
     border-bottom-right-radius: 0px!important;
-}
+} */
 
 .playlist-arrow {
-    width: 1ch;
+    content: url("./collapse-arrow.png");
+    height: 1rem;
+    position: relative;
+    top: 0.1rem;
     margin-right: 0.5ch;
 }
 
 .open > .playlist-arrow {
-    margin-left: 0.3ch;
-    margin-right: 0.3ch;
-    writing-mode: vertical-rl;
+    content: url("./collapse-arrow-down.png");
 }
 
 .song-list {
     border-top-left-radius: 0px!important;
     border-top-right-radius: 0px!important;
+}
+
+.kebab-menu {
+    content: url("./kebab-icon.png");
+    height: 1.23rem;
 }

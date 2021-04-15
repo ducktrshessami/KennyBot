@@ -85,7 +85,7 @@ export default class Server extends Component {
                         </section>
                         <section className="col s12 m6 l8">
                             <h5 className="playlist-header">Playlists</h5>
-                            <ul>
+                            <ul className="playlist-wrapper">
                                 {this.state.guild.playlists && this.state.guild.playlists.length ? this.state.guild.playlists.map(playlist => <Playlist key={playlist.id} {...playlist} />) : this.state.ready ? <h6>This server has no playlists</h6> : undefined}
                             </ul>
                         </section>
