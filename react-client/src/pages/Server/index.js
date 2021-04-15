@@ -84,7 +84,13 @@ export default class Server extends Component {
                             {this.state.guild.voice ? <VoiceChannel {...this.state.guild.voice} /> : this.state.ready ? <h6>Not connected to a voice channel</h6> : undefined}
                         </section>
                         <section className="col s12 m6 l8">
-                            <h5 className="playlist-header">Playlists</h5>
+                            <div className="playlist-header">
+                                <h5>Playlists</h5>
+                                <button className="create-playlist-button btn btn-small greyple-bg focus-lighten">
+                                    +
+                                    <span className="hide-on-med-and-up"> Create</span>
+                                </button>
+                            </div>
                             <ul className="playlist-wrapper">
                                 {this.state.guild.playlists && this.state.guild.playlists.length ? this.state.guild.playlists.map(playlist => <Playlist key={playlist.id} {...playlist} />) : this.state.ready ? <h6>This server has no playlists</h6> : undefined}
                             </ul>

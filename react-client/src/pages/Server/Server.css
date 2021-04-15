@@ -13,6 +13,17 @@
     margin-bottom: 2rem;
 }
 
+.playlist-header > * {
+    display: inline;
+}
+
+.create-playlist-button {
+    margin-left: 2ch;
+    padding: 0 0.75rem!important;
+    position: relative;
+    top: -0.25rem;
+}
+
 .playlist-wrapper {
     margin: 0;
 }
