@@ -11,7 +11,7 @@ export default function ServerIcon(props) {
     }
 
     return (
-        <div className="server-select center col s6 m1">
+        <div className="server-select center col s6 m4 l1">
             <img
                 role="button"
                 className="server-icon circle"
