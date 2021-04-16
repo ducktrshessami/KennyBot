@@ -1,14 +1,49 @@
+.create-playlist {
+    display: flex;
+    flex-direction: row;
+    min-width: 100%;
+}
+
 .new-playlist-input {
     border-radius: 5px;
     outline: none;
-    width: 100%;
+    flex: 1 0 auto;
     margin-bottom: 2rem;
     padding: 1rem;
     font-size: 1.3rem;
 }
 
+.new-playlist-input.invalid {
+    border: red solid 3px;
+}
+
+.new-playlist-counter {
+    pointer-events: none;
+    width: 0%;
+    position: relative;
+    top: 6px;
+    right: 60px;
+}
+
+.invalid + .new-playlist-counter {
+    color: red!important;
+
+}
+
+.create-playlist-submit {
+    margin-left: 1ch;
+    padding: 0 1.5rem!important;
+    font-size: 1.3rem!important;
+}
+
 @media only screen and (min-width: 601px) {
     .new-playlist-input {
         margin-bottom: 1rem;
+    }
+
+    .create-playlist-submit {
+        margin-left: 2ch;
+        position: relative;
+        top: 0.05rem;
     }
 }

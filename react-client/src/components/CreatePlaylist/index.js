@@ -1,11 +1,17 @@
+import { useState } from "react";
 import API from "../../utils/API";
 import "./CreatePlaylist.css";
 
 export default function CreatePlaylist(props) {
+    const [name, setName] = useState("");
+
+    function change(event) {
+        setName(event.target.value.trim());
+    }
+
     function submit(event) {
-        let name = event.target.name.value.trim();
         event.preventDefault();
-        if (name) {
+        if (name && name.length <= 100) {
             API.createPlaylist(props.guildId, name)
                 .then(res => {
                     if (res) {
@@ -21,7 +27,9 @@ export default function CreatePlaylist(props) {
 
     return (
         <form className="create-playlist" onSubmit={submit}>
-            <input name="name" type="text" placeholder="New playlist name" className="new-playlist-input browser-default" />
+            <input id="new-playlist-input" name="name" type="text" placeholder="New playlist name" className={`new-playlist-input browser-default ${name.length > 100 ? "invalid" : undefined}`.trim()} onChange={change} />
+            <span className="new-playlist-counter black-text">{name.length}/100</span>
+            <button type="submit" className="create-playlist-submit btn btn-large blurple-bg focus-lighten">+</button>
         </form>
     );
 };
