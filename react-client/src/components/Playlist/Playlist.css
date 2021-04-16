@@ -3,6 +3,7 @@
 }
 
 .playlist-title-wrapper {
+    position: relative;
     display: flex;
     flex-direction: row;
     min-width: 100%;
