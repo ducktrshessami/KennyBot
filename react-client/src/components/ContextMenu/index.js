@@ -1,4 +1,3 @@
-import { Component, useState } from "react";
 import Option from "./Option";
 import "./ContextMenu.css";
 
