@@ -1,3 +1,5 @@
+import "./Song.css";
+
 export default function Song(props) {
     return (
         <li className="song">
