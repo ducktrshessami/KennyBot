@@ -3,7 +3,9 @@ import "./Song.css";
 export default function Song(props) {
     return (
         <li className="song">
-            {props.title}
+            <div role="button" className="song-title dark-kenny-bg focus-lighten">
+                {props.title}
+            </div>
         </li>
     );
 };

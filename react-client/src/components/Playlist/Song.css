@@ -1,0 +1,22 @@
+.song {
+    display: flex;
+    flex-direction: row;
+    min-width: 100%;
+}
+
+.song:nth-child(even) > * {
+    background-color: #4a1416!important;
+}
+
+.song .focus-lighten:hover, .song .focus-lighten:focus {
+    background-color: #7d4649!important;
+}
+
+.song-title {
+    flex: 1 0 auto;
+    padding: 1rem;
+}
+
+.song:last-child .song-title {
+    border-bottom-left-radius: 6px;
+}
