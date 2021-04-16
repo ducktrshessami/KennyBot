@@ -29,7 +29,7 @@ export default class Server extends Component {
 
     handleUrl() {
         return new Promise((resolve, reject) => {
-            let guildID = ((window.location.hash.match(/server\/[0-9]+/gi) || [""])[0].match(/[0-9]+/g) || [""])[0];
+            let guildID = ((window.location.pathname.match(/server\/[0-9]+/gi) || [""])[0].match(/[0-9]+/g) || [""])[0];
             if (this.props.guilds) {
                 let guild = this.props.guilds.find(server => server.id === guildID);
                 if (guild) {
