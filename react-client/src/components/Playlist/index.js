@@ -1,11 +1,15 @@
 import { createRef, useState } from "react";
 import ContextMenu from "../ContextMenu";
 import SongList from "./SongList";
+import EditForm from "./EditForm";
+import API from "../../utils/API";
+import Toast from "../../utils/Toast";
 import "./Playlist.css";
 
 export default function Playlist(props) {
     const menuRef = createRef();
     const [active, setActive] = useState(false);
+    const [editing, setEditing] = useState(false);
     const menuOptions = [
         {
             name: "Edit",
@@ -18,7 +22,16 @@ export default function Playlist(props) {
     ];
 
     function editPlaylistName() {
+        setEditing(true);
+    }
 
+    function editSucc() {
+        Toast("Success!");
+        setEditing(false);
+    }
+
+    function editFail() {
+        Toast("Failed to update playlist");
     }
 
     function deletePlaylist() {
@@ -32,7 +45,7 @@ export default function Playlist(props) {
                     <div className="playlist-title kenny-bg focus-lighten" role="button" onClick={() => setActive(!active)}>
                         <i className="minimal-text">&nbsp;</i>
                         <i className="playlist-arrow" />
-                        {props.name}
+                        {editing ? <EditForm guildId={props.GuildId} initialValue={props.name} onSuccess={editSucc} onError={editFail} onCancel={() => setEditing(false)} /> : props.name}
                     </div>
                     <div className="kenny-bg focus-lighten" role="button">▶</div>
                     <div className="playlist-title-menu kenny-bg focus-lighten" role="button" ref={menuRef}>
