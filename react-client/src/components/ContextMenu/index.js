@@ -1,10 +1,7 @@
 import { Component, createRef } from "react";
 import Option from "./Option";
+import isDescendent from "../../utils/isDescendent";
 import "./ContextMenu.css";
-
-function isDescendent(child, ancestor) {
-    return child && ancestor ? child === ancestor ? true : child === document.body ? false : isDescendent(child.parentNode, ancestor) : false;
-}
 
 export default class ContextMenu extends Component {
     state = {

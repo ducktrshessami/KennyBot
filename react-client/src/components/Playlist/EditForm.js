@@ -18,7 +18,7 @@ export default function EditForm(props) {
     }
 
     return (
-        <form className="edit-playlist" onSubmit={submit}>
+        <form className="edit-playlist" onSubmit={submit} ref={props.editRef}>
             <input id="edit-playlist-input" value={name} name="name" type="text" placeholder="Playlist name" className={`edit-playlist-input browser-default ${name.trim().length > 100 ? "invalid" : undefined}`.trim()} onChange={change} />
         </form>
     )
