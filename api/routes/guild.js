@@ -10,10 +10,10 @@ module.exports = function (router) {
                     attributes: ["id", "volume"],
                     include: {
                         model: db.Playlist,
-                        attributes: ["id", "name"],
+                        attributes: ["id", "name", "GuildId"],
                         include: {
                             model: db.Song,
-                            attributes: ["id", "title", "url", "source", "order"]
+                            attributes: ["id", "title", "url", "source", "order", "PlaylistId"]
                         }
                     },
                     order: [
