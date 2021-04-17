@@ -3,6 +3,16 @@ const phin = require("phin");
 const scope = "identify guilds";
 const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${process.bot.user.id}&redirect_uri=${process.env.CLIENT_REDIRECT}&response_type=code&scope=${scope}`;
 
+function handleLimit(response, retry, ...params) {
+    if (response.statusCode === 429 && response.body.retry_after) {
+        return new Promise((resolve, reject) => setTimeout(resolve, response.body.retry_after))
+            .then(() => retry(...params));
+    }
+    else {
+        return response;
+    }
+}
+
 function getToken(code) {
     return phin({
         url: "https://discord.com/api/oauth2/token",
@@ -62,7 +72,8 @@ function getUser(access_token) {
         url: "https://discord.com/api/users/@me",
         headers: { Authorization: `Bearer ${access_token}` },
         parse: "json"
-    });
+    })
+        .then(res => handleLimit(res, getUser, access_token));
 }
 
 function getUserGuilds(access_token) {
@@ -70,7 +81,8 @@ function getUserGuilds(access_token) {
         url: "https://discord.com/api/users/@me/guilds",
         headers: { Authorization: `Bearer ${access_token}` },
         parse: "json"
-    });
+    })
+        .then(res => handleLimit(res, getUserGuilds, access_token));
 }
 
 module.exports = {
