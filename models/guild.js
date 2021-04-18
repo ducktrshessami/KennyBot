@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       models.Guild.hasMany(models.Playlist, { onDelete: "cascade" });
       models.Guild.hasMany(models.UserAction, { onDelete: "cascade" });
       models.Guild.hasMany(models.Queue, { onDelete: "cascade" });
+      models.Guild.hasOne(models.State, { onDelete: "cascade" });
     }
   };
   Guild.init({
@@ -29,10 +30,6 @@ module.exports = (sequelize, DataTypes) => {
     ownerID: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    volume: {
-      type: DataTypes.FLOAT,
-      defaultValue: 1
     },
     prefix: DataTypes.STRING
   }, {

@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       models.Song.belongsTo(models.Playlist);
       models.Song.hasOne(models.Queue, { onDelete: "cascade" });
+      models.Song.hasOne(models.State, { onDelete: "set null" });
     }
   };
   Song.init({
