@@ -1,25 +1,27 @@
-import { useState } from "react";
+import { Component, createRef } from "react";
 import "./EditForm.css";
 
-export default function EditForm(props) {
-    const [name, setName] = useState(props.initialValue || "");
+export default class EditForm extends Component {
+    state = { name: this.props.initialValue || "" };
+    inputRef = createRef();
 
-    function change(event) {
-        setName(event.target.value);
+    componentDidMount() {
+        this.inputRef.current.focus();
     }
 
-    function submit(event) {
-
+    change(event) {
+        this.setState({ name: event.target.value });
     }
 
-    function cancel(event) {
+    submit = (event) => {
         event.preventDefault();
-        props.onCancel();
     }
 
-    return (
-        <form className="edit-playlist" onSubmit={submit} ref={props.editRef}>
-            <input id="edit-playlist-input" value={name} name="name" type="text" placeholder="Playlist name" className={`edit-playlist-input browser-default ${name.trim().length > 100 ? "invalid" : undefined}`.trim()} onChange={change} />
-        </form>
-    )
+    render() {
+        return (
+            <form className="edit-playlist" onSubmit={event => this.submit(event)} ref={this.props.editRef}>
+                <input id="edit-playlist-input" value={this.state.name} name="name" type="text" placeholder="Playlist name" className={`edit-playlist-input browser-default ${this.state.name.trim().length > 100 ? "invalid" : undefined}`.trim()} onChange={event => this.change(event)} ref={this.inputRef} />
+            </form>
+        );
+    }
 };
