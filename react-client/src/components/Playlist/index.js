@@ -46,7 +46,7 @@ export default class Playlist extends Component {
 
     editSucc() {
         Toast("Success!");
-        this.refreshServer();
+        this.props.refreshServer();
     }
 
     editFail() {
@@ -75,7 +75,7 @@ export default class Playlist extends Component {
                         <div className="playlist-title kenny-bg focus-lighten" role="button" onClick={event => this.clickActive(event)}>
                             <i className="minimal-text">&nbsp;</i>
                             <i className="playlist-arrow" />
-                            {this.state.editing ? <EditForm guildId={this.props.GuildId} initialValue={this.props.name} onSuccess={() => this.editSucc()} onError={this.editFail} editRef={this.editRef} /> : this.props.name}
+                            {this.state.editing ? <EditForm guildId={this.props.GuildId} playlistId={this.props.id} initialValue={this.props.name} onSuccess={() => this.editSucc()} onError={() => this.editFail()} editRef={this.editRef} /> : this.props.name}
                         </div>
                         <div className="kenny-bg focus-lighten" role="button">▶</div>
                         <div className="playlist-title-menu kenny-bg focus-lighten" role="button" ref={this.menuRef}>

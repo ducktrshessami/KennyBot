@@ -1,4 +1,5 @@
 import { Component, createRef } from "react";
+import API from "../../utils/API";
 import "./EditForm.css";
 
 export default class EditForm extends Component {
@@ -13,8 +14,21 @@ export default class EditForm extends Component {
         this.setState({ name: event.target.value });
     }
 
-    submit = (event) => {
+    submit(event) {
+        let value = event.target.name.value.trim();
         event.preventDefault();
+        if (value) {
+            API.updatePlaylist(this.props.guildId, this.props.playlistId, { name: value })
+                .then(res => {
+                    if (res) {
+                        this.props.onSuccess();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    this.props.onError(err);
+                });
+        }
     }
 
     render() {
