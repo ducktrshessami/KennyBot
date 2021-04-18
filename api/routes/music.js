@@ -22,30 +22,13 @@ module.exports = function (router) {
 
     router.post("/api/play/:guildId/:songId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(guild => guild.id === req.params.guildId)) {
-            db.Song.findByPk(req.params.songId, {
-                include: {
-                    model: db.Playlist,
-                    include: {
-                        model: db.Guild,
-                        include: db.State
-                    }
-                }
-            })
-                .then(song => {
-                    if (song && song.Playlist.Guild.id === req.params.guildId) {
-                        if (music.playURL(req.params.guildId, song, song.Playlist.Guild.State.volume)) {
-                            song.Playlist.Guild.State.update({
-                                SongId: song.id,
-                                playing: true
-                            });
-                            res.status(200).end();
-                        }
-                        else {
-                            res.status(400).end();
-                        }
+            music.playSong(req.params.guildId, req.params.songId)
+                .then(success => {
+                    if (success) {
+                        res.status(200).end();
                     }
                     else {
-                        res.status(404).end();
+                        res.status(400).end();
                     }
                 })
                 .catch(err => {
