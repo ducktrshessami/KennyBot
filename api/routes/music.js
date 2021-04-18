@@ -6,8 +6,8 @@ module.exports = function (router) {
     router.post("/api/volume/:guildId/:volume", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(guild => guild.id === req.params.guildId)) {
             let vol = Math.max(0, Math.min(1.5, req.params.volume));
-            db.Guild.findByPk(req.params.guildId)
-                .then(guild => guild.update({ volume: vol }))
+            db.Guild.findByPk(req.params.guildId, { include: db.State })
+                .then(guild => guild.State.update({ volume: vol }))
                 .then(() => music.changeVolume(req.params.guildId, vol))
                 .then(() => res.status(200).end())
                 .catch(err => {
@@ -25,12 +25,19 @@ module.exports = function (router) {
             db.Song.findByPk(req.params.songId, {
                 include: {
                     model: db.Playlist,
-                    include: db.Guild
+                    include: {
+                        model: db.Guild,
+                        include: db.State
+                    }
                 }
             })
                 .then(song => {
                     if (song && song.Playlist.Guild.id === req.params.guildId) {
-                        if (music.playURL(req.params.guildId, song, song.Playlist.Guild.volume)) {
+                        if (music.playURL(req.params.guildId, song, song.Playlist.Guild.State.volume)) {
+                            song.Playlist.Guild.State.update({
+                                SongId: song.id,
+                                playing: true
+                            });
                             res.status(200).end();
                         }
                         else {

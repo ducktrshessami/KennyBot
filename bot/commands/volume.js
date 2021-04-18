@@ -6,8 +6,8 @@ module.exports = new Command("volume", function (message, args) {
     let vol = Number(args[1]);
     if (vol || vol === 0) {
         vol = Math.max(0, Math.min(1.5, vol));
-        db.Guild.findByPk(message.guild.id)
-            .then(guild => guild.update({ volume: vol }))
+        db.Guild.findByPk(message.guild.id, { include: db.State })
+            .then(guild => guild.State.update({ volume: vol }))
             .then(() => changeVolume(message.guild.id, vol))
             .then(() => utils.sendVerbose(message.channel, `Volume updated to \`${vol}\``))
             .catch(console.error);
