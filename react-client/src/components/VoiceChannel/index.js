@@ -1,4 +1,4 @@
-import Member from "./Listener";
+import Listener from "./Listener";
 import "./VoiceChannel.css";
 
 export default function VoiceChannel(props) {
@@ -10,7 +10,7 @@ export default function VoiceChannel(props) {
                 <b>{props.channel}</b>
             </h5>
             <ul className="browser-default user-list">
-                {props.users.map(user => <Member name={user} />)}
+                {props.users.map(user => <Listener key={user} name={user} />)}
             </ul>
         </article>
     );
