@@ -15,10 +15,27 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   State.init({
-    volume: DataTypes.FLOAT,
-    playing: DataTypes.BOOLEAN,
-    shuffle: DataTypes.BOOLEAN,
-    repeat: DataTypes.INTEGER
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
+    volume: {
+      type: DataTypes.FLOAT,
+      defaultValue: 1
+    },
+    playing: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    shuffle: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    repeat: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    }
   }, {
     sequelize,
     modelName: 'State',
