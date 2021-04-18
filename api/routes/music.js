@@ -20,7 +20,7 @@ module.exports = function (router) {
         }
     });
 
-    router.post("/api/play/:guildId/:songId", auth.authCheck, auth.authGuilds, function (req, res) {
+    router.post("/api/play/song/:guildId/:songId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(guild => guild.id === req.params.guildId)) {
             music.playSong(req.params.guildId, req.params.songId)
                 .then(success => {

@@ -62,7 +62,7 @@ function deletePlaylist(guildId, playlistId) {
 }
 
 function playSong(guildId, songId) {
-    return fetch(`/api/play/${guildId}/${songId}`, { method: "post" });
+    return fetch(`/api/play/song/${guildId}/${songId}`, { method: "post" });
 }
 
 export default API;
