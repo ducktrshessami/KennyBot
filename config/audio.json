@@ -1,0 +1,10 @@
+{
+    "scdl": {
+        "client_id": ""
+    },
+    "ytdl": {
+        "options": {
+            "quality": "highestaudio"
+        }
+    }
+}
