@@ -1,7 +1,10 @@
+const audio = require("./audioController");
+
 module.exports = {
     changeVolume,
     pause,
-    resume
+    resume,
+    playURL
 };
 
 function findGuild(guildID) {
@@ -35,6 +38,16 @@ function resume(guildID) {
             guild.voice.connection.dispatcher.resume();
             return true;
         }
+    }
+    return false;
+}
+
+function playURL(guildID, songData, volume) {
+    let guild = findGuild(guildID);
+    if (guild && guild.voice.connection) {
+        pause(guildID);
+        guild.voice.connection.play(audio(songData.url, songData.source), { volume });
+        return true;
     }
     return false;
 }
