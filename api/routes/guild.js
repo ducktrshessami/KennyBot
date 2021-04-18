@@ -7,15 +7,29 @@ module.exports = function (router) {
             let guild = process.bot.guilds.cache.get(req.params.guildID);
             if (guild) {
                 db.Guild.findByPk(req.params.guildID, {
-                    attributes: ["id", "volume"],
-                    include: {
-                        model: db.Playlist,
-                        attributes: ["id", "name", "GuildId"],
-                        include: {
-                            model: db.Song,
-                            attributes: ["id", "title", "url", "source", "order", "PlaylistId"]
+                    attributes: ["id", "name"],
+                    include: [
+                        {
+                            model: db.State,
+                            attributes: ["volume", "playing", "shuffle", "repeat"],
+                            include: {
+                                model: db.Song,
+                                attributes: ["id", "title", "url", "source", "PlaylistId"],
+                                include: {
+                                    model: db.Playlist,
+                                    attributes: ["id", "name"]
+                                }
+                            }
+                        },
+                        {
+                            model: db.Playlist,
+                            attributes: ["id", "name", "GuildId"],
+                            include: {
+                                model: db.Song,
+                                attributes: ["id", "title", "url", "source", "order", "PlaylistId"]
+                            }
                         }
-                    },
+                    ],
                     order: [
                         [db.Playlist, "name"],
                         [db.Playlist, db.Song, "order"]
@@ -25,7 +39,8 @@ module.exports = function (router) {
                         if (dbGuild) {
                             let response = {
                                 id: dbGuild.id,
-                                volume: dbGuild.volume,
+                                name: dbGuild.name,
+                                state: dbGuild.State,
                                 playlists: dbGuild.Playlists
                             };
                             if (guild.voice && guild.voice.channel) {
