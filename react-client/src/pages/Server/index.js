@@ -16,6 +16,15 @@ export default class Server extends Component {
         creating: false
     }
 
+    refreshComponent() {
+        this.setState({
+            ready: false,
+            failed: false,
+            guild: { name: "" },
+            creating: false
+        }, this.componentDidMount);
+    }
+
     componentDidMount() {
         this.handleUrl()
             .then(() => this.getGuildFromDb())
@@ -98,7 +107,7 @@ export default class Server extends Component {
         this.setState({
             ...this.state,
             creating: false
-        });
+        }, this.refreshComponent);
     }
 
     failSucc() {
@@ -128,7 +137,7 @@ export default class Server extends Component {
                             </div>
                             {this.state.creating ? <CreatePlaylist guildId={this.state.guild.id} onSuccess={() => this.createSucc()} onError={() => this.failSucc()} /> : undefined}
                             <ul className="playlist-wrapper">
-                                {this.state.guild.playlists && this.state.guild.playlists.length ? this.state.guild.playlists.map(playlist => <Playlist key={playlist.id} {...playlist} />) : this.state.ready ? <h6>This server has no playlists</h6> : undefined}
+                                {this.state.guild.playlists && this.state.guild.playlists.length ? this.state.guild.playlists.map(playlist => <Playlist key={playlist.id} refreshServer={() => this.refreshComponent()} {...playlist} />) : this.state.ready ? <h6>This server has no playlists</h6> : undefined}
                             </ul>
                         </section>
                     </div>

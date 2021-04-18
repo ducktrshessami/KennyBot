@@ -46,10 +46,7 @@ export default class Playlist extends Component {
 
     editSucc() {
         Toast("Success!");
-        this.setState({
-            ...this.state,
-            editing: false
-        });
+        this.refreshServer();
     }
 
     editFail() {
@@ -61,6 +58,7 @@ export default class Playlist extends Component {
             .then(res => {
                 if (res.status === 200) {
                     Toast("Success!");
+                    this.props.refreshServer();
                 }
                 else {
                     Toast(`Failed to delete ${this.props.name}`);
