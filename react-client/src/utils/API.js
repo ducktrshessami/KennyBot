@@ -4,7 +4,8 @@ const API = {
     getUser,
     getUserGuilds,
     getGuildInfo,
-    createPlaylist
+    createPlaylist,
+    deletePlaylist
 };
 
 function gotoLogin() {
@@ -43,6 +44,10 @@ function createPlaylist(guildId, playlistName) {
         headers: { "Content-Type": "application/json" }
     })
         .then(resJSON);
+}
+
+function deletePlaylist(guildId, playlistId) {
+    return fetch(`/api/guild/playlist/${guildId}/${playlistId}`, { method: "delete" });
 }
 
 export default API;

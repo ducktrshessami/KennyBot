@@ -53,11 +53,20 @@ export default class Playlist extends Component {
     }
 
     editFail() {
-        Toast("Failed to update playlist");
+        Toast(`Failed to update ${this.props.name}`);
     }
 
     deletePlaylist() {
-
+        API.deletePlaylist(this.props.GuildId, this.props.id)
+            .then(res => {
+                if (res.status === 200) {
+                    Toast("Success!");
+                }
+                else {
+                    Toast(`Failed to delete ${this.props.name}`);
+                }
+            })
+            .catch(console.error);
     }
 
     render() {
