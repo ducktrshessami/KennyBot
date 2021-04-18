@@ -5,6 +5,7 @@ const API = {
     getUserGuilds,
     getGuildInfo,
     createPlaylist,
+    updatePlaylist,
     deletePlaylist
 };
 
@@ -41,6 +42,15 @@ function createPlaylist(guildId, playlistName) {
     return fetch(`/api/guild/playlist/${guildId}`, {
         method: "post",
         body: `{"name": "${playlistName}"}`,
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(resJSON);
+}
+
+function updatePlaylist(guildId, playlistId, playlistData) {
+    return fetch(`/api/guild/playlist/${guildId}/${playlistId}`, {
+        method: "put",
+        body: JSON.stringify(playlistData),
         headers: { "Content-Type": "application/json" }
     })
         .then(resJSON);

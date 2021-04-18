@@ -75,6 +75,28 @@ module.exports = function (router) {
         }
     });
 
+    router.put("/api/guild/playlist/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
+        if (req.authGuilds.find(server => server.id === req.params.guildId)) {
+            db.Playlist.findByPk(req.params.playlistId)
+                .then(playlist => {
+                    if (playlist) {
+                        return playlist.update(req.body)
+                            .then(updated => res.status(200).json(updated));
+                    }
+                    else {
+                        res.status(404).end();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).end();
+                });
+        }
+        else {
+            res.status(404).end();
+        }
+    });
+
     router.delete("/api/guild/playlist/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(server => server.id === req.params.guildId)) {
             db.Playlist.findByPk(req.params.playlistId)
