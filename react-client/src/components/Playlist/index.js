@@ -93,7 +93,7 @@ export default class Playlist extends Component {
                             }
                         ]} buttonRef={this.menuRef} />
                     </div>
-                    {this.state.active ? <SongList songs={this.props.Songs} /> : undefined}
+                    {this.state.active ? <SongList guildId={this.props.GuildId} songs={this.props.Songs} /> : undefined}
                 </div>
             </li>
         );

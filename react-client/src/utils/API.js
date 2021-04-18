@@ -6,7 +6,8 @@ const API = {
     getGuildInfo,
     createPlaylist,
     updatePlaylist,
-    deletePlaylist
+    deletePlaylist,
+    playSong
 };
 
 function gotoLogin() {
@@ -58,6 +59,10 @@ function updatePlaylist(guildId, playlistId, playlistData) {
 
 function deletePlaylist(guildId, playlistId) {
     return fetch(`/api/guild/playlist/${guildId}/${playlistId}`, { method: "delete" });
+}
+
+function playSong(guildId, songId) {
+    return fetch(`/api/play/${guildId}/${songId}`, { method: "post" });
 }
 
 export default API;
