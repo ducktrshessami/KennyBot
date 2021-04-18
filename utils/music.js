@@ -1,5 +1,5 @@
 const db = require("../models");
-const audio = require("./audioController");
+const audio = require("./audio");
 
 module.exports = {
     changeVolume,
