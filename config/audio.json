@@ -1,6 +1,7 @@
 {
     "scdl": {
-        "client_id": ""
+        "client_id": "",
+        "oauth_token": ""
     },
     "ytdl": {
         "options": {

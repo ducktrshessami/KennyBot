@@ -5,6 +5,7 @@ const config = require("../config/audio.json");
 module.exports = controller;
 
 scdl.setClientID(process.env.SCDL_CLIENTID || config.scdl.client_id);
+scdl.setOauthToken(process.env.SCDL_TOKEN || config.scdl.oauth_token);
 
 function controller(url, source) {
     let stream;
