@@ -23,9 +23,9 @@
 }
 
 .server-name.active {
-    opacity: 100%;
+    opacity: 1;
 }
 
 .server-name.disabled {
-    opacity: 0%;
+    opacity: 0;
 }
