@@ -8,7 +8,8 @@ const API = {
     updatePlaylist,
     deletePlaylist,
     playSong,
-    playPlaylist
+    playPlaylist,
+    shufflePlay
 };
 
 function gotoLogin() {
@@ -68,6 +69,10 @@ function playSong(guildId, songId) {
 
 function playPlaylist(guildId, playlistId) {
     return fetch(`/api/play/playlist/${guildId}/${playlistId}`, { method: "post" });
+}
+
+function shufflePlay(guildId, playlistId) {
+    return fetch(`/api/play/shuffle/${guildId}/${playlistId}`, { method: "post" });
 }
 
 export default API;

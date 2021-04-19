@@ -77,6 +77,16 @@ export default class Playlist extends Component {
             .catch(console.error);
     }
 
+    shufflePlay() {
+        API.shufflePlay(this.props.GuildId, this.props.id)
+            .then(res => {
+                if (res.status !== 200) {
+                    Toast(`Failed to play ${this.props.name}`);
+                }
+            })
+            .catch(console.error);
+    }
+
     render() {
         return (
             <li>
@@ -88,6 +98,9 @@ export default class Playlist extends Component {
                             {this.state.editing ? <EditForm guildId={this.props.GuildId} playlistId={this.props.id} initialValue={this.props.name} onSuccess={() => this.editSucc()} onError={() => this.editFail()} editRef={this.editRef} /> : this.props.name}
                         </div>
                         <div className="kenny-bg focus-lighten" role="button" onClick={() => this.playPlaylist()}>▶</div>
+                        <div className="kenny-bg focus-lighten" role="button" onClick={() => this.shufflePlay()}>
+                            <i className="shuffle-icon" />
+                        </div>
                         <div className="playlist-title-menu kenny-bg focus-lighten" role="button" ref={this.menuRef}>
                             <i className="minimal-text">&nbsp;</i>
                             <i className="kebab-menu" />

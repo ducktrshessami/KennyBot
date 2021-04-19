@@ -36,6 +36,15 @@
     content: url("./collapse-arrow-down.png");
 }
 
+.shuffle-icon {
+    content: url("./shuffle-icon.png");
+    height: 1.5rem;
+    position: relative;
+    left: 0.1ch;
+    bottom: 0.05rem;
+    vertical-align: text-top;
+}
+
 .playlist-title-menu {
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
