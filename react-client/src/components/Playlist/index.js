@@ -50,7 +50,7 @@ export default class Playlist extends Component {
     }
 
     editFail() {
-        Toast(`Failed to update ${this.props.name}`);
+        Toast(`Failed to update ${this.props.name}`, 1);
     }
 
     deletePlaylist() {
@@ -61,30 +61,42 @@ export default class Playlist extends Component {
                     this.props.refreshServer();
                 }
                 else {
-                    Toast(`Failed to delete ${this.props.name}`);
+                    Toast(`Failed to delete ${this.props.name}`, 1);
                 }
             })
             .catch(console.error);
+    }
+
+    voiceCheck() {
+        if (!this.props.canPlay) {
+            Toast("Join the bot to a voice channel first", 1);
+            return false;
+        }
+        return true;
     }
 
     playPlaylist() {
-        API.playPlaylist(this.props.GuildId, this.props.id)
-            .then(res => {
-                if (res.status !== 200) {
-                    Toast(`Failed to play ${this.props.name}`);
-                }
-            })
-            .catch(console.error);
+        if (this.voiceCheck()) {
+            API.playPlaylist(this.props.GuildId, this.props.id)
+                .then(res => {
+                    if (res.status !== 200) {
+                        Toast(`Failed to play ${this.props.name}`, 1);
+                    }
+                })
+                .catch(console.error);
+        }
     }
 
     shufflePlay() {
-        API.shufflePlay(this.props.GuildId, this.props.id)
-            .then(res => {
-                if (res.status !== 200) {
-                    Toast(`Failed to play ${this.props.name}`);
-                }
-            })
-            .catch(console.error);
+        if (this.voiceCheck()) {
+            API.shufflePlay(this.props.GuildId, this.props.id)
+                .then(res => {
+                    if (res.status !== 200) {
+                        Toast(`Failed to play ${this.props.name}`, 1);
+                    }
+                })
+                .catch(console.error);
+        }
     }
 
     render() {
@@ -116,7 +128,7 @@ export default class Playlist extends Component {
                             }
                         ]} buttonRef={this.menuRef} />
                     </div>
-                    {this.state.active ? <SongList guildId={this.props.GuildId} songs={this.props.Songs} /> : undefined}
+                    {this.state.active ? <SongList guildId={this.props.GuildId} songs={this.props.Songs} canPlay={this.props.canPlay} /> : undefined}
                 </div>
             </li>
         );

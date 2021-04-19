@@ -7,16 +7,28 @@ import "./Song.css";
 export default function Song(props) {
     const menuRef = createRef();
 
+    function voiceCheck() {
+        if (!props.canPlay) {
+            Toast("Join the bot to a voice channel first", 1);
+            return false;
+        }
+        return true;
+    }
+
     function play() {
-        API.playSong(props.guildId, props.id)
-            .catch(err => {
-                console.error(err);
-                Toast(`Failed to play ${props.title}`);
-            });
+        if (voiceCheck()) {
+            API.playSong(props.guildId, props.id)
+                .catch(err => {
+                    console.error(err);
+                    Toast(`Failed to play ${props.title}`);
+                });
+        }
     }
 
     function queue() {
+        if (voiceCheck()) {
 
+        }
     }
 
     function deleteThis() {
