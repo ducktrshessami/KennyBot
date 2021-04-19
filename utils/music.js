@@ -8,7 +8,9 @@ module.exports = {
     skip,
     playSong,
     playFirstInPlaylist,
-    playRandomInPlaylist
+    playRandomInPlaylist,
+    queueSong,
+    unqueueSong
 };
 
 function findGuild(guildID) {
@@ -42,7 +44,10 @@ function playNextQueue(guildID) {
         include: db.Queue,
         order: [[db.Queue, "createdAt"]]
     })
-        .then(guild => playSong(guildID, guild.Queues[0].SongId, true));
+        .then(guild => {
+            return playSong(guildID, guild.Queues[0].SongId, true)
+                .then(() => guild.Queues[0].destroy());
+        });
 }
 
 function playNextInPlaylist(guildID, repeatAll = false) {
@@ -255,4 +260,27 @@ function playSong(guildID, songID, queued = false) {
             });
             resolve(false);
         }));
+}
+
+function queueSong(guildID, songID) {
+    return db.Song.findByPk(songID, {
+        include: [db.Playlist, db.Queue]
+    })
+        .then(song => {
+            if (song && !song.Queue && song.Playlist.GuildId === guildID) {
+                return db.Queue.create({
+                    GuildId: guildID,
+                    SongId: songID
+                });
+            }
+        });
+}
+
+function unqueueSong(guildID, queueID) {
+    return db.Queue.findByPk(queueID)
+        .then(queue => {
+            if (queue && queue.GuildId === guildID) {
+                return queue.destroy();
+            }
+        });
 }
