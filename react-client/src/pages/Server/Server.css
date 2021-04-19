@@ -37,6 +37,10 @@
         padding: 1.5rem 1rem 1.5rem 1rem;
     }
 
+    .server-container > * {
+        padding: 0 2ch!important;
+    }
+
     .playlist-header {
         margin-bottom: 2rem;
     }
