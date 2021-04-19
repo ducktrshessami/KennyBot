@@ -2,6 +2,11 @@
     display: flex;
     flex-direction: row;
     min-width: 100%;
+    position: relative;
+}
+
+.song > * {
+    padding: 1rem;
 }
 
 .song:nth-child(even) > * {
@@ -14,9 +19,17 @@
 
 .song-title {
     flex: 1 0 auto;
-    padding: 1rem;
+}
+
+.song-context-menu {
+    right: 0;
+    bottom: -3rem;
 }
 
 .song:last-child .song-title {
     border-bottom-left-radius: 6px;
+}
+
+.song:last-child .song-menu {
+    border-bottom-right-radius: 6px;
 }

@@ -58,3 +58,8 @@
     content: url("./kebab-icon.png");
     height: 1.23rem;
 }
+
+.playlist-context-menu {
+    right: 0;
+    bottom: -7rem;
+}

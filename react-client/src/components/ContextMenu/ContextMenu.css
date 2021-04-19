@@ -1,7 +1,5 @@
 .context-menu {
     position: absolute!important;
-    right: 0;
-    bottom: -7rem;
     z-index: 1;
     text-align: right;
     padding: 0!important;
