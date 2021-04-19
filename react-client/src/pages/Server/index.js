@@ -111,7 +111,7 @@ export default class Server extends Component {
     }
 
     failSucc() {
-        Toast("Failed to create playlist");
+        Toast("Failed to create playlist", 1);
     }
 
     render() {

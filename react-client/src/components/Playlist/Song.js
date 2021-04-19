@@ -20,7 +20,7 @@ export default function Song(props) {
             API.playSong(props.guildId, props.id)
                 .catch(err => {
                     console.error(err);
-                    Toast(`Failed to play ${props.title}`);
+                    Toast(`Failed to play ${props.title}`, 1);
                 });
         }
     }
