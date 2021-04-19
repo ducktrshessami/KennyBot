@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    lastNotQueue: DataTypes.UUID,
     shuffle: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

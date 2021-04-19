@@ -5,23 +5,80 @@ module.exports = {
     changeVolume,
     pause,
     resume,
-    playSong
+    skip,
+    playSong,
+    playFirstInPlaylist
 };
 
 function findGuild(guildID) {
     return process.bot.guilds.cache.get(guildID);
 }
 
-function handleSongEnd(guildID) {
+function handleSongEnd(guildID, skip = false) {
     db.Guild.findByPk(guildID, {
-        include: {
-            model: db.State,
-            include: {
-                model: db.Song,
-                include: db.Playlist
+        include: [db.Queue, db.State],
+        order: [[db.Queue, "createdAt"]]
+    })
+        .then(guild => {
+            if (guild.Queues.length) {
+                return playNextQueue(guildID);
             }
-        }
-    });
+            else if (!skip && guild.State.repeat === 1) {
+                return playSong(guildID, guild.State.SongId, guild.State.SongId === guild.State.lastNotQueue);
+            }
+            else if (guild.State.shuffle) {
+                return playRandomInPlaylist(guildID);
+            }
+            else {
+                return playNextInPlaylist(guildID, Boolean(guild.State.repeat));
+            }
+        })
+        .catch(console.error);
+}
+
+function playNextQueue(guildID) {
+
+}
+
+function playNextInPlaylist(guildID, repeatAll = false) {
+    return findLastNotQueue(guildID)
+        .then(lastNotQueue => {
+            if (lastNotQueue) {
+                return lastNotQueue.Playlist.Songs.find(song => song.order === lastNotQueue.order + 1);
+            }
+        })
+        .then(song => {
+            if (song) {
+                return playSong(guildID, song.id);
+            }
+            else if (repeatAll) {
+                return playFirstInCurrentPlaylist(guildID);
+            }
+        });
+}
+
+function findLastNotQueue(guildID) {
+    return db.Guild.findByPk(guildID, { include: db.State })
+        .then(guild => {
+            if (guild && guild.State.lastNotQueue) {
+                return db.Song.findByPk(guild.State.lastNotQueue, {
+                    include: {
+                        model: db.Playlist,
+                        include: db.Song
+                    },
+                    order: [[db.Playlist, db.Song, "order"]]
+                });
+            }
+        });
+}
+
+function playFirstInCurrentPlaylist(guildID) {
+    return findLastNotQueue(guildID)
+        .then()
+}
+
+function playFirstInPlaylist(guildID, playlistID) {
+
 }
 
 function updateGuildState(guildID, stateData) {
@@ -60,7 +117,12 @@ function resume(guildID) {
     return false;
 }
 
-function playSong(guildID, songID) {
+function skip(guildID) {
+    pause(guildID);
+    return handleSongEnd(guildID, true);
+}
+
+function playSong(guildID, songID, queued = false) {
     return db.Song.findByPk(songID, {
         include: {
             model: db.Playlist,
@@ -78,10 +140,14 @@ function playSong(guildID, songID) {
                     pause(guildID);
                     guild.voice.connection.play(stream, { volume: song.Playlist.Guild.State.volume })
                         .on("start", () => {
-                            updateGuildState(guildID, {
+                            let newState = {
                                 SongId: song.id,
                                 playing: true
-                            });
+                            };
+                            if (!queued) {
+                                newState.lastNotQueue = song.id
+                            }
+                            updateGuildState(guildID, newState);
                             resolve(true);
                         })
                         .on("finish", () => handleSongEnd(guildID));
@@ -90,7 +156,8 @@ function playSong(guildID, songID) {
             }
             updateGuildState(guildID, {
                 SongId: null,
-                playing: false
+                playing: false,
+                lastNotQueue: null
             });
             resolve(false);
         }));
