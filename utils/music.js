@@ -60,6 +60,13 @@ function playNextInPlaylist(guildID, repeatAll = false) {
             else if (repeatAll) {
                 return playFirstInCurrentPlaylist(guildID);
             }
+            else {
+                return updateGuildState(guildID, {
+                    SongId: null,
+                    playing: false,
+                    lastNotQueue: null
+                });
+            }
         });
 }
 
@@ -89,6 +96,13 @@ function playFirstInCurrentPlaylist(guildID) {
             if (song) {
                 return playSong(guildID, song.id);
             }
+            else {
+                return updateGuildState(guildID, {
+                    SongId: null,
+                    playing: false,
+                    lastNotQueue: null
+                });
+            }
         });
 }
 
@@ -101,6 +115,13 @@ function playFirstInPlaylist(guildID, playlistID) {
             if (playlist.Songs.length) {
                 return playSong(guildID, playlist.Songs[0].id);
             }
+            else {
+                return updateGuildState(guildID, {
+                    SongId: null,
+                    playing: false,
+                    lastNotQueue: null
+                });
+            }
         });
 }
 
@@ -108,7 +129,14 @@ function playRandomInCurrentPlaylist(guildID) {
     return findLastNotQueue(guildID)
         .then(lastNotQueue => {
             if (lastNotQueue) {
-                return playSong(guildID, pickNewRandomFromList(lastNotQueue.Playlist.Songs, lastNotQueue));
+                return playSong(guildID, pickNewRandomFromList(lastNotQueue.Playlist.Songs, lastNotQueue).id);
+            }
+            else {
+                return updateGuildState(guildID, {
+                    SongId: null,
+                    playing: false,
+                    lastNotQueue: null
+                });
             }
         })
 }
@@ -122,6 +150,13 @@ function playRandomInPlaylist(guildID, playlistID) {
         .then(song => {
             if (song) {
                 return playSong(guildID, song.id);
+            }
+            else {
+                return updateGuildState(guildID, {
+                    SongId: null,
+                    playing: false,
+                    lastNotQueue: null
+                });
             }
         });
 }
