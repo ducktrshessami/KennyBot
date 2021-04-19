@@ -14,11 +14,12 @@
 }
 
 .server-name {
-    padding: 0.1rem;
+    padding: 0.5rem 0.2ch;
     word-wrap: break-word;
     border-radius: 8px;
     pointer-events: none;
     transition: opacity 0.2s!important;
+    z-index: 1;
 }
 
 .server-name.active {
