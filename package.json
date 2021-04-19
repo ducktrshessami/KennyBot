@@ -26,6 +26,7 @@
     "roll-parser": "^2.3.2",
     "scdl-core": "github:ducktrshessami/scdl-core",
     "sequelize": "^6.6.2",
+    "socket.io": "^4.0.1",
     "with-cooldown": "^1.0.0",
     "ytdl-core": "^4.5.0"
   },
