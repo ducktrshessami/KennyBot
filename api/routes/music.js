@@ -39,7 +39,7 @@ module.exports = function (router) {
 
     router.post("/api/play/playlist/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(guild => guild.id === req.params.guildId)) {
-            music.playFirstInPlaylist(req.params.guildId, req.params.playlistId)
+            music.playPlaylist(req.params.guildId, req.params.playlistId)
                 .then(success => {
                     if (success) {
                         res.status(200).end();

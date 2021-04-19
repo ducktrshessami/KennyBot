@@ -8,7 +8,7 @@ module.exports = {
     resume,
     skip,
     playSong,
-    playFirstInPlaylist,
+    playPlaylist,
     shufflePlayPlaylist,
     queueSong,
     unqueueSong
@@ -111,11 +111,12 @@ function playFirstInCurrentPlaylist(guildID) {
         });
 }
 
-function playFirstInPlaylist(guildID, playlistID) {
-    return db.Playlist.findByPk(playlistID, {
-        include: db.Song,
-        order: [[db.Song, "order"]]
-    })
+function playPlaylist(guildID, playlistID) {
+    return setShuffle(guildID, false)
+        .then(() => db.Playlist.findByPk(playlistID, {
+            include: db.Song,
+            order: [[db.Song, "order"]]
+        }))
         .then(playlist => {
             if (playlist.Songs.length) {
                 return playSong(guildID, playlist.Songs[0].id);
