@@ -74,11 +74,28 @@ function findLastNotQueue(guildID) {
 
 function playFirstInCurrentPlaylist(guildID) {
     return findLastNotQueue(guildID)
-        .then()
+        .then(lastNotQueue => {
+            if (lastNotQueue) {
+                return lastNotQueue.Playlist.Songs[0];
+            }
+        })
+        .then(song => {
+            if (song) {
+                return playSong(guildID, song.id);
+            }
+        });
 }
 
 function playFirstInPlaylist(guildID, playlistID) {
-
+    return db.Playlist.findByPk(playlistID, {
+        include: db.Song,
+        order: [[db.Song, "order"]]
+    })
+        .then(playlist => {
+            if (playlist.Songs.length) {
+                return playSong(guildID, playlist.Songs[0].id);
+            }
+        });
 }
 
 function updateGuildState(guildID, stateData) {
