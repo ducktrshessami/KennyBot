@@ -7,7 +7,9 @@ module.exports = {
     resume,
     skip,
     playSong,
-    playFirstInPlaylist
+    playFirstInPlaylist,
+    playRandomInCurrentPlaylist,
+    playRandomInPlaylist
 };
 
 function findGuild(guildID) {
@@ -27,7 +29,7 @@ function handleSongEnd(guildID, skip = false) {
                 return playSong(guildID, guild.State.SongId, guild.State.SongId === guild.State.lastNotQueue);
             }
             else if (guild.State.shuffle) {
-                return playRandomInPlaylist(guildID);
+                return playRandomInCurrentPlaylist(guildID);
             }
             else {
                 return playNextInPlaylist(guildID, Boolean(guild.State.repeat));
@@ -100,6 +102,43 @@ function playFirstInPlaylist(guildID, playlistID) {
                 return playSong(guildID, playlist.Songs[0].id);
             }
         });
+}
+
+function playRandomInCurrentPlaylist(guildID) {
+    return findLastNotQueue(guildID)
+        .then(lastNotQueue => {
+            if (lastNotQueue) {
+                return playSong(guildID, pickNewRandomFromList(lastNotQueue.Playlist.Songs, lastNotQueue));
+            }
+        })
+}
+
+function playRandomInPlaylist(guildID, playlistID) {
+    return db.Playlist.findByPk(playlistID, {
+        include: db.Song,
+        order: [[db.Song, "order"]]
+    })
+        .then(pickNewRandomFromList)
+        .then(song => {
+            if (song) {
+                return playSong(guildID, song.id);
+            }
+        });
+}
+
+function pickNewRandomFromList(list, old = { id: null }) {
+    if (list.length) {
+        if (list.length === 1) {
+            return old;
+        }
+        else {
+            let random;
+            do {
+                random = list[Math.floor(Math.random() * list.length)];
+            } while (random.id === old.id);
+            return random;
+        }
+    }
 }
 
 function updateGuildState(guildID, stateData) {
