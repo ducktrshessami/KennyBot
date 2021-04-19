@@ -8,7 +8,6 @@ module.exports = {
     skip,
     playSong,
     playFirstInPlaylist,
-    playRandomInCurrentPlaylist,
     playRandomInPlaylist
 };
 
