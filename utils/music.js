@@ -186,12 +186,19 @@ function updateGuildState(guildID, stateData) {
 }
 
 function changeVolume(guildID, volume) {
-    let guild = findGuild(guildID);
-    if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
-        guild.voice.connection.dispatcher.setVolume(volume);
-        return true;
-    }
-    return false;
+    let vol = Math.max(0, Math.min(1.5, volume));
+    return db.Guild.findByPk(guildID, { include: db.State })
+        .then(guild => {
+            if (guild) {
+                return guild.State.update({ volume: vol });
+            }
+        }).then(res => {
+            let guild = findGuild(guildID);
+            if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
+                guild.voice.connection.dispatcher.setVolume(vol);
+            }
+            return res;
+        });
 }
 
 function pause(guildID) {
