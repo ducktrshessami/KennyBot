@@ -1,7 +1,7 @@
 import { createRef } from "react";
-import ContextMenu from "../ContextMenu";
-import API from "../../utils/API";
-import Toast from "../../utils/Toast";
+import ContextMenu from "../../ContextMenu";
+import API from "../../../utils/API";
+import Toast from "../../../utils/Toast";
 import "./Song.css";
 
 export default function Song(props) {

@@ -1,5 +1,5 @@
 import { Component, createRef } from "react";
-import API from "../../utils/API";
+import API from "../../../utils/API";
 import "./EditForm.css";
 
 export default class EditForm extends Component {
