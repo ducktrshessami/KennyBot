@@ -3,12 +3,13 @@ const audio = require("./audio");
 
 module.exports = {
     changeVolume,
+    setShuffle,
     pause,
     resume,
     skip,
     playSong,
     playFirstInPlaylist,
-    playRandomInPlaylist,
+    shufflePlayPlaylist,
     queueSong,
     unqueueSong
 };
@@ -145,12 +146,13 @@ function playRandomInCurrentPlaylist(guildID) {
         })
 }
 
-function playRandomInPlaylist(guildID, playlistID) {
-    return db.Playlist.findByPk(playlistID, {
-        include: db.Song,
-        order: [[db.Song, "order"]]
-    })
-        .then(pickNewRandomFromList)
+function shufflePlayPlaylist(guildID, playlistID) {
+    return setShuffle(guildID, true)
+        .then(() => db.Playlist.findByPk(playlistID, {
+            include: db.Song,
+            order: [[db.Song, "order"]]
+        }))
+        .then(playlist => pickNewRandomFromList(playlist.Songs))
         .then(song => {
             if (song) {
                 return playSong(guildID, song.id);
@@ -198,6 +200,15 @@ function changeVolume(guildID, volume) {
                 guild.voice.connection.dispatcher.setVolume(vol);
             }
             return res;
+        });
+}
+
+function setShuffle(guildID, shuffle) {
+    return db.Guild.findByPk(guildID, { include: db.State })
+        .then(guild => {
+            if (guild) {
+                return guild.State.update({ shuffle });
+            }
         });
 }
 
