@@ -73,7 +73,8 @@ module.exports = function (commandList) {
                     })
                     .filter(line => line)
                     .sort()
-                    .join("\n")
+                    .join("\n"),
+                color: config.embedColor || "RANDOM"
             })
         }));
 };

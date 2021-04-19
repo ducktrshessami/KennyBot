@@ -12,13 +12,26 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       models.Song.belongsTo(models.Playlist);
       models.Song.hasOne(models.Queue, { onDelete: "cascade" });
+      models.Song.hasOne(models.State, { onDelete: "set null" });
     }
   };
   Song.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     url: {
       type: DataTypes.STRING,
-      allowNull: false,
-      primaryKey: true
+      allowNull: false
+    },
+    source: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     order: {
       type: DataTypes.INTEGER,

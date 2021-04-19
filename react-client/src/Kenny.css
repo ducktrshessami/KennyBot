@@ -1,0 +1,35 @@
+.kenny-bg {
+    background-color: #9C2B2F!important;
+}
+
+.kenny-bg.focus-darken:hover, .kenny-bg.focus-darken:focus {
+    background-color: #7c2225!important;
+}
+
+.kenny-bg.focus-lighten:hover, .kenny-bg.focus-lighten:focus {
+    background-color: #af5558!important;
+}
+
+.dark-kenny-bg {
+    background-color: #5d191c!important;
+}
+
+.dark-kenny-bg.focus-darken:hover, .dark-kenny-bg.focus-darken:focus {
+    background-color: #4a1416!important;
+}
+
+.dark-kenny-bg.focus-lighten:hover, .dark-kenny-bg.focus-lighten:focus {
+    background-color: #7d4649!important;
+}
+
+.light-kenny-bg {
+    background-color: #b96a6d!important;
+}
+
+.light-kenny-bg.focus-darken:hover, .light-kenny-bg.focus-darken:focus {
+    background-color: #945457!important;
+}
+
+.light-kenny-bg.focus-lighten:hover, .light-kenny-bg.focus-lighten:focus {
+    background-color: #c7878a!important;
+}

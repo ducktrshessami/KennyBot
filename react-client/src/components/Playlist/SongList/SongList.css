@@ -1,0 +1,6 @@
+.playlist-empty {
+    margin: 0;
+    padding: 2rem;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}

@@ -1,0 +1,65 @@
+.playlist {
+    margin-bottom: 1.75rem;
+}
+
+.playlist-title-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    min-width: 100%;
+    font-size: 1.3rem;
+}
+
+.playlist-title-wrapper > * {
+    padding: 1rem;
+}
+
+.playlist-title {
+    flex: 1 1 auto;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.open .playlist-title {
+    border-bottom-left-radius: 0;
+}
+
+.playlist-arrow {
+    content: url("./collapse-arrow.png");
+    height: 1rem;
+    position: relative;
+    top: 0.1rem;
+    margin-right: 0.5ch;
+}
+
+.open .playlist-arrow {
+    content: url("./collapse-arrow-down.png");
+}
+
+.shuffle-icon {
+    content: url("./shuffle-icon.png");
+    height: 1.5rem;
+    position: relative;
+    left: 0.1ch;
+    bottom: 0.05rem;
+    vertical-align: text-top;
+}
+
+.playlist-title-menu {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.open .playlist-title-menu {
+    border-bottom-right-radius: 0;
+}
+
+.kebab-menu {
+    content: url("./kebab-icon.png");
+    height: 1.23rem;
+}
+
+.playlist-context-menu {
+    right: 0;
+    bottom: -7rem;
+}

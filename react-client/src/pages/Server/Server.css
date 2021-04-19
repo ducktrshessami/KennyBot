@@ -1,0 +1,51 @@
+.server-wrapper {
+    padding: 2rem;
+}
+
+.server-loader {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 1ch;
+}
+
+.playlist-header {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.playlist-header > * {
+    display: inline;
+}
+
+.create-playlist-button {
+    margin-left: 2ch;
+    padding: 0 0.75rem!important;
+    position: relative;
+    top: -0.25rem;
+}
+
+.playlist-wrapper {
+    margin: 0;
+}
+
+@media only screen and (min-width: 601px) {
+    .server-wrapper {
+        padding: 3.5rem 4rem 2rem 4rem;
+    }
+
+    .server-container {
+        padding: 1.5rem 1rem 1.5rem 1rem;
+    }
+
+    .server-container > * {
+        padding: 0 2ch!important;
+    }
+
+    .playlist-header {
+        margin-bottom: 2rem;
+    }
+    
+    .playlist-wrapper {
+        margin-top: 1rem;
+    }
+}

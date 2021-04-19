@@ -1,0 +1,16 @@
+.edit-playlist {
+    display: inline-flex;
+    flex-direction: row;
+    min-width: calc(100% - 3ch);
+    margin-left: 1ch;
+}
+
+.edit-playlist-input {
+    border-radius: 5px;
+    outline: none;
+    flex: 1 0 auto;
+}
+
+.edit-playlist-input.invalid {
+    border: red solid 3px;
+}

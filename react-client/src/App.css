@@ -7,3 +7,25 @@
 main {
     flex: 1 0 auto;
 }
+
+.btn {
+    border-radius: 3px!important;
+}
+
+.focus-darken, .focus-lighten {
+    transition: background-color 0.2s;
+}
+
+.minimal-text {
+    font-size: 0;
+}
+
+.toast {
+    padding: 0;
+}
+
+.toast-wrapper {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+}

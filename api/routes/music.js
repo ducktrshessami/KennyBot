@@ -1,14 +1,10 @@
-const db = require("../../models");
 const auth = require("../middleware/auth");
 const music = require("../../utils/music");
 
 module.exports = function (router) {
     router.post("/api/volume/:guildId/:volume", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(guild => guild.id === req.params.guildId)) {
-            let vol = Math.max(0, Math.min(1.5, req.params.volume));
-            db.Guild.findByPk(req.params.guildId)
-                .then(guild => guild.update({ volume: vol }))
-                .then(() => music.changeVolume(req.params.guildId, vol))
+            music.changeVolume(req.params.guildId, req.params.volume)
                 .then(() => res.status(200).end())
                 .catch(err => {
                     console.error(err);
@@ -16,20 +12,20 @@ module.exports = function (router) {
                 });
         }
         else {
-            res.status(404).end();
+            res.status(401).end();
         }
     });
 
-    router.get("/api/playlists/:guildId", auth.authCheck, auth.authGuilds, function (req, res) {
+    router.post("/api/play/song/:guildId/:songId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(guild => guild.id === req.params.guildId)) {
-            db.Guild.findByPk(req.params.guildId, {
-                include: {
-                    model: db.Playlist,
-                    include: db.Song
-                }
-            })
-                .then(guild => {
-                    res.status(200).json(guild.Playlists);
+            music.playSong(req.params.guildId, req.params.songId)
+                .then(success => {
+                    if (success) {
+                        res.status(200).end();
+                    }
+                    else {
+                        res.status(400).end();
+                    }
                 })
                 .catch(err => {
                     console.error(err);
@@ -37,7 +33,49 @@ module.exports = function (router) {
                 });
         }
         else {
-            res.status(404).end();
+            res.status(401).end();
+        }
+    });
+
+    router.post("/api/play/playlist/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
+        if (req.authGuilds.find(guild => guild.id === req.params.guildId)) {
+            music.playPlaylist(req.params.guildId, req.params.playlistId)
+                .then(success => {
+                    if (success) {
+                        res.status(200).end();
+                    }
+                    else {
+                        res.status(400).end();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).end();
+                });
+        }
+        else {
+            res.status(401).end();
+        }
+    });
+
+    router.post("/api/play/shuffle/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
+        if (req.authGuilds.find(guild => guild.id === req.params.guildId)) {
+            music.shufflePlayPlaylist(req.params.guildId, req.params.playlistId)
+                .then(success => {
+                    if (success) {
+                        res.status(200).end();
+                    }
+                    else {
+                        res.status(400).end();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).end();
+                });
+        }
+        else {
+            res.status(401).end();
         }
     });
 };

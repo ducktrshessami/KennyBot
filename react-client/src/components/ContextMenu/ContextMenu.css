@@ -1,0 +1,10 @@
+.context-menu {
+    position: absolute!important;
+    z-index: 1;
+    text-align: right;
+    padding: 0!important;
+}
+
+.context-menu-option {
+    padding: 1rem 1.5rem;
+}

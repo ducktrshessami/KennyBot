@@ -1,0 +1,22 @@
+.dashboard-header {
+    padding: 2vw 2rem 2vw 2rem;
+}
+
+#server-list {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+@media only screen and (min-width: 601px) {
+    .dashboard-header {
+        text-align: center;
+        padding-left: 4rem;
+        padding-right: 4rem;
+        padding-bottom: 2rem;
+    }
+
+    #server-list {
+        padding-left: 8rem;
+        padding-right: 8rem;
+    }
+}
