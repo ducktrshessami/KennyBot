@@ -37,7 +37,11 @@ function handleSongEnd(guildID, skip = false) {
 }
 
 function playNextQueue(guildID) {
-
+    return db.Guild.findByPk(guildID, {
+        include: db.Queue,
+        order: [[db.Queue, "createdAt"]]
+    })
+        .then(guild => playSong(guildID, guild.Queues[0].SongId, true));
 }
 
 function playNextInPlaylist(guildID, repeatAll = false) {
