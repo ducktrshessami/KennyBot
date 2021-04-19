@@ -15,7 +15,7 @@
 }
 
 .playlist-title {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
 }
