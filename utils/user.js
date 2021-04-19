@@ -21,7 +21,7 @@ function getAuthGuilds(access_token) {
                 "id",
                 "name",
                 "icon",
-                "ownerId"
+                "ownerID"
             ]
         })
     ])
