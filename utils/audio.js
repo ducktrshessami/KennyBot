@@ -3,6 +3,7 @@ const scdl = require("scdl-core");
 const config = require("../config/audio.json");
 
 module.exports = controller;
+module.exports.getSource = getSource;
 
 scdl.setClientID(process.env.SCDL_CLIENTID || config.scdl.client_id);
 scdl.setOauthToken(process.env.SCDL_TOKEN || config.scdl.oauth_token);
@@ -23,4 +24,13 @@ function youtube(url) {
 
 function soundcloud(url) {
     return scdl(url);
+}
+
+function getSource(url) {
+    if (ytdl.validateURL(url)) {
+        return "youtube";
+    }
+    else if (scdl.validateURL(url)) {
+        return "soundcloud";
+    }
 }

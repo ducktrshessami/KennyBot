@@ -7,6 +7,7 @@ module.exports = {
     pause,
     resume,
     skip,
+    playUrl,
     playSong,
     playPlaylist,
     shufflePlayPlaylist,
@@ -185,7 +186,11 @@ function pickNewRandomFromList(list, old = { id: null }) {
 
 function updateGuildState(guildID, stateData) {
     return db.Guild.findByPk(guildID, { include: db.State })
-        .then(guild => guild.State.update(stateData));
+        .then(guild => {
+            if (guild) {
+                guild.State.update(stateData);
+            }
+        });
 }
 
 function changeVolume(guildID, volume) {
@@ -236,8 +241,37 @@ function resume(guildID) {
 }
 
 function skip(guildID) {
-    pause(guildID);
     return handleSongEnd(guildID, true);
+}
+
+function playUrl(guildID, url) {
+    return db.Guild.findByPk(guildID, { include: db.State })
+        .then(dbGuild => new Promise((resolve, reject) => {
+            if (dbGuild) {
+                let source = audio.getSource(url);
+                let guild = findGuild(guildID);
+                if (source && guild && guild.voice && guild.voice.connection) {
+                    let stream = audio(url, source);
+                    pause(guildID);
+                    guild.voice.connection.play(stream, { volume: dbGuild.State.volume })
+                        .on("start", () => {
+                            updateGuildState(guildID, {
+                                SongId: null,
+                                playing: true
+                            });
+                            resolve(true);
+                        })
+                        .on("finish", () => handleSongEnd(guildID));
+                    return;
+                }
+            }
+            updateGuildState(guildID, {
+                SongId: null,
+                playing: false,
+                lastNotQueue: null
+            });
+            resolve(false);
+        }));
 }
 
 function playSong(guildID, songID, queued = false) {
