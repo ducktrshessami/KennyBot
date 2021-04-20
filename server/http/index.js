@@ -5,9 +5,8 @@ const MemoryStore = require("memorystore")(session);
 const auth = require("./middleware/auth");
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 const cycler = Cycle({
-    origin: process.env.API_ORIGIN || `http://localhost:${PORT}`,
+    origin: process.env.API_ORIGIN,
     ms: 1500000,
     verbose: true
 });
@@ -25,9 +24,5 @@ app.use(express.json());
 app.use(require("./routes"));
 app.use(require("./public"));
 
-module.exports = app.listen(PORT, function () {
-    console.log(`API listening on PORT ${PORT}`);
-    if (!process.env.API_NOCYCLE || (process.env.API_NOCYCLE || "").trim().toLowerCase() === "false") {
-        cycler.startLoop();
-    }
-});
+module.exports = app;
+module.exports.cycler = cycler;

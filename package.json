@@ -42,12 +42,12 @@
     "install": "cd client && npm install",
     "build": "cd client && npm run build",
     "start-react": "cd client && npm run start",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
     "sqlite3": "^5.0.2"
   },
-  "main": "server.js",
+  "main": "index.js",
   "keywords": []
 }
