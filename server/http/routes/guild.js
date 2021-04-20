@@ -1,5 +1,5 @@
 const auth = require("../middleware/auth");
-const db = require("../../models");
+const db = require("../../../models");
 
 module.exports = function (router) {
     router.get("/api/guild/:guildID", auth.authCheck, auth.authGuilds, function (req, res) {

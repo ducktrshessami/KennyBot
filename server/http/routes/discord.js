@@ -1,5 +1,5 @@
 const auth = require("../middleware/auth");
-const discord = require("../../utils/discord");
+const discord = require("../../../utils/discord");
 
 module.exports = function (router) {
     router.get("/api/authorized", auth.refreshCheck, function (req, res) {

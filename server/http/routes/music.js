@@ -1,5 +1,5 @@
 const auth = require("../middleware/auth");
-const music = require("../../utils/music");
+const music = require("../../../utils/music");
 
 module.exports = function (router) {
     router.post("/api/volume/:guildId/:volume", auth.authCheck, auth.authGuilds, function (req, res) {

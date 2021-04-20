@@ -1,6 +1,6 @@
-const hash = require("../../utils/hash");
-const { refreshToken, revokeToken } = require("../../utils/discord");
-const { getAuthGuilds } = require("../../utils/user");
+const hash = require("../../../utils/hash");
+const { refreshToken, revokeToken } = require("../../../utils/discord");
+const { getAuthGuilds } = require("../../../utils/user");
 
 function init(req, res, next) {
     if (!req.session.discord) {

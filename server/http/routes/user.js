@@ -1,6 +1,6 @@
 const auth = require("../middleware/auth");
-const discord = require("../../utils/discord");
-const user = require("../../utils/user");
+const discord = require("../../../utils/discord");
+const user = require("../../../utils/user");
 
 module.exports = function (router) {
     router.get("/api/user", auth.authCheck, function (req, res) {
