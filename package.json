@@ -39,9 +39,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "cd react-client && npm install",
-    "build": "cd react-client && npm run build",
-    "start-react": "cd react-client && npm run start",
+    "install": "cd client && npm install",
+    "build": "cd client && npm run build",
+    "start-react": "cd client && npm run start",
     "start": "node server.js"
   },
   "devDependencies": {

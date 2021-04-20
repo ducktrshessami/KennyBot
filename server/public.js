@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 
 const router = express.Router();
-const staticDir = path.resolve(__dirname, "..", "react-client", "build");
+const staticDir = path.resolve(__dirname, "..", "client", "build");
 
 if (fs.existsSync(staticDir)) {
     router.use(express.static(staticDir));

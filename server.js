@@ -17,7 +17,7 @@ db.sequelize.sync({ force: process.env.DB_FORCE && process.env.DB_FORCE.trim().t
 
         process.bot.on("ready", () => {
             process.bot.off("error", failed);
-            process.api = require("./api");
+            process.server = require("./server");
         });
 
         process.bot.on("error", failed);
