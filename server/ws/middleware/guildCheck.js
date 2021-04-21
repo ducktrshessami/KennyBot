@@ -8,10 +8,10 @@ module.exports = function (socket, next) {
                     next();
                 }
                 else {
-                    throw new Error("Could not get guild");
+                    throw new Error();
                 }
             })
-            .catch(next);
+            .catch(() => next(new Error("Could not get guild")));
     }
     else {
         next(new Error("Must specify guild ID"));

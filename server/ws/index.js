@@ -1,15 +1,14 @@
 const Socket = require("socket.io");
-const auth = require("./middleware/auth");
-const session = require("../http/middleware/session");
-const expressAuth = require("../http/middleware/auth");
-const wrapExpressMiddleware = require("./utils/wrapExpressMiddleware");
+const session = require("./middleware/session");
+const authCheck = require("./middleware/authCheck");
+const guildCheck = require("./middleware/guildCheck");
 
 module.exports = function (server) {
     const ws = Socket(server);
 
-    ws.use(wrapExpressMiddleware(session));
-    ws.use(wrapExpressMiddleware(expressAuth.authCheck));
-    ws.use(auth);
+    ws.use(session);
+    ws.use(authCheck);
+    ws.use(guildCheck);
 
     ws.on("connection", function (socket) {
         socket.join(socket.handshake.auth.guildID);
