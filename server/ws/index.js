@@ -1,4 +1,5 @@
 const Socket = require("socket.io");
+const listeners = require("./listeners");
 const session = require("./middleware/session");
 const authCheck = require("./middleware/authCheck");
 const guildCheck = require("./middleware/guildCheck");
@@ -10,10 +11,7 @@ module.exports = function (server) {
     ws.use(authCheck);
     ws.use(guildCheck);
 
-    ws.on("connection", function (socket) {
-        socket.join(socket.handshake.auth.guildID);
-        console.log(`Joined ${socket.handshake.auth.guildID}`);
-    });
+    listeners(ws);
 
     return ws;
 };
