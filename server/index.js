@@ -5,7 +5,7 @@ const ws = require("./ws");
 const PORT = process.env.PORT || 3001;
 const server = createServer(http);
 
-ws(server);
+process.socket = ws(server);
 
 module.exports = server.listen(PORT, function () {
     console.log(`API listening on PORT ${PORT}`);
