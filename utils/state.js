@@ -1,6 +1,11 @@
 const db = require("../models");
 
-module.exports = function (guildID) {
+module.exports = {
+    getNewState,
+    emitStateUpdate
+};
+
+function getNewState(guildID) {
     return db.Guild.findByPk(guildID, {
         include: [
             {
@@ -54,4 +59,9 @@ module.exports = function (guildID) {
                 throw new Error("Guild not found");
             }
         });
-};
+}
+
+function emitStateUpdate(guildID) {
+    return getNewState(guildID)
+        .then(state => process.socket.to(guildID).emit("stateUpdate", state));
+}
