@@ -15,6 +15,7 @@ function controller(url, source) {
         case "soundcloud": stream = soundcloud(url); break;
         default:
     }
+    stream.on("error", console.error);
     return stream;
 }
 
