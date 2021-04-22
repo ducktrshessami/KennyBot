@@ -111,4 +111,4 @@ seeders/
 db/
 
 # Heroku package-lock github dependency bug
-package-lock.json
+/package-lock.json

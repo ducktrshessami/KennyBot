@@ -1,5 +1,6 @@
 const db = require("../models");
 const audio = require("./audio");
+const { emitStateUpdate } = require("./state");
 
 module.exports = {
     changeVolume,
@@ -12,7 +13,7 @@ module.exports = {
     playPlaylist,
     shufflePlayPlaylist,
     queueSong,
-    unqueueSong
+    dequeueSong
 };
 
 function findGuild(guildID) {
@@ -190,7 +191,8 @@ function updateGuildState(guildID, stateData) {
             if (guild) {
                 guild.State.update(stateData);
             }
-        });
+        })
+        .then(() => emitStateUpdate(guildID));
 }
 
 function changeVolume(guildID, volume) {
@@ -324,16 +326,18 @@ function queueSong(guildID, songID) {
                 return db.Queue.create({
                     GuildId: guildID,
                     SongId: songID
-                });
+                })
+                    .then(() => emitStateUpdate(guildID));
             }
         });
 }
 
-function unqueueSong(guildID, queueID) {
+function dequeueSong(guildID, queueID) {
     return db.Queue.findByPk(queueID)
         .then(queue => {
             if (queue && queue.GuildId === guildID) {
-                return queue.destroy();
+                return queue.destroy()
+                    .then(() => emitStateUpdate(guildID));
             }
         });
 }

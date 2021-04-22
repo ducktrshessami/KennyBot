@@ -8,7 +8,7 @@ module.exports = function (guild) {
                 return dbGuild.update(guild);
             }
             else {
-                db.Guild.create(guild)
+                return db.Guild.create(guild)
                     .then(guild => db.State.create({ GuildId: guild.id }));
             }
         });

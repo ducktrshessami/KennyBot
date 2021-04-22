@@ -4,6 +4,7 @@ const commands = require("./commands");
 const responses = require("./responses");
 const helpCmd = require("./helpCmd");
 const initGuild = require("./utils/initGuild");
+const { emitStateUpdate } = require("../utils/state");
 
 var client;
 
@@ -39,5 +40,12 @@ client.on("error", console.error);
 client.on("guildCreate", initGuild);
 
 client.on("guildUpdate", (before, after) => initGuild(after));
+
+client.on("voiceStateUpdate", voiceState => {
+    if (voiceState.member.id === client.user.id) {
+        emitStateUpdate(voiceState.guild.id)
+            .catch(console.error);
+    }
+});
 
 module.exports = client;

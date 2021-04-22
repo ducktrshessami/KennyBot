@@ -13,7 +13,7 @@ module.exports = new Command("play", function (message, args) {
                 .then(res => res.videoDetails.title);
                 break;
             case "soundcloud": getter = getInfo(args[1])
-                .then(res => res.title);
+                .then(res => `${res.user.username} - ${res.title}`);
                 break;
             default:
         }
