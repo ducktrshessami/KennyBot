@@ -70,18 +70,18 @@ export default class Playlist extends Component {
             Toast("Join the bot to a voice channel first", 1);
             return false;
         }
-        return true;
+        return Boolean(this.props.socket);
     }
 
     playPlaylist() {
         if (this.voiceCheck()) {
-
+            this.props.socket.emit("playlistPlay", this.props.id);
         }
     }
 
     shufflePlay() {
         if (this.voiceCheck()) {
-
+            this.props.socket.emit("playlistShuffle", this.props.id);
         }
     }
 
@@ -114,7 +114,7 @@ export default class Playlist extends Component {
                             }
                         ]} buttonRef={this.menuRef} />
                     </div>
-                    {this.state.active ? <SongList guildId={this.props.GuildId} songs={this.props.Songs} canPlay={this.props.canPlay} /> : undefined}
+                    {this.state.active ? <SongList guildId={this.props.GuildId} songs={this.props.Songs} canPlay={this.props.canPlay} socket={this.props.socket} /> : undefined}
                 </div>
             </li>
         );

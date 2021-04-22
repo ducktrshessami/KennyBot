@@ -11,18 +11,18 @@ export default function Song(props) {
             Toast("Join the bot to a voice channel first", 1);
             return false;
         }
-        return true;
+        return Boolean(props.socket);
     }
 
     function play() {
         if (voiceCheck()) {
-
+            props.socket.emit("songPlay", props.id);
         }
     }
 
     function queue() {
         if (voiceCheck()) {
-
+            props.socket.emit("songQueue", props.id);
         }
     }
 

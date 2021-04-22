@@ -123,7 +123,7 @@ export default class Server extends Component {
                             </div>
                             {this.state.creating ? <CreatePlaylist guildId={this.state.guild.id} onSuccess={() => this.createSucc()} onError={() => this.failSucc()} /> : undefined}
                             <ul className="playlist-wrapper">
-                                {this.state.guild.state.playlists && this.state.guild.state.playlists.length ? this.state.guild.state.playlists.map(playlist => <Playlist key={playlist.id} canPlay={Boolean(this.state.guild.state.voice)} {...playlist} />) : this.state.ready ? <h6>This server has no playlists</h6> : undefined}
+                                {this.state.guild.state.playlists && this.state.guild.state.playlists.length ? this.state.guild.state.playlists.map(playlist => <Playlist key={playlist.id} canPlay={Boolean(this.state.guild.state.voice)} socket={this.state.socket} {...playlist} />) : this.state.ready ? <h6>This server has no playlists</h6> : undefined}
                             </ul>
                         </section>
                     </div>
