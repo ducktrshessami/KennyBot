@@ -19,7 +19,7 @@ export default function Confirm(props) {
                 <div className="confirm-card card nqb-bg col s10 m6 l4 offset-s1 offset-m3 offset-l4" ref={cardRef}>
                     <div className="card-content">
                         {props.title ? <div className="card-title">{props.title}</div> : undefined}
-                        {props.body ? <p>{props.body}</p> : undefined}
+                        {props.children}
                     </div>
                     <div className="card-action">
                         <button className="confirm-button btn greyple-bg focus-lighten right" onClick={props.onCancel}>Cancel</button>
