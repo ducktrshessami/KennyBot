@@ -46,7 +46,6 @@ export default class Server extends Component {
     componentDidUpdate() {
         let guild = this.props.guilds.find(guild => guild.id === this.guildID) || {};
         let name = guild.name || "";
-        console.log(this.state);
         if (this.state.guild.name !== name) {
             let newState = { ...this.state };
             newState.guild.name = name;
