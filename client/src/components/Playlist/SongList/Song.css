@@ -9,7 +9,7 @@
     padding: 1rem;
 }
 
-.song:nth-child(even) > * {
+li:nth-child(even) > .song > * {
     background-color: #4a1416!important;
 }
 
