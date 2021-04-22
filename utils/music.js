@@ -326,7 +326,8 @@ function queueSong(guildID, songID) {
                 return db.Queue.create({
                     GuildId: guildID,
                     SongId: songID
-                });
+                })
+                    .then(() => emitStateUpdate(guildID));
             }
         });
 }
@@ -335,7 +336,8 @@ function dequeueSong(guildID, queueID) {
     return db.Queue.findByPk(queueID)
         .then(queue => {
             if (queue && queue.GuildId === guildID) {
-                return queue.destroy();
+                return queue.destroy()
+                    .then(() => emitStateUpdate(guildID));
             }
         });
 }
