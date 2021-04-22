@@ -1,10 +1,13 @@
-import { createRef } from "react";
+import { createRef, useState } from "react";
 import ContextMenu from "../../ContextMenu";
+import Confirm from "../../Confirm";
+import API from "../../../utils/API";
 import Toast from "../../../utils/Toast";
 import "./Song.css";
 
 export default function Song(props) {
     const menuRef = createRef();
+    const [deleting, setDeleting] = useState(false);
 
     function voiceCheck() {
         if (!props.canPlay) {
@@ -26,28 +29,48 @@ export default function Song(props) {
         }
     }
 
-    function deleteThis() {
+    function startDeleting() {
+        setDeleting(true);
+    }
 
+    function cancelDelete() {
+        setDeleting(false);
+    }
+
+    function deleteThis() {
+        API.deleteSong(props.id)
+            .then(res => {
+                if (res.status === 200) {
+                    Toast("Success!");
+                }
+                else {
+                    Toast(`Failed to delete ${props.title}`, 1);
+                }
+            })
+            .catch(console.error);
     }
 
     return (
-        <li className="song">
-            <div role="button" className="song-title dark-kenny-bg focus-lighten" onClick={play}>
-                {props.title}
+        <li>
+            {deleting ? <Confirm title={`Delete ${props.title}?`} onOk={deleteThis} onCancel={cancelDelete} /> : undefined}
+            <div className="song">
+                <div role="button" className="song-title dark-kenny-bg focus-lighten" onClick={play}>
+                    {props.title}
+                </div>
+                <div className="song-menu dark-kenny-bg focus-lighten" role="button" ref={menuRef}>
+                    <i className="kebab-menu" />
+                </div>
+                <ContextMenu className="song-context-menu" optionClassName="dark-kenny-bg focus-lighten" options={[
+                    {
+                        name: "Add to queue",
+                        callback: queue
+                    },
+                    {
+                        name: "Delete",
+                        callback: startDeleting
+                    }
+                ]} buttonRef={menuRef} />
             </div>
-            <div className="song-menu dark-kenny-bg focus-lighten" role="button" ref={menuRef}>
-                <i className="kebab-menu" />
-            </div>
-            <ContextMenu className="song-context-menu" optionClassName="dark-kenny-bg focus-lighten" options={[
-                {
-                    name: "Add to queue",
-                    callback: queue
-                },
-                {
-                    name: "Delete",
-                    callback: deleteThis
-                }
-            ]} buttonRef={menuRef} />
         </li>
     );
 };

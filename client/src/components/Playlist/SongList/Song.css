@@ -26,10 +26,10 @@
     bottom: -6rem;
 }
 
-.song:last-child .song-title {
+li:last-child > .song .song-title {
     border-bottom-left-radius: 6px;
 }
 
-.song:last-child .song-menu {
+li:last-child > .song .song-menu {
     border-bottom-right-radius: 6px;
 }
