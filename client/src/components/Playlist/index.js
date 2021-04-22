@@ -116,7 +116,7 @@ export default class Playlist extends Component {
                             <i className="playlist-arrow" />
                             {this.state.editing ? <EditForm guildId={this.props.GuildId} playlistId={this.props.id} initialValue={this.props.name} onSuccess={() => this.editSucc()} onError={() => this.editFail()} editRef={this.editRef} /> : this.props.name}
                         </div>
-                        <div className="kenny-bg focus-lighten" role="button" onClick={() => this.playPlaylist()}>▶</div>
+                        <div className="kenny-bg focus-lighten" role="button" onClick={() => this.playPlaylist()}>▷</div>
                         <div className="kenny-bg focus-lighten" role="button" onClick={() => this.shufflePlay()}>
                             <i className="shuffle-icon" />
                         </div>
