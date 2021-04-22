@@ -27,11 +27,20 @@ function getNewState(guildID) {
                     model: db.Song,
                     attributes: ["id", "title", "url", "source", "order", "PlaylistId"]
                 }
+            },
+            {
+                model: db.Queue,
+                attributes: ["id"],
+                include: {
+                    model: db.Song,
+                    attributes: ["id", "title", "url", "source", "PlaylistId"]
+                }
             }
         ],
         order: [
             [db.Playlist, "name"],
-            [db.Playlist, db.Song, "order"]
+            [db.Playlist, db.Song, "order"],
+            [db.Queue, db.Song, "createdAt"]
         ]
     })
         .then(dbGuild => {
@@ -44,6 +53,7 @@ function getNewState(guildID) {
                     shuffle: dbGuild.State.shuffle,
                     repeat: dbGuild.State.repeat,
                     playlists: dbGuild.Playlists,
+                    queue: dbGuild.Queues,
                     voice: null
                 };
                 if (guild.voice && guild.voice.channel) {
