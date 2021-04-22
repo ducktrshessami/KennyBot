@@ -1,5 +1,6 @@
 const auth = require("../middleware/auth");
 const db = require("../../../models");
+const { emitStateUpdate } = require("../../../utils/state");
 
 module.exports = function (router) {
     router.post("/api/guild/playlist/:guildId", auth.authCheck, auth.authGuilds, function (req, res) {
@@ -8,10 +9,13 @@ module.exports = function (router) {
                 name: req.body.name,
                 GuildId: req.params.guildId
             })
-                .then(playlist => res.status(200).json({
-                    id: playlist.id,
-                    name: playlist.name
-                }))
+                .then(playlist => {
+                    emitStateUpdate(req.params.guildId);
+                    res.status(200).json({
+                        id: playlist.id,
+                        name: playlist.name
+                    });
+                })
                 .catch(err => {
                     console.error(err);
                     res.status(500).end();
@@ -28,7 +32,10 @@ module.exports = function (router) {
                 .then(playlist => {
                     if (playlist) {
                         return playlist.update(req.body)
-                            .then(updated => res.status(200).json(updated));
+                            .then(updated => {
+                                emitStateUpdate(req.params.guildId);
+                                res.status(200).json(updated);
+                            });
                     }
                     else {
                         res.status(404).end();
@@ -50,7 +57,10 @@ module.exports = function (router) {
                 .then(playlist => {
                     if (playlist) {
                         return playlist.destroy()
-                            .then(() => res.status(200).end());
+                            .then(() => {
+                                emitStateUpdate(req.params.guildId);
+                                res.status(200).end();
+                            });
                     }
                     else {
                         res.status(404).end();
