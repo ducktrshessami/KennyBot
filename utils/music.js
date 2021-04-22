@@ -13,7 +13,7 @@ module.exports = {
     playPlaylist,
     shufflePlayPlaylist,
     queueSong,
-    unqueueSong
+    dequeueSong
 };
 
 function findGuild(guildID) {
@@ -331,7 +331,7 @@ function queueSong(guildID, songID) {
         });
 }
 
-function unqueueSong(guildID, queueID) {
+function dequeueSong(guildID, queueID) {
     return db.Queue.findByPk(queueID)
         .then(queue => {
             if (queue && queue.GuildId === guildID) {
