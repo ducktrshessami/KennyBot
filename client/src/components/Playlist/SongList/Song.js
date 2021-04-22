@@ -38,7 +38,8 @@ export default function Song(props) {
     }
 
     function deleteThis() {
-        API.deleteSong(props.id)
+        setDeleting(false);
+        API.deleteSong(props.guildId, props.id)
             .then(res => {
                 if (res.status === 200) {
                     Toast("Success!");
