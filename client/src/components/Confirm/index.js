@@ -11,8 +11,8 @@ export default function Confirm(props) {
                         {props.body ? <p>{props.body}</p> : undefined}
                     </div>
                     <div className="card-action">
-                        <button className="confirm-button btn greyple-bg focus-lighten right">Cancel</button>
-                        <button className="confirm-button btn kenny-bg focus-lighten right">Ok</button>
+                        <button className="confirm-button btn greyple-bg focus-lighten right" onClick={props.onCancel}>Cancel</button>
+                        <button className="confirm-button btn kenny-bg focus-lighten right" onClick={props.onOk}>Ok</button>
                     </div>
                 </div>
             </div>
