@@ -1,5 +1,6 @@
 const db = require("../models");
 const audio = require("./audio");
+const { emitStateUpdate } = require("./state");
 
 module.exports = {
     changeVolume,
@@ -190,7 +191,8 @@ function updateGuildState(guildID, stateData) {
             if (guild) {
                 guild.State.update(stateData);
             }
-        });
+        })
+        .then(() => emitStateUpdate(guildID));
 }
 
 function changeVolume(guildID, volume) {
