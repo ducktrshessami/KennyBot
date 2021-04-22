@@ -23,6 +23,7 @@ export default class Server extends Component {
         const socket = Socket({
             auth: { guildID: this.guildID }
         });
+        console.info(`Establishing socket for guild ID: ${this.guildID}`);
 
         socket.on("connect_error", console.error);
         socket.once("connect_error", () => Toast("Failed to poll live voice state connection", 1));
@@ -33,13 +34,18 @@ export default class Server extends Component {
                 ready: true
             };
             newState.guild.state = voiceState;
-            this.setState(newState);
+            this.setState(newState, () => console.info("Connection established!"));
         });
 
         socket.on("stateUpdate", voiceState => {
             let newState = { ...this.state };
             newState.guild.state = voiceState;
             this.setState(newState);
+        });
+
+        this.setState({
+            ...this.state,
+            socket
         });
     }
 
@@ -50,6 +56,13 @@ export default class Server extends Component {
             let newState = { ...this.state };
             newState.guild.name = name;
             this.setState(newState);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.state.socket) {
+            console.info(`Closing connection for guild ID: ${this.guildID}`);
+            this.state.socket.disconnect();
         }
     }
 
