@@ -1,0 +1,29 @@
+.confirm-background {
+    opacity: 0.5;
+    background-color: black;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+}
+
+.confirm-wrapper {
+    z-index: 3;
+    position: fixed!important;
+    width: 100vw;
+}
+
+.confirm-card {
+    margin-top: 40vh!important;
+}
+
+.confirm-button {
+    margin-bottom: 1rem;
+    margin-left: 1ch;
+}
+
+@media only screen and (min-width: 601px) {
+    .confirm-button {
+        margin-left: 3ch;
+    }
+}
