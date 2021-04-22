@@ -1,5 +1,6 @@
 import { Component, createRef } from "react";
 import ContextMenu from "../ContextMenu";
+import Confirm from "../Confirm";
 import SongList from "./SongList";
 import EditForm from "./EditForm";
 import API from "../../utils/API";
@@ -10,7 +11,8 @@ import "./Playlist.css";
 export default class Playlist extends Component {
     state = {
         active: false,
-        editing: false
+        editing: false,
+        deleting: false
     }
     menuRef = createRef();
     editRef = createRef();
@@ -56,6 +58,20 @@ export default class Playlist extends Component {
         Toast(`Failed to update ${this.props.name}`, 1);
     }
 
+    setDeleting() {
+        this.setState({
+            ...this.state,
+            deleting: true
+        });
+    }
+
+    cancelDeleting() {
+        this.setState({
+            ...this.state,
+            deleting: false
+        });
+    }
+
     deletePlaylist() {
         API.deletePlaylist(this.props.GuildId, this.props.id)
             .then(res => {
@@ -92,6 +108,7 @@ export default class Playlist extends Component {
     render() {
         return (
             <li>
+                {this.state.deleting ? <Confirm title={`Delete ${this.props.name}?`} onOk={() => this.deletePlaylist()} onCancel={() => this.cancelDeleting()} /> : undefined}
                 <div className={`playlist ${this.state.active ? "open" : ""}`.trim()}>
                     <div className="playlist-title-wrapper">
                         <div className="playlist-title kenny-bg focus-lighten" role="button" onClick={event => this.clickActive(event)}>
@@ -114,7 +131,7 @@ export default class Playlist extends Component {
                             },
                             {
                                 name: "Delete",
-                                callback: () => this.deletePlaylist()
+                                callback: () => this.setDeleting()
                             }
                         ]} buttonRef={this.menuRef} />
                     </div>
