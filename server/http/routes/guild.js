@@ -75,4 +75,29 @@ module.exports = function (router) {
             res.status(404).end();
         }
     });
+
+    router.delete("/api/guild/song/:guildId/:songId", auth.authCheck, auth.authGuilds, function (req, res) {
+        if (req.authGuilds.find(server => server.id === req.params.guildId)) {
+            db.Song.findByPk(req.params.songId)
+                .then(song => {
+                    if (song) {
+                        return song.destroy()
+                            .then(() => {
+                                emitStateUpdate(req.params.guildId);
+                                res.status(200).end();
+                            });
+                    }
+                    else {
+                        res.status(404).end();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).end();
+                });
+        }
+        else {
+            res.status(404).end();
+        }
+    });
 };
