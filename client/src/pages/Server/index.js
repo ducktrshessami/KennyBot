@@ -26,7 +26,9 @@ export default class Server extends Component {
         console.info(`Establishing socket for guild ID: ${this.guildID}`);
 
         socket.on("connect_error", console.error);
-        socket.once("connect_error", () => Toast("Failed to poll live voice state connection", 1));
+        socket.once("connect_error", () => Toast("Live state connection failed", 1));
+
+        socket.on("error", console.error);
 
         socket.on("stateInitial", voiceState => {
             let newState = {
