@@ -1,6 +1,5 @@
 import { createRef } from "react";
 import ContextMenu from "../../ContextMenu";
-import API from "../../../utils/API";
 import Toast from "../../../utils/Toast";
 import "./Song.css";
 
@@ -17,11 +16,7 @@ export default function Song(props) {
 
     function play() {
         if (voiceCheck()) {
-            API.playSong(props.guildId, props.id)
-                .catch(err => {
-                    console.error(err);
-                    Toast(`Failed to play ${props.title}`, 1);
-                });
+
         }
     }
 

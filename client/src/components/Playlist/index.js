@@ -75,25 +75,13 @@ export default class Playlist extends Component {
 
     playPlaylist() {
         if (this.voiceCheck()) {
-            API.playPlaylist(this.props.GuildId, this.props.id)
-                .then(res => {
-                    if (res.status !== 200) {
-                        Toast(`Failed to play ${this.props.name}`, 1);
-                    }
-                })
-                .catch(console.error);
+
         }
     }
 
     shufflePlay() {
         if (this.voiceCheck()) {
-            API.shufflePlay(this.props.GuildId, this.props.id)
-                .then(res => {
-                    if (res.status !== 200) {
-                        Toast(`Failed to play ${this.props.name}`, 1);
-                    }
-                })
-                .catch(console.error);
+
         }
     }
 
