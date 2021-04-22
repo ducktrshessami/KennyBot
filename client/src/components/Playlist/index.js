@@ -46,6 +46,10 @@ export default class Playlist extends Component {
 
     editSucc() {
         Toast("Success!");
+        this.setState({
+            ...this.state,
+            editing: false
+        });
     }
 
     editFail() {
