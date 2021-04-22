@@ -1,3 +1,5 @@
+const music = require("../../../utils/music");
+
 module.exports = function (socket) {
     socket.on("songQueue", function (songID) {
         music.queueSong(socket.handshake.auth.guildID, songID)
