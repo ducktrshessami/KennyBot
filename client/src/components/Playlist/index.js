@@ -3,6 +3,7 @@ import ContextMenu from "../ContextMenu";
 import Confirm from "../Confirm";
 import SongList from "./SongList";
 import EditForm from "./EditForm";
+import AddSong from "./AddSong";
 import API from "../../utils/API";
 import Toast from "../../utils/Toast";
 import isDescendent from "../../utils/isDescendent";
@@ -12,7 +13,8 @@ export default class Playlist extends Component {
     state = {
         active: false,
         editing: false,
-        deleting: false
+        deleting: false,
+        adding: false
     }
     menuRef = createRef();
     editRef = createRef();
@@ -99,6 +101,20 @@ export default class Playlist extends Component {
         }
     }
 
+    addSong() {
+        this.setState({
+            ...this.state,
+            adding: true
+        });
+    }
+
+    closeAdding() {
+        this.setState({
+            ...this.state,
+            adding: false
+        });
+    }
+
     shufflePlay() {
         if (this.voiceCheck()) {
             this.props.socket.emit("playlistShuffle", this.props.id);
@@ -109,6 +125,7 @@ export default class Playlist extends Component {
         return (
             <li>
                 {this.state.deleting ? <Confirm title={`Delete ${this.props.name}?`} onOk={() => this.deletePlaylist()} onCancel={() => this.cancelDeleting()} /> : undefined}
+                {this.state.adding ? <AddSong playlist={this.props.name} close={() => this.closeAdding()} /> : undefined}
                 <div className={`playlist ${this.state.active ? "open" : ""}`.trim()}>
                     <div className="playlist-title-wrapper">
                         <div className="playlist-title kenny-bg focus-lighten" role="button" onClick={event => this.clickActive(event)}>
@@ -121,6 +138,9 @@ export default class Playlist extends Component {
                         </div>
                         <div className="kenny-bg focus-lighten" role="button" onClick={() => this.shufflePlay()}>
                             <i className="shuffle-icon" />
+                        </div>
+                        <div className="kenny-bg focus-lighten" role="button" onClick={() => this.addSong()}>
+                            <b>+</b>
                         </div>
                         <div className="playlist-title-menu kenny-bg focus-lighten" role="button" ref={this.menuRef}>
                             <i className="minimal-text">&nbsp;</i>

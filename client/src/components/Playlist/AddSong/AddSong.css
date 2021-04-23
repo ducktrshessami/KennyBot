@@ -1,0 +1,17 @@
+.add-url-input-field {
+    margin-top: 5vh!important;
+    margin-bottom: 0!important;
+}
+
+.add-url-input {
+    margin: 0!important;
+}
+
+.add-url-input:focus, .add-url-input.valid {
+    border-bottom-color: #9C2B2F!important;
+    box-shadow: 0 1px 0 0 #9C2B2F!important;
+}
+
+.add-url-input-label {
+    pointer-events: none;
+}
