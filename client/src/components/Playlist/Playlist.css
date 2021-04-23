@@ -55,6 +55,12 @@
     vertical-align: text-top;
 }
 
+.big-plus {
+    font-size: 1.8rem;
+    position: relative;
+    bottom: 0.2rem;
+}
+
 .playlist-title-menu {
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
