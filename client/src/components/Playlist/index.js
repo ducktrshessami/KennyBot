@@ -140,7 +140,7 @@ export default class Playlist extends Component {
                             <i className="shuffle-icon" />
                         </div>
                         <div className="kenny-bg focus-lighten" role="button" onClick={() => this.addSong()}>
-                            <i className="big-plus">＋</i>
+                            <i className="add-icon" />
                         </div>
                         <div className="playlist-title-menu kenny-bg focus-lighten" role="button" ref={this.menuRef}>
                             <i className="minimal-text">&nbsp;</i>
