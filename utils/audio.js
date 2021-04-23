@@ -4,6 +4,8 @@ const config = require("../config/audio.json");
 
 module.exports = controller;
 module.exports.getSource = getSource;
+module.exports.getTitle = getTitle;
+module.exports.formatUrl = formatUrl;
 
 scdl.setClientID(process.env.SCDL_CLIENTID || config.scdl.client_id);
 scdl.setOauthToken(process.env.SCDL_TOKEN || config.scdl.oauth_token);
@@ -33,5 +35,33 @@ function getSource(url) {
     }
     else if (scdl.validateURL(url)) {
         return "soundcloud";
+    }
+}
+
+function getTitle(url) {
+    return new Promise((resolve, reject) => {
+        let source = getSource(url);
+        switch (source) {
+            case "youtube":
+                ytdl.getBasicInfo(url)
+                    .then(res => res.videoDetails.title)
+                    .then(resolve);
+                break;
+            case "soundcloud":
+                scdl.getInfo(url)
+                    .then(res => `${res.user.username} - ${res.title}`)
+                    .then(resolve);
+                break;
+            default:
+                reject(new Error("Source not supported"));
+        }
+    });
+}
+
+function formatUrl(url) {
+    let source = getSource(url);
+    switch (source) {
+        case "youtube": return `https://www.youtube.com/watch?v=${ytdl.getURLVideoID(url)}`;
+        case "soundcloud": return scdl.getPermalinkURL(url);
     }
 }

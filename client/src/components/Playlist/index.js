@@ -125,7 +125,7 @@ export default class Playlist extends Component {
         return (
             <li>
                 {this.state.deleting ? <Confirm title={`Delete ${this.props.name}?`} onOk={() => this.deletePlaylist()} onCancel={() => this.cancelDeleting()} /> : undefined}
-                {this.state.adding ? <AddSong playlist={this.props.name} close={() => this.closeAdding()} /> : undefined}
+                {this.state.adding ? <AddSong guildId={this.props.GuildId} playlistId={this.props.id} playlist={this.props.name} close={() => this.closeAdding()} /> : undefined}
                 <div className={`playlist ${this.state.active ? "open" : ""}`.trim()}>
                     <div className="playlist-title-wrapper">
                         <div className="playlist-title kenny-bg focus-lighten" role="button" onClick={event => this.clickActive(event)}>

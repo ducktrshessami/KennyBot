@@ -1,5 +1,6 @@
 const auth = require("../middleware/auth");
 const db = require("../../../models");
+const { getTitle, getSource, formatUrl } = require("../../../utils/audio");
 const { emitStateUpdate } = require("../../../utils/state");
 
 module.exports = function (router) {
@@ -85,6 +86,42 @@ module.exports = function (router) {
                             .then(() => {
                                 emitStateUpdate(req.params.guildId);
                                 res.status(200).end();
+                            });
+                    }
+                    else {
+                        res.status(404).end();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).end();
+                });
+        }
+        else {
+            res.status(404).end();
+        }
+    });
+
+    router.post("/api/guild/song/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
+        if (req.authGuilds.find(server => server.id === req.params.guildId)) {
+            db.Playlist.findByPk(req.params.playlistId, {
+                include: db.Song,
+                order: [[db.Song, "order"]]
+            })
+                .then(playlist => {
+                    if (playlist) {
+                        let lastSong = playlist.Songs[playlist.Songs.length - 1];
+                        return getTitle(req.body.url)
+                            .then(title => db.Song.create({
+                                title,
+                                url: formatUrl(req.body.url),
+                                source: getSource(req.body.url),
+                                order: lastSong ? lastSong.order + 1 : 0,
+                                PlaylistId: req.params.playlistId
+                            }))
+                            .then(song => {
+                                emitStateUpdate(req.params.guildId);
+                                res.status(200).json(song);
                             });
                     }
                     else {
