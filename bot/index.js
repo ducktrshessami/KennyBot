@@ -1,4 +1,5 @@
 const DiscordBot = require("discord-bot");
+const db = require("../models");
 const config = require("../config/bot.json");
 const commands = require("./commands");
 const responses = require("./responses");
@@ -41,9 +42,17 @@ client.on("guildCreate", initGuild);
 
 client.on("guildUpdate", (before, after) => initGuild(after));
 
-client.on("voiceStateUpdate", voiceState => {
-    if (voiceState.member.id === client.user.id) {
-        emitStateUpdate(voiceState.guild.id)
+client.on("voiceStateUpdate", async (before, after) => {
+    if (after.member.id === client.user.id) {
+        if (!after.channel) {
+            let guild = await db.Guild.findByPk(after.guild.id, { include: db.State });
+            await guild.State.update({
+                playing: false,
+                paused: false,
+                lastNotQueue: null
+            });
+        }
+        emitStateUpdate(after.guild.id)
             .catch(console.error);
     }
 });
