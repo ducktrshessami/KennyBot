@@ -7,7 +7,7 @@ export default function VoiceChannel(props) {
             <h5 className="voice-channel-name">
                 Connected to
                 <i className="speaker-icon" />
-                <b>{props.channel}</b>
+                {props.channel}
             </h5>
             <ul className="browser-default user-list">
                 {props.users.map(user => <Listener key={user} name={user} />)}
