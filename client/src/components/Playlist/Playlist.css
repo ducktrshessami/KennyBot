@@ -36,6 +36,16 @@
     content: url("./collapse-arrow-down.png");
 }
 
+.play-icon {
+    content: url("./play-icon.png");
+    padding: 0 0.2ch;
+    height: 1rem;
+    vertical-align: middle;
+    position: relative;
+    bottom: 0.1rem;
+    left: 0.1ch;
+}
+
 .shuffle-icon {
     content: url("./shuffle-icon.png");
     height: 1.5rem;
