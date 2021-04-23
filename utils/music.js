@@ -71,6 +71,7 @@ function playNextInPlaylist(guildID, repeatAll = false) {
                 return updateGuildState(guildID, {
                     SongId: null,
                     playing: false,
+                    paused: false,
                     lastNotQueue: null
                 });
             }
@@ -107,6 +108,7 @@ function playFirstInCurrentPlaylist(guildID) {
                 return updateGuildState(guildID, {
                     SongId: null,
                     playing: false,
+                    paused: false,
                     lastNotQueue: null
                 });
             }
@@ -127,6 +129,7 @@ function playPlaylist(guildID, playlistID) {
                 return updateGuildState(guildID, {
                     SongId: null,
                     playing: false,
+                    paused: false,
                     lastNotQueue: null
                 });
             }
@@ -143,6 +146,7 @@ function playRandomInCurrentPlaylist(guildID) {
                 return updateGuildState(guildID, {
                     SongId: null,
                     playing: false,
+                    paused: false,
                     lastNotQueue: null
                 });
             }
@@ -164,6 +168,7 @@ function shufflePlayPlaylist(guildID, playlistID) {
                 return updateGuildState(guildID, {
                     SongId: null,
                     playing: false,
+                    paused: false,
                     lastNotQueue: null
                 });
             }
@@ -225,6 +230,7 @@ function pause(guildID) {
     if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
         if (!guild.voice.connection.dispatcher.paused) {
             guild.voice.connection.dispatcher.pause(true);
+            updateGuildState(guildID, { paused: true });
             return true;
         }
     }
@@ -236,6 +242,7 @@ function resume(guildID) {
     if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
         if (guild.voice.connection.dispatcher.paused) {
             guild.voice.connection.dispatcher.resume();
+            updateGuildState(guildID, { paused: false });
             return true;
         }
     }
@@ -296,7 +303,8 @@ function playSong(guildID, songID, queued = false) {
                         .on("start", () => {
                             let newState = {
                                 SongId: song.id,
-                                playing: true
+                                playing: true,
+                                paused: false
                             };
                             if (!queued) {
                                 newState.lastNotQueue = song.id
@@ -311,6 +319,7 @@ function playSong(guildID, songID, queued = false) {
             updateGuildState(guildID, {
                 SongId: null,
                 playing: false,
+                paused: false,
                 lastNotQueue: null
             });
             resolve(false);

@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    paused: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     lastNotQueue: DataTypes.UUID,
     shuffle: {
       type: DataTypes.BOOLEAN,
