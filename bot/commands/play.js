@@ -1,24 +1,12 @@
 const { Command, utils } = require("discord-bot");
-const { getBasicInfo } = require("ytdl-core");
-const { getInfo } = require("scdl-core");
-const { getSource } = require("../../utils/audio");
+const { getSource, getTitle } = require("../../utils/audio");
 const { playUrl } = require("../../utils/music");
 
 module.exports = new Command("play", function (message, args) {
     let source = getSource(args[1]);
     if (args.length > 1 && source) {
-        let getter;
-        switch (source) {
-            case "youtube": getter = getBasicInfo(args[1])
-                .then(res => res.videoDetails.title);
-                break;
-            case "soundcloud": getter = getInfo(args[1])
-                .then(res => `${res.user.username} - ${res.title}`);
-                break;
-            default:
-        }
         Promise.all([
-            getter,
+            getTitle(args[1]),
             playUrl(message.guild.id, args[1])
         ])
             .then(([title, success]) => {
@@ -30,6 +18,7 @@ module.exports = new Command("play", function (message, args) {
                     utils.sendVerbose(message.channel, `Failed to play \`${args[1]}\``)
                         .catch(console.error);
                 }
-            });
+            })
+            .catch(console.error);
     }
 });
