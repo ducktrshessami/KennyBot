@@ -61,6 +61,7 @@ function getNewState(guildID) {
                         channel: guild.voice.channel.name,
                         users: guild.voice.channel.members
                             .map(member => member.nickname || member.user.username)
+                            .sort()
                     };
                 }
                 return state;
