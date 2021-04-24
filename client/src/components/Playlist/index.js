@@ -137,7 +137,7 @@ export default class Playlist extends Component {
                             <i className="playlist-play-icon" />
                         </div>
                         <div className="kenny-bg focus-lighten" role="button" onClick={() => this.shufflePlay()}>
-                            <i className="shuffle-icon" />
+                            <i className="playlist-shuffle-icon" />
                         </div>
                         <div className="kenny-bg focus-lighten" role="button" onClick={() => this.addSong()}>
                             <i className="add-icon" />

@@ -28,6 +28,17 @@
     margin: auto;
 }
 
+.music-player-button.disabled {
+    opacity: 0.25;
+}
+
+.server-shuffle-icon {
+    content: url("../../images/shuffle-icon.png");
+    height: 1.5rem;
+    position: relative;
+    top: 0.4rem;
+}
+
 .server-play-icon {
     content: url("../../images//play-icon.png");
     height: 2rem;
@@ -73,6 +84,11 @@
 
     .server-container > * {
         padding: 0 2ch!important;
+    }
+
+    .music-player-button {
+        position: relative;
+        left: 0.5ch;
     }
 
     .playlist-header {

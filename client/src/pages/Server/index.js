@@ -129,15 +129,23 @@ export default class Server extends Component {
                             </h4>
                             <article className="server-info-container">
                                 <section className="music-player nqb-bg">
-                                    <div className="music-player-row row">
-                                        <div role="button" className="music-player-button col">
-                                            <i className="server-prev-icon" />
+                                    <div className="row">
+                                        <div role="button" className="music-player-outer-button col s1">
+                                            <i className="server-shuffle-icon" />
                                         </div>
-                                        <div role="button" className="music-player-button col">
-                                            <i className={"server-play-icon"} />
+                                        <div className="music-player-row col s10">
+                                            <div role={this.state.guild.state.playing ? "button" : undefined} className="music-player-button disabled">
+                                                <i className="server-prev-icon" />
+                                            </div>
+                                            <div role={this.state.guild.state.playing ? "button" : undefined} className={`music-player-button ${this.state.playing ? "" : "disabled"}`.trim()}>
+                                                <i className={"server-play-icon"} />
+                                            </div>
+                                            <div role={this.state.guild.state.playing ? "button" : undefined} className={`music-player-button ${this.state.playing ? "" : "disabled"}`.trim()}>
+                                                <i className="server-skip-icon" />
+                                            </div>
                                         </div>
-                                        <div role="button" className="music-player-button col">
-                                            <i className="server-skip-icon" />
+                                        <div role="button" className="music-player-outer-button col s1">
+                                            <i className="" />
                                         </div>
                                     </div>
                                     <div className="range-field">
