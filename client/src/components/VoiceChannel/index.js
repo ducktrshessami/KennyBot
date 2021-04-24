@@ -3,7 +3,7 @@ import "./VoiceChannel.css";
 
 export default function VoiceChannel(props) {
     return (
-        <article className="voice-channel nqb-bg">
+        <section className="voice-channel nqb-bg">
             <h5 className="voice-channel-name">
                 Connected to
                 <i className="speaker-icon" />
@@ -12,6 +12,6 @@ export default function VoiceChannel(props) {
             <ul className="browser-default user-list">
                 {props.users.map(user => <Listener key={user} name={user} />)}
             </ul>
-        </article>
+        </section>
     );
 };

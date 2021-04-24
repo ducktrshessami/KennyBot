@@ -29,3 +29,34 @@ main {
     height: 100%;
     padding: 1rem;
 }
+
+input[type=range]::-webkit-slider-thumb {
+    background-color: #9C2B2F;
+    box-shadow: none!important;
+}
+
+input[type=range]::-moz-range-thumb {
+    background-color: #9C2B2F;
+    box-shadow: none!important;
+}
+
+input[type=range]::-ms-thumb {
+    background-color: #9C2B2F;
+    box-shadow: none!important;
+}
+
+input[type=range] + .thumb {
+    background-color: #9C2B2F;
+}
+
+input[type=range] + .thumb.active {
+    width: 4ch!important;
+    height: 4ch!important;
+    margin-left: -1.1ch!important;
+}
+
+input[type=range] + .thumb.active .value {
+    font-size: 0.9rem;
+    margin-left: 0.3ch;
+    margin-top: 1.3ch;
+}

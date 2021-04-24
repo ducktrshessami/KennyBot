@@ -1,14 +1,16 @@
-import { Component } from "react";
+import { Component, createRef } from "react";
 import { Link, Redirect } from "react-router-dom";
+import Socket from "socket.io-client";
+import M from "materialize-css";
 import Loading from "../../components/Loading";
 import VoiceChannel from "../../components/VoiceChannel";
 import Playlist from "../../components/Playlist";
 import CreatePlaylist from "../../components/CreatePlaylist";
-import Socket from "socket.io-client";
 import Toast from "../../utils/Toast";
 import "./Server.css";
 
 export default class Server extends Component {
+    volumeRef = createRef();
     guildID = ((window.location.pathname.match(/server\/[0-9]+/gi) || [""])[0].match(/[0-9]+/g) || [""])[0];
     state = {
         ready: false,
@@ -17,12 +19,13 @@ export default class Server extends Component {
             name: "",
             state: {}
         }
-    }
+    };
 
     componentDidMount() {
         const socket = Socket({
             auth: { guildID: this.guildID }
         });
+
         console.info(`Establishing socket for guild ID: ${this.guildID}`);
 
         socket.on("connect_error", console.error);
@@ -49,11 +52,14 @@ export default class Server extends Component {
             ...this.state,
             socket
         });
+
+        M.Range.init(this.volumeRef.current);
     }
 
     componentDidUpdate() {
         let guild = this.props.guilds.find(guild => guild.id === this.guildID) || {};
         let name = guild.name || "";
+        this.volumeRef.current.value = this.state.guild.state.volume || 0;
         if (this.state.guild.name !== name) {
             let newState = { ...this.state };
             newState.guild.name = name;
@@ -103,6 +109,12 @@ export default class Server extends Component {
         Toast("Failed to create playlist", 1);
     }
 
+    changeVolume() {
+        if (this.state.socket) {
+            this.state.socket.emit("volumeChange", this.volumeRef.current.value);
+        }
+    }
+
     render() {
         return (
             <main>
@@ -115,8 +127,27 @@ export default class Server extends Component {
                                 {this.state.guild.name}
                                 {!this.state.ready || !this.props.ready ? <Loading className="server-loader" size="small" /> : undefined}
                             </h4>
-                            <br />
-                            {this.state.guild.state.voice ? <VoiceChannel {...this.state.guild.state.voice} /> : this.state.ready ? <h6>Not connected to a voice channel</h6> : undefined}
+                            <article className="server-info-container">
+                                <section className="music-player nqb-bg">
+                                    <div className="music-player-row row">
+                                        <div role="button" className="music-player-button col">
+                                            <i className="server-prev-icon" />
+                                        </div>
+                                        <div role="button" className="music-player-button col">
+                                            <i className={"server-play-icon"} />
+                                        </div>
+                                        <div role="button" className="music-player-button col">
+                                            <i className="server-skip-icon" />
+                                        </div>
+                                    </div>
+                                    <div className="range-field">
+                                        <input type="range" min="0" max="1.5" step="0.01" onMouseUp={() => this.changeVolume()} ref={this.volumeRef} />
+                                    </div>
+                                </section>
+                            </article>
+                            <article className="server-info-container">
+                                {this.state.guild.state.voice ? <VoiceChannel {...this.state.guild.state.voice} /> : this.state.ready ? <h6>Not connected to a voice channel</h6> : undefined}
+                            </article>
                         </section>
                         <section className="col s12 m6 l8">
                             <div className="playlist-header">

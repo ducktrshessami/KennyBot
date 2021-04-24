@@ -8,6 +8,40 @@
     margin-left: 1ch;
 }
 
+.server-info-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.music-player {
+    padding: 1.5rem 3ch 1rem 3ch;
+    border-radius: 10px;
+    /* position: sticky; */
+}
+
+.music-player-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.music-player-button {
+    margin: auto;
+}
+
+.server-play-icon {
+    content: url("../../images//play-icon.png");
+    height: 2rem;
+}
+
+.server-skip-icon, .server-prev-icon {
+    content: url("../../images//skip-icon.png");
+    height: 1.25rem;
+}
+
+.server-prev-icon {
+    transform: scaleX(-1);
+}
+
 .playlist-header {
     margin-top: 2rem;
     margin-bottom: 2rem;
