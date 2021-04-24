@@ -207,13 +207,13 @@ function changeVolume(guildID, volume) {
             if (guild) {
                 return guild.State.update({ volume: vol });
             }
-        }).then(res => {
+        }).then(() => {
             let guild = findGuild(guildID);
             if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
                 guild.voice.connection.dispatcher.setVolume(vol);
             }
-            return res;
-        });
+        })
+        .then(() => emitStateUpdate(guildID));
 }
 
 function setShuffle(guildID, shuffle) {
