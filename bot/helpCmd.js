@@ -22,7 +22,8 @@ const pageTemplates = {
         "leave",
         "volume",
         "pause",
-        "resume"
+        "resume",
+        "play"
     ]
 };
 
