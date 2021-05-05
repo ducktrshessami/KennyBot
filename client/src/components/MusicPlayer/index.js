@@ -12,6 +12,11 @@ export default function MusicPlayer(props) {
         }
     }
 
+    switch (props.repeat) {
+        case 1: repeatIcon = "one"; break;
+        case 2: repeatIcon = "all"; break;
+        default: repeatIcon = ""; break;
+    }
     useEffect(() => {
         let instance = M.Range.init(volumeRef.current);
         console.log(props);

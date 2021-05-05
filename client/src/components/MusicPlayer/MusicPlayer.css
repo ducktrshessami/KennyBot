@@ -41,6 +41,21 @@
     content: url("../../images/active-shuffle-icon.png");
 }
 
+.repeat-icon {
+    content: url("../../images/repeat-icon.png");
+    height: 1.5rem;
+    position: relative;
+    top: 0.3rem;
+}
+
+.repeat-icon.one {
+    content: url("../../images/repeat-one-icon.png");
+}
+
+.repeat-icon.all {
+    content: url("../../images/repeat-all-icon.png");
+}
+
 @media only screen and (min-width: 601px) {
     .music-player-button {
         position: relative;
