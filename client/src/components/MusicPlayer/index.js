@@ -4,6 +4,7 @@ import "./MusicPlayer.css";
 
 export default function MusicPlayer(props) {
     const volumeRef = createRef();
+    let repeatIcon;
 
     function changeVolume() {
         if (props.socket) {
@@ -13,6 +14,7 @@ export default function MusicPlayer(props) {
 
     useEffect(() => {
         let instance = M.Range.init(volumeRef.current);
+        console.log(props);
         volumeRef.current.value = props.volume || 0;
         return () => {
             instance.destroy();
@@ -23,7 +25,7 @@ export default function MusicPlayer(props) {
         <section className="music-player nqb-bg">
             <div className="row">
                 <div role="button" className="music-player-outer-button col s1">
-                    <i className="player-shuffle-icon" />
+                    <i className={`player-shuffle-icon ${props.shuffle ? "active" : ""}`.trim()} />
                 </div>
                 <div className="music-player-row col s10">
                     <div role={props.playing ? "button" : undefined} className="music-player-button disabled">
@@ -37,7 +39,7 @@ export default function MusicPlayer(props) {
                     </div>
                 </div>
                 <div role="button" className="music-player-outer-button col s1">
-                    <i className="" />
+                    <i className={`repeat-icon ${repeatIcon}`.trim()} />
                 </div>
             </div>
             <div className="range-field">

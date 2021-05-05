@@ -37,6 +37,10 @@
     top: 0.4rem;
 }
 
+.player-shuffle-icon.active {
+    content: url("../../images/active-shuffle-icon.png");
+}
+
 @media only screen and (min-width: 601px) {
     .music-player-button {
         position: relative;
