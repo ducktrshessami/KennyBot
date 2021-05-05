@@ -10,7 +10,7 @@ function getNewState(guildID) {
         include: [
             {
                 model: db.State,
-                attributes: ["volume", "playing", "shuffle", "repeat"],
+                attributes: ["volume", "playing", "paused", "shuffle", "repeat"],
                 include: {
                     model: db.Song,
                     attributes: ["id", "title", "url", "source", "PlaylistId"],
@@ -50,6 +50,7 @@ function getNewState(guildID) {
                     song: dbGuild.State.Song,
                     volume: dbGuild.State.volume,
                     playing: dbGuild.State.playing,
+                    paused: dbGuild.State.paused,
                     shuffle: dbGuild.State.shuffle,
                     repeat: dbGuild.State.repeat,
                     playlists: dbGuild.Playlists,
