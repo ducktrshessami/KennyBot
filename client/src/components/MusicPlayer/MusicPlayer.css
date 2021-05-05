@@ -1,0 +1,38 @@
+.music-player {
+    padding: 1.5rem 3ch 1rem 3ch;
+    border-radius: 10px;
+}
+
+.music-player-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.music-player-button {
+    margin: auto;
+}
+
+.music-player-button.disabled {
+    opacity: 0.25;
+}
+
+.player-play-icon {
+    content: url("../../images/play-icon.png");
+    height: 2rem;
+}
+
+.player-skip-icon, .player-prev-icon {
+    content: url("../../images/skip-icon.png");
+    height: 1.25rem;
+}
+
+.player-prev-icon {
+    transform: scaleX(-1);
+}
+
+@media only screen and (min-width: 601px) {
+    .music-player-button {
+        position: relative;
+        left: 0.5ch;
+    }
+}

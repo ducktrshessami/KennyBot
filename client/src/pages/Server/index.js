@@ -1,16 +1,17 @@
-import { Component, createRef } from "react";
+import { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import Socket from "socket.io-client";
-import M from "materialize-css";
+import Toast from "../../utils/Toast";
+
 import Loading from "../../components/Loading";
 import VoiceChannel from "../../components/VoiceChannel";
 import Playlist from "../../components/Playlist";
 import CreatePlaylist from "../../components/CreatePlaylist";
-import Toast from "../../utils/Toast";
+import MusicPlayer from "../../components/MusicPlayer";
+
 import "./Server.css";
 
 export default class Server extends Component {
-    volumeRef = createRef();
     guildID = ((window.location.pathname.match(/server\/[0-9]+/gi) || [""])[0].match(/[0-9]+/g) || [""])[0];
     state = {
         ready: false,
@@ -52,14 +53,11 @@ export default class Server extends Component {
             ...this.state,
             socket
         });
-
-        M.Range.init(this.volumeRef.current);
     }
 
     componentDidUpdate() {
         let guild = this.props.guilds.find(guild => guild.id === this.guildID) || {};
         let name = guild.name || "";
-        this.volumeRef.current.value = this.state.guild.state.volume || 0;
         if (this.state.guild.name !== name) {
             let newState = { ...this.state };
             newState.guild.name = name;
@@ -109,12 +107,6 @@ export default class Server extends Component {
         Toast("Failed to create playlist", 1);
     }
 
-    changeVolume() {
-        if (this.state.socket) {
-            this.state.socket.emit("volumeChange", this.volumeRef.current.value);
-        }
-    }
-
     render() {
         return (
             <main>
@@ -128,30 +120,7 @@ export default class Server extends Component {
                                 {!this.state.ready || !this.props.ready ? <Loading className="server-loader" size="small" /> : undefined}
                             </h4>
                             <article className="server-info-container">
-                                <section className="music-player nqb-bg">
-                                    <div className="row">
-                                        <div role="button" className="music-player-outer-button col s1">
-                                            <i className="server-shuffle-icon" />
-                                        </div>
-                                        <div className="music-player-row col s10">
-                                            <div role={this.state.guild.state.playing ? "button" : undefined} className="music-player-button disabled">
-                                                <i className="server-prev-icon" />
-                                            </div>
-                                            <div role={this.state.guild.state.playing ? "button" : undefined} className={`music-player-button ${this.state.playing ? "" : "disabled"}`.trim()}>
-                                                <i className={"server-play-icon"} />
-                                            </div>
-                                            <div role={this.state.guild.state.playing ? "button" : undefined} className={`music-player-button ${this.state.playing ? "" : "disabled"}`.trim()}>
-                                                <i className="server-skip-icon" />
-                                            </div>
-                                        </div>
-                                        <div role="button" className="music-player-outer-button col s1">
-                                            <i className="" />
-                                        </div>
-                                    </div>
-                                    <div className="range-field">
-                                        <input type="range" min="0" max="1.5" step="0.01" onMouseUp={() => this.changeVolume()} ref={this.volumeRef} />
-                                    </div>
-                                </section>
+                                {this.state.guild.state.voice ? <MusicPlayer socket={this.state.socket} playing={this.state.guild.state.playing} volume={this.state.guild.state.volume} /> : undefined}
                             </article>
                             <article className="server-info-container">
                                 {this.state.guild.state.voice ? <VoiceChannel {...this.state.guild.state.voice} /> : this.state.ready ? <h6>Not connected to a voice channel</h6> : undefined}
