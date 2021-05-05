@@ -16,4 +16,12 @@ module.exports = function (socket) {
                 socket.emit("error", err);
             });
     });
+
+    socket.on("repeatChange", function (repeat) {
+        music.setRepeat(socket.handshake.auth.guildID, repeat)
+            .catch(err => {
+                console.error(err);
+                socket.emit("error", err);
+            });
+    });
 };

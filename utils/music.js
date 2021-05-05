@@ -5,6 +5,7 @@ const { emitStateUpdate } = require("./state");
 module.exports = {
     changeVolume,
     setShuffle,
+    setRepeat,
     pause,
     resume,
     skip,
@@ -221,6 +222,16 @@ function setShuffle(guildID, shuffle) {
         .then(guild => {
             if (guild) {
                 return guild.State.update({ shuffle });
+            }
+        })
+        .then(() => emitStateUpdate(guildID));
+}
+
+function setRepeat(guildID, repeat) {
+    return db.Guild.findByPk(guildID, { include: db.State })
+        .then(guild => {
+            if (guild) {
+                return guild.State.update({ repeat });
             }
         })
         .then(() => emitStateUpdate(guildID));

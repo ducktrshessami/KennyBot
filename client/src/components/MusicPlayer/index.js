@@ -5,6 +5,7 @@ import "./MusicPlayer.css";
 export default function MusicPlayer(props) {
     const volumeRef = createRef();
     const [shuffle, setShuffle] = useState(props.shuffle);
+    const [repeat, setRepeat] = useState(props.repeat);
     let repeatIcon;
 
     function changeVolume() {
@@ -21,7 +22,18 @@ export default function MusicPlayer(props) {
         }
     }
 
-    switch (props.repeat) {
+    function changeRepeat() {
+        if (props.socket) {
+            let newRepeat = repeat - 1;
+            if (newRepeat < 0) {
+                newRepeat = 2;
+            }
+            props.socket.emit("repeatChange", newRepeat);
+            setRepeat(newRepeat);
+        }
+    }
+
+    switch (repeat) {
         case 1: repeatIcon = "one"; break;
         case 2: repeatIcon = "all"; break;
         default: repeatIcon = ""; break;
@@ -36,7 +48,8 @@ export default function MusicPlayer(props) {
     });
     useEffect(() => {
         setShuffle(props.shuffle);
-    }, [props.shuffle]);
+        setRepeat(props.repeat);
+    }, [props]);
 
     return (
         <section className="music-player nqb-bg">
@@ -55,7 +68,7 @@ export default function MusicPlayer(props) {
                         <i className="player-skip-icon" />
                     </div>
                 </div>
-                <div role="button" className="music-player-outer-button col s1">
+                <div role="button" className="music-player-outer-button col s1" onClick={changeRepeat}>
                     <i className={`repeat-icon ${repeatIcon}`.trim()} />
                 </div>
             </div>
