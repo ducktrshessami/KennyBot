@@ -30,6 +30,13 @@
     transform: scaleX(-1);
 }
 
+.player-shuffle-icon {
+    content: url("../../images/shuffle-icon.png");
+    height: 1.5rem;
+    position: relative;
+    top: 0.4rem;
+}
+
 @media only screen and (min-width: 601px) {
     .music-player-button {
         position: relative;

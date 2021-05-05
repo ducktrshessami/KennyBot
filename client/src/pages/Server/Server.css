@@ -13,13 +13,6 @@
     margin-bottom: 2rem;
 }
 
-.server-shuffle-icon {
-    content: url("../../images/shuffle-icon.png");
-    height: 1.5rem;
-    position: relative;
-    top: 0.4rem;
-}
-
 .playlist-header {
     margin-top: 2rem;
     margin-bottom: 2rem;
