@@ -1,14 +1,23 @@
-import { createRef, useEffect } from "react";
+import { createRef, useEffect, useState } from "react";
 import M from "materialize-css";
 import "./MusicPlayer.css";
 
 export default function MusicPlayer(props) {
     const volumeRef = createRef();
+    const [shuffle, setShuffle] = useState(props.shuffle);
     let repeatIcon;
 
     function changeVolume() {
         if (props.socket) {
             props.socket.emit("volumeChange", volumeRef.current.value);
+        }
+    }
+
+    function toggleShuffle() {
+        if (props.socket) {
+            let newShuffle = !shuffle;
+            props.socket.emit("shuffleChange", newShuffle);
+            setShuffle(newShuffle);
         }
     }
 
@@ -25,12 +34,15 @@ export default function MusicPlayer(props) {
             instance.destroy();
         }
     });
+    useEffect(() => {
+        setShuffle(props.shuffle);
+    }, [props.shuffle]);
 
     return (
         <section className="music-player nqb-bg">
             <div className="row">
-                <div role="button" className="music-player-outer-button col s1">
-                    <i className={`player-shuffle-icon ${props.shuffle ? "active" : ""}`.trim()} />
+                <div role="button" className="music-player-outer-button col s1" onClick={toggleShuffle}>
+                    <i className={`player-shuffle-icon ${shuffle ? "active" : ""}`.trim()} />
                 </div>
                 <div className="music-player-row col s10">
                     <div role={props.playing ? "button" : undefined} className="music-player-button disabled">

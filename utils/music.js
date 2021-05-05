@@ -222,7 +222,8 @@ function setShuffle(guildID, shuffle) {
             if (guild) {
                 return guild.State.update({ shuffle });
             }
-        });
+        })
+        .then(() => emitStateUpdate(guildID));
 }
 
 function pause(guildID) {
