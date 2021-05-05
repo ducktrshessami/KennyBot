@@ -58,7 +58,7 @@ export default function MusicPlayer(props) {
                     <i className={`player-shuffle-icon ${shuffle ? "active" : ""}`.trim()} />
                 </div>
                 <div className="music-player-row col s10">
-                    <div role={props.playing ? "button" : undefined} className="music-player-button disabled">
+                    <div className="music-player-button disabled">
                         <i className="player-prev-icon" />
                     </div>
                     <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()}>
