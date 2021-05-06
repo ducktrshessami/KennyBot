@@ -195,7 +195,7 @@ function updateGuildState(guildID, stateData) {
     return db.Guild.findByPk(guildID, { include: db.State })
         .then(guild => {
             if (guild) {
-                guild.State.update(stateData);
+                return guild.State.update(stateData);
             }
         })
         .then(() => emitStateUpdate(guildID));
