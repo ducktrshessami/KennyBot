@@ -148,7 +148,7 @@ export default class Playlist extends Component {
                         </div>
                         <ContextMenu className="playlist-context-menu" optionClassName="kenny-bg focus-lighten" options={[
                             {
-                                name: "Edit",
+                                name: "Rename",
                                 callback: () => this.editPlaylistName()
                             },
                             {
