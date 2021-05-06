@@ -47,7 +47,6 @@ export default function MusicPlayer(props) {
         }
     }
 
-    console.log(props);
     switch (repeat) {
         case 1: repeatIcon = "one"; break;
         case 2: repeatIcon = "all"; break;
