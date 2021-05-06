@@ -4,7 +4,6 @@ import Socket from "socket.io-client";
 import Toast from "../../utils/Toast";
 
 import Loading from "../../components/Loading";
-import VoiceChannel from "../../components/VoiceChannel";
 import Playlist from "../../components/Playlist";
 import CreatePlaylist from "../../components/CreatePlaylist";
 import MusicPlayer from "../../components/MusicPlayer";
@@ -120,10 +119,10 @@ export default class Server extends Component {
                                 {!this.state.ready || !this.props.ready ? <Loading className="server-loader" size="small" /> : undefined}
                             </h4>
                             <article className="server-info-container">
-                                {this.state.guild.state.voice ? <MusicPlayer socket={this.state.socket} playing={this.state.guild.state.playing} paused={this.state.guild.state.paused} shuffle={this.state.guild.state.shuffle} repeat={this.state.guild.state.repeat} volume={this.state.guild.state.volume} song={this.state.guild.state.song} /> : undefined}
+                                {this.state.guild.state.voice ? <h5>Connected to <b>{this.state.guild.state.voice.channel}</b></h5> : this.state.ready ? <h6>Not connected to a voice channel</h6> : undefined}
                             </article>
                             <article className="server-info-container">
-                                {this.state.guild.state.voice ? <VoiceChannel {...this.state.guild.state.voice} /> : this.state.ready ? <h6>Not connected to a voice channel</h6> : undefined}
+                                {this.state.guild.state.voice ? <MusicPlayer socket={this.state.socket} playing={this.state.guild.state.playing} paused={this.state.guild.state.paused} shuffle={this.state.guild.state.shuffle} repeat={this.state.guild.state.repeat} volume={this.state.guild.state.volume} song={this.state.guild.state.song} /> : undefined}
                             </article>
                         </section>
                         <section className="col s12 m6 l8">

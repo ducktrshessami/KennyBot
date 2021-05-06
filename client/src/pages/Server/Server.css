@@ -10,7 +10,7 @@
 
 .server-info-container {
     margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
 }
 
 .playlist-header {
@@ -47,6 +47,11 @@
     }
 
     .playlist-header {
+        margin-bottom: 2rem;
+    }
+
+    .server-info-container {
+        margin-top: 2rem;
         margin-bottom: 2rem;
     }
     
