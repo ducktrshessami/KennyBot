@@ -134,10 +134,10 @@ export default class Playlist extends Component {
                             {this.state.editing ? <EditForm guildId={this.props.GuildId} playlistId={this.props.id} initialValue={this.props.name} onSuccess={() => this.editSucc()} onError={() => this.editFail()} editRef={this.editRef} /> : this.props.name}
                         </div>
                         <div className="kenny-bg focus-lighten" role="button" onClick={() => this.playPlaylist()}>
-                            <i className="play-icon" />
+                            <i className="playlist-play-icon" />
                         </div>
                         <div className="kenny-bg focus-lighten" role="button" onClick={() => this.shufflePlay()}>
-                            <i className="shuffle-icon" />
+                            <i className="playlist-shuffle-icon" />
                         </div>
                         <div className="kenny-bg focus-lighten" role="button" onClick={() => this.addSong()}>
                             <i className="add-icon" />
@@ -148,7 +148,7 @@ export default class Playlist extends Component {
                         </div>
                         <ContextMenu className="playlist-context-menu" optionClassName="kenny-bg focus-lighten" options={[
                             {
-                                name: "Edit",
+                                name: "Rename",
                                 callback: () => this.editPlaylistName()
                             },
                             {

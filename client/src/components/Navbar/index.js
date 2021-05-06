@@ -8,7 +8,7 @@ export default function Navbar() {
                 <div className="nav-wrapper">
                     <Link to="/dashboard" className="left dash-link">
                         <img src={process.env.PUBLIC_URL + "/logo100.png"} alt="Kenny" className="logo" />
-                        <b className="hide-on-small-only">KennyBot</b>
+                        <span className="hide-on-small-only">KennyBot</span>
                     </Link>
                     <Link to="/logout" className="logout right">Log Out</Link>
                 </div>

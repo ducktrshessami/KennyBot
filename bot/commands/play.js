@@ -21,4 +21,7 @@ module.exports = new Command("play", function (message, args) {
             })
             .catch(console.error);
     }
+}, {
+    usage: "@kennybot play <url>",
+    description: "Play a single song from URL"
 });

@@ -5,6 +5,7 @@ const { emitStateUpdate } = require("./state");
 module.exports = {
     changeVolume,
     setShuffle,
+    setRepeat,
     pause,
     resume,
     skip,
@@ -21,7 +22,7 @@ function findGuild(guildID) {
 }
 
 function handleSongEnd(guildID, skip = false) {
-    db.Guild.findByPk(guildID, {
+    return db.Guild.findByPk(guildID, {
         include: [db.Queue, db.State],
         order: [[db.Queue, "createdAt"]]
     })
@@ -36,7 +37,7 @@ function handleSongEnd(guildID, skip = false) {
                 return playRandomInCurrentPlaylist(guildID);
             }
             else {
-                return playNextInPlaylist(guildID, Boolean(guild.State.repeat));
+                return playNextInPlaylist(guildID, skip || Boolean(guild.State.repeat));
             }
         })
         .catch(console.error);
@@ -207,13 +208,13 @@ function changeVolume(guildID, volume) {
             if (guild) {
                 return guild.State.update({ volume: vol });
             }
-        }).then(res => {
+        }).then(() => {
             let guild = findGuild(guildID);
             if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
                 guild.voice.connection.dispatcher.setVolume(vol);
             }
-            return res;
-        });
+        })
+        .then(() => emitStateUpdate(guildID));
 }
 
 function setShuffle(guildID, shuffle) {
@@ -222,7 +223,18 @@ function setShuffle(guildID, shuffle) {
             if (guild) {
                 return guild.State.update({ shuffle });
             }
-        });
+        })
+        .then(() => emitStateUpdate(guildID));
+}
+
+function setRepeat(guildID, repeat) {
+    return db.Guild.findByPk(guildID, { include: db.State })
+        .then(guild => {
+            if (guild) {
+                return guild.State.update({ repeat });
+            }
+        })
+        .then(() => emitStateUpdate(guildID));
 }
 
 function pause(guildID) {
@@ -261,7 +273,6 @@ function playUrl(guildID, url) {
                 let guild = findGuild(guildID);
                 if (source && guild && guild.voice && guild.voice.connection) {
                     let stream = audio(url, source);
-                    pause(guildID);
                     guild.voice.connection.play(stream, { volume: dbGuild.State.volume })
                         .on("start", () => {
                             updateGuildState(guildID, {
@@ -298,7 +309,6 @@ function playSong(guildID, songID, queued = false) {
                 let guild = findGuild(guildID);
                 if (guild && guild.voice && guild.voice.connection) {
                     let stream = audio(song.url, song.source);
-                    pause(guildID);
                     guild.voice.connection.play(stream, { volume: song.Playlist.Guild.State.volume })
                         .on("start", () => {
                             let newState = {
@@ -309,8 +319,9 @@ function playSong(guildID, songID, queued = false) {
                             if (!queued) {
                                 newState.lastNotQueue = song.id
                             }
-                            updateGuildState(guildID, newState);
-                            resolve(true);
+                            updateGuildState(guildID, newState)
+                                .then(() => resolve(true))
+                                .catch(reject);
                         })
                         .on("finish", () => handleSongEnd(guildID));
                     return;
@@ -321,8 +332,9 @@ function playSong(guildID, songID, queued = false) {
                 playing: false,
                 paused: false,
                 lastNotQueue: null
-            });
-            resolve(false);
+            })
+                .then(() => resolve(false))
+                .catch(reject);
         }));
 }
 

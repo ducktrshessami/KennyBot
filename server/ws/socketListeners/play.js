@@ -24,4 +24,21 @@ module.exports = function (socket) {
                 socket.emit("error", err);
             });
     });
+
+    socket.on("pauseChange", function (paused) {
+        let result;
+        if (paused) {
+            result = music.pause(socket.handshake.auth.guildID);
+        }
+        else {
+            result = music.resume(socket.handshake.auth.guildID);
+        }
+        if (!result) {
+            socket.emit("error", new Error(`Failed to ${paused ? "pause" : "resume"}`));
+        }
+    });
+
+    socket.on("playNext", function () {
+        music.skip(socket.handshake.auth.guildID);
+    });
 };

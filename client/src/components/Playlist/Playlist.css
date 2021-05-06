@@ -36,8 +36,8 @@
     content: url("./collapse-arrow-down.png");
 }
 
-.play-icon {
-    content: url("./play-icon.png");
+.playlist-play-icon {
+    content: url("../../images/play-icon.png");
     padding: 0 0.2ch;
     height: 1rem;
     vertical-align: middle;
@@ -46,8 +46,8 @@
     left: 0.1ch;
 }
 
-.shuffle-icon {
-    content: url("./shuffle-icon.png");
+.playlist-shuffle-icon {
+    content: url("../../images/shuffle-icon.png");
     height: 1.5rem;
     position: relative;
     left: 0.1ch;
