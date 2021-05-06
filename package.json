@@ -13,28 +13,28 @@
   },
   "homepage": "https://github.com/ducktrshessami/KennyBot#readme",
   "dependencies": {
-    "@discordjs/opus": "^0.3.3",
+    "@discordjs/opus": "^0.5.0",
     "discord-bot": "github:ducktrshessami/discord-bot",
     "express": "^4.17.1",
     "express-cycle": "github:ducktrshessami/express-cycle",
     "express-session": "^1.17.1",
     "ffmpeg-static": "^4.3.0",
     "memorystore": "^1.6.6",
-    "pg": "^8.5.1",
+    "pg": "^8.6.0",
     "pg-hstore": "^2.3.3",
     "phin": "^3.5.1",
     "roll-parser": "^2.3.2",
     "scdl-core": "github:ducktrshessami/scdl-core",
     "sequelize": "^6.6.2",
-    "socket.io": "^4.0.1",
+    "socket.io": "^4.0.2",
     "with-cooldown": "^1.0.0",
-    "ytdl-core": "^4.5.0"
+    "ytdl-core": "^4.7.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.3",
     "erlpack": "github:discord/erlpack",
     "libsodium-wrappers": "^0.7.9",
-    "utf-8-validate": "^5.0.4",
+    "utf-8-validate": "^5.0.5",
     "zlib-sync": "^0.1.7"
   },
   "scripts": {
