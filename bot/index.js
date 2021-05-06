@@ -48,11 +48,11 @@ client.on("voiceStateUpdate", async (before, after) => {
         await guild.State.update({
             playing: false,
             paused: false,
-            lastNotQueue: null
+            lastNotQueue: null,
+            SongId: null
         });
     }
-    emitStateUpdate(after.guild.id)
-        .catch(console.error);
+    await emitStateUpdate(after.guild.id);
 });
 
 module.exports = client;

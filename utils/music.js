@@ -319,8 +319,9 @@ function playSong(guildID, songID, queued = false) {
                             if (!queued) {
                                 newState.lastNotQueue = song.id
                             }
-                            updateGuildState(guildID, newState);
-                            resolve(true);
+                            updateGuildState(guildID, newState)
+                                .then(() => resolve(true))
+                                .catch(reject);
                         })
                         .on("finish", () => handleSongEnd(guildID));
                     return;
@@ -331,8 +332,9 @@ function playSong(guildID, songID, queued = false) {
                 playing: false,
                 paused: false,
                 lastNotQueue: null
-            });
-            resolve(false);
+            })
+                .then(() => resolve(false))
+                .catch(reject);
         }));
 }
 
