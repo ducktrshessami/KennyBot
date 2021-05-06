@@ -63,7 +63,7 @@ export default function MusicPlayer(props) {
         setShuffle(props.shuffle);
         setRepeat(props.repeat);
         setPaused(props.paused);
-    }, [props]);
+    }, [props.shuffle, props.repeat, props.paused]);
 
     return (
         <section className="music-player nqb-bg">
