@@ -23,7 +23,8 @@ const pageTemplates = {
         "volume",
         "pause",
         "resume",
-        "play"
+        "play",
+        "skip"
     ]
 };
 

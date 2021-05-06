@@ -22,7 +22,7 @@ function findGuild(guildID) {
 }
 
 function handleSongEnd(guildID, skip = false) {
-    db.Guild.findByPk(guildID, {
+    return db.Guild.findByPk(guildID, {
         include: [db.Queue, db.State],
         order: [[db.Queue, "createdAt"]]
     })
