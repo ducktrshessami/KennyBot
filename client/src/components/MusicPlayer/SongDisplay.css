@@ -1,0 +1,12 @@
+.display-external-icon {
+    content: url("../../images/external-icon.png");
+    height: 1.5rem;
+    position: relative;
+    top: 0.4rem;
+    left: 0.5ch;
+}
+
+.display-playlist {
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+}

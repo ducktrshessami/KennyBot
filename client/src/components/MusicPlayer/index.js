@@ -1,5 +1,6 @@
 import { createRef, useEffect, useState } from "react";
 import M from "materialize-css";
+import SongDisplay from "./SongDisplay";
 import "./MusicPlayer.css";
 
 export default function MusicPlayer(props) {
@@ -83,6 +84,7 @@ export default function MusicPlayer(props) {
             <div className="range-field">
                 <input type="range" min="0" max="1.5" step="0.01" onMouseUp={changeVolume} ref={volumeRef} />
             </div>
+            {props.song ? <SongDisplay title={props.song.title} url={props.song.url} playlist={props.song.Playlist.name} /> : undefined}
         </section>
     );
 };
