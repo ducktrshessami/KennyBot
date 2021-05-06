@@ -37,4 +37,8 @@ module.exports = function (socket) {
             socket.emit("error", new Error(`Failed to ${paused ? "pause" : "resume"}`));
         }
     });
+
+    socket.on("playNext", function () {
+        music.skip(socket.handshake.auth.guildID);
+    });
 };

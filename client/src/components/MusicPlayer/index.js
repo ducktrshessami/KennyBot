@@ -35,9 +35,15 @@ export default function MusicPlayer(props) {
     }
 
     function changePaused() {
-        if (props.socket) {
+        if (props.playing && props.socket) {
             props.socket.emit("pauseChange", !paused);
             setPaused(!paused);
+        }
+    }
+
+    function skip() {
+        if (props.playing && props.socket) {
+            props.socket.emit("playNext")
         }
     }
 
@@ -73,7 +79,7 @@ export default function MusicPlayer(props) {
                     <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()} onClick={changePaused}>
                         <i className={paused || !props.playing ? "player-play-icon" : "player-pause-icon"} />
                     </div>
-                    <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()}>
+                    <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()} onClick={skip}>
                         <i className="player-skip-icon" />
                     </div>
                 </div>
