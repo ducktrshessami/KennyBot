@@ -6,6 +6,7 @@ export default function MusicPlayer(props) {
     const volumeRef = createRef();
     const [shuffle, setShuffle] = useState(props.shuffle);
     const [repeat, setRepeat] = useState(props.repeat);
+    const [paused, setPaused] = useState(props.paused);
     let repeatIcon;
 
     function changeVolume() {
@@ -16,9 +17,8 @@ export default function MusicPlayer(props) {
 
     function toggleShuffle() {
         if (props.socket) {
-            let newShuffle = !shuffle;
-            props.socket.emit("shuffleChange", newShuffle);
-            setShuffle(newShuffle);
+            props.socket.emit("shuffleChange", !shuffle);
+            setShuffle(!shuffle);
         }
     }
 
@@ -33,6 +33,14 @@ export default function MusicPlayer(props) {
         }
     }
 
+    function changePaused() {
+        if (props.socket) {
+            props.socket.emit("pauseChange", !paused);
+            setPaused(!paused);
+        }
+    }
+
+    console.log(props);
     switch (repeat) {
         case 1: repeatIcon = "one"; break;
         case 2: repeatIcon = "all"; break;
@@ -40,15 +48,15 @@ export default function MusicPlayer(props) {
     }
     useEffect(() => {
         let instance = M.Range.init(volumeRef.current);
-        console.log(props);
         volumeRef.current.value = props.volume || 0;
         return () => {
             instance.destroy();
         }
-    });
+    }, [volumeRef, props.volume]);
     useEffect(() => {
         setShuffle(props.shuffle);
         setRepeat(props.repeat);
+        setPaused(props.paused);
     }, [props]);
 
     return (
@@ -61,7 +69,7 @@ export default function MusicPlayer(props) {
                     <div className="music-player-button disabled">
                         <i className="player-prev-icon" />
                     </div>
-                    <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()}>
+                    <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()} onClick={changePaused}>
                         <i className={"player-play-icon"} />
                     </div>
                     <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()}>
