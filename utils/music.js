@@ -273,7 +273,6 @@ function playUrl(guildID, url) {
                 let guild = findGuild(guildID);
                 if (source && guild && guild.voice && guild.voice.connection) {
                     let stream = audio(url, source);
-                    pause(guildID);
                     guild.voice.connection.play(stream, { volume: dbGuild.State.volume })
                         .on("start", () => {
                             updateGuildState(guildID, {
@@ -310,7 +309,6 @@ function playSong(guildID, songID, queued = false) {
                 let guild = findGuild(guildID);
                 if (guild && guild.voice && guild.voice.connection) {
                     let stream = audio(song.url, song.source);
-                    pause(guildID);
                     guild.voice.connection.play(stream, { volume: song.Playlist.Guild.State.volume })
                         .on("start", () => {
                             let newState = {
