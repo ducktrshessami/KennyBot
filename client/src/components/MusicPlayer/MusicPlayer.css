@@ -29,6 +29,11 @@
     height: 2rem;
 }
 
+.player-pause-icon {
+    content: url("../../images//pause-icon.png");
+    height: 2rem;
+}
+
 .player-skip-icon, .player-prev-icon {
     content: url("../../images/skip-icon.png");
     height: 1.25rem;

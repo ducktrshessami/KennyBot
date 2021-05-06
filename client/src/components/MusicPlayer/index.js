@@ -70,7 +70,7 @@ export default function MusicPlayer(props) {
                         <i className="player-prev-icon" />
                     </div>
                     <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()} onClick={changePaused}>
-                        <i className={"player-play-icon"} />
+                        <i className={paused || !props.playing ? "player-play-icon" : "player-pause-icon"} />
                     </div>
                     <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()}>
                         <i className="player-skip-icon" />
