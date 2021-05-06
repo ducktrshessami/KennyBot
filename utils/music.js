@@ -37,7 +37,7 @@ function handleSongEnd(guildID, skip = false) {
                 return playRandomInCurrentPlaylist(guildID);
             }
             else {
-                return playNextInPlaylist(guildID, Boolean(guild.State.repeat));
+                return playNextInPlaylist(guildID, skip || Boolean(guild.State.repeat));
             }
         })
         .catch(console.error);
