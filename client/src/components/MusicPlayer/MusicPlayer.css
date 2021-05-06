@@ -69,6 +69,31 @@
     content: url("../../images/repeat-all-icon.png");
 }
 
+.volume-control {
+    display: flex;
+    width: 100%;
+}
+
+.volume-control-icon {
+    height: 1.3rem;
+    position: relative;
+    top: 0.5rem;
+}
+
+.muted-icon {
+    content: url("../../images/muted-icon.png");
+    margin-right: 1ch;
+}
+
+.speaker-icon {
+    content: url("../../images/speaker-icon.png");
+    margin-left: 1ch;
+}
+
+.volume-control .range-field {
+    flex: 1 0 auto;
+}
+
 @media only screen and (min-width: 601px) {
     .music-player-button {
         position: relative;

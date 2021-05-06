@@ -86,8 +86,12 @@ export default function MusicPlayer(props) {
                     <i className={`repeat-icon ${repeatIcon}`.trim()} />
                 </div>
             </div>
-            <div className="range-field">
-                <input type="range" min="0" max="1.5" step="0.01" onMouseUp={changeVolume} ref={volumeRef} />
+            <div className="volume-control">
+                <i className="volume-control-icon muted-icon" />
+                <div className="range-field">
+                    <input type="range" min="0" max="1.5" step="0.01" onMouseUp={changeVolume} ref={volumeRef} />
+                </div>
+                <i className="volume-control-icon speaker-icon" />
             </div>
             {props.song ? <SongDisplay title={props.song.title} url={props.song.url} playlist={props.song.Playlist.name} /> : undefined}
         </section>
