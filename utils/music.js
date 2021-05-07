@@ -367,5 +367,6 @@ function dequeueSong(guildID, queueID) {
 function clearQueue(guildID) {
     return db.Queue.destroy({
         where: { GuildId: guildID }
-    });
+    })
+        .then(() => emitStateUpdate(guildID));
 }
