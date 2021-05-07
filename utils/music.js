@@ -14,7 +14,8 @@ module.exports = {
     playPlaylist,
     shufflePlayPlaylist,
     queueSong,
-    dequeueSong
+    dequeueSong,
+    clearQueue
 };
 
 function findGuild(guildID) {
@@ -361,4 +362,10 @@ function dequeueSong(guildID, queueID) {
                     .then(() => emitStateUpdate(guildID));
             }
         });
+}
+
+function clearQueue(guildID) {
+    return db.Queue.destroy({
+        where: { GuildId: guildID }
+    });
 }

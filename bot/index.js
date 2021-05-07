@@ -6,6 +6,7 @@ const responses = require("./responses");
 const helpCmd = require("./helpCmd");
 const initGuild = require("./utils/initGuild");
 const { emitStateUpdate } = require("../utils/state");
+const { clearQueue } = require("../utils/music");
 
 var client;
 
@@ -42,17 +43,21 @@ client.on("guildCreate", initGuild);
 
 client.on("guildUpdate", (before, after) => initGuild(after));
 
-client.on("voiceStateUpdate", async (before, after) => {
+client.on("voiceStateUpdate", (before, after) => {
     if (!after.channel && after.member.id === client.user.id) {
-        let guild = await db.Guild.findByPk(after.guild.id, { include: db.State });
-        await guild.State.update({
-            playing: false,
-            paused: false,
-            lastNotQueue: null,
-            SongId: null
-        });
+        db.Guild.findByPk(after.guild.id, { include: db.State })
+            .then(guild => Promise.all([
+                guild.State.update({
+                    playing: false,
+                    paused: false,
+                    lastNotQueue: null,
+                    SongId: null
+                }),
+                clearQueue(after.guild.id)
+            ]))
+            .then(() => emitStateUpdate(after.guild.id))
+            .catch(console.error);
     }
-    await emitStateUpdate(after.guild.id);
 });
 
 module.exports = client;
