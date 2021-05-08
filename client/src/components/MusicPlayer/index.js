@@ -8,6 +8,7 @@ export default function MusicPlayer(props) {
     const [shuffle, setShuffle] = useState(props.shuffle);
     const [repeat, setRepeat] = useState(props.repeat);
     const [paused, setPaused] = useState(props.paused);
+    const enableButtons = props.playing || props.queued;
     let repeatIcon;
 
     function changeVolume() {
@@ -35,14 +36,19 @@ export default function MusicPlayer(props) {
     }
 
     function changePaused() {
-        if (props.playing && props.socket) {
-            props.socket.emit("pauseChange", !paused);
-            setPaused(!paused);
+        if (props.socket) {
+            if (props.playing) {
+                props.socket.emit("pauseChange", !paused);
+                setPaused(!paused);
+            }
+            else {
+                skip();
+            }
         }
     }
 
     function skip() {
-        if (props.playing && props.socket) {
+        if (props.socket) {
             props.socket.emit("playNext")
         }
     }
@@ -75,10 +81,10 @@ export default function MusicPlayer(props) {
                     <div className="music-player-button disabled">
                         <i className="player-prev-icon" />
                     </div>
-                    <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()} onClick={changePaused}>
+                    <div role={enableButtons ? "button" : undefined} className={`music-player-button ${enableButtons ? "" : "disabled"}`.trim()} onClick={changePaused}>
                         <i className={paused || !props.playing ? "player-play-icon" : "player-pause-icon"} />
                     </div>
-                    <div role={props.playing ? "button" : undefined} className={`music-player-button ${props.playing ? "" : "disabled"}`.trim()} onClick={skip}>
+                    <div role={enableButtons ? "button" : undefined} className={`music-player-button ${enableButtons ? "" : "disabled"}`.trim()} onClick={skip}>
                         <i className="player-skip-icon" />
                     </div>
                 </div>

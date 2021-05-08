@@ -122,7 +122,7 @@ export default class Server extends Component {
                                 {this.state.guild.state.voice ? <h5>Connected to <b>{this.state.guild.state.voice.channel}</b></h5> : this.state.ready ? <h6>Not connected to a voice channel</h6> : undefined}
                             </article>
                             <article className="server-info-container">
-                                {this.state.guild.state.voice ? <MusicPlayer socket={this.state.socket} playing={this.state.guild.state.playing} paused={this.state.guild.state.paused} shuffle={this.state.guild.state.shuffle} repeat={this.state.guild.state.repeat} volume={this.state.guild.state.volume} song={this.state.guild.state.song} /> : undefined}
+                                {this.state.guild.state.voice ? <MusicPlayer socket={this.state.socket} playing={this.state.guild.state.playing} paused={this.state.guild.state.paused} queued={Boolean(this.state.guild.state.queue.length)} shuffle={this.state.guild.state.shuffle} repeat={this.state.guild.state.repeat} volume={this.state.guild.state.volume} song={this.state.guild.state.song} /> : undefined}
                             </article>
                         </section>
                         <section className="col s12 m6 l8">
