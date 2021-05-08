@@ -15,7 +15,9 @@ module.exports = {
     shufflePlayPlaylist,
     queueSong,
     dequeueSong,
-    clearQueue
+    clearQueue,
+    queueFirst,
+    queueLast
 };
 
 function findGuild(guildID) {
@@ -349,6 +351,7 @@ function queueSong(guildID, songID) {
                     GuildId: guildID,
                     SongId: songID
                 })
+                    .then(queue => queueLast(guildID, [queue.id]))
                     .then(() => emitStateUpdate(guildID));
             }
         });
@@ -359,6 +362,7 @@ function dequeueSong(guildID, queueID) {
         .then(queue => {
             if (queue && queue.GuildId === guildID) {
                 return queue.destroy()
+                    .then(() => queueFirst(guildID))
                     .then(() => emitStateUpdate(guildID));
             }
         });
@@ -368,5 +372,33 @@ function clearQueue(guildID) {
     return db.Queue.destroy({
         where: { GuildId: guildID }
     })
+        .then(() => emitStateUpdate(guildID));
+}
+
+function queueFirst(guildID, queues = []) {
+    return db.Queue.findAll({
+        where: { GuildId: guildID },
+        order: [["order"]]
+    })
+        .then(current => queues.concat(current.filter(queue => !queues.includes(queue.id))
+            .map(queue => queue.id)))
+        .then(queueAll);
+}
+
+function queueLast(guildID, queues = []) {
+    return db.Queue.findAll({
+        where: { GuildId: guildID },
+        order: [["order"]]
+    })
+        .then(current => current.filter(queue => !queues.includes(queue.id))
+            .map(queue => queue.id)
+            .concat(queues))
+        .then(queueAll);
+}
+
+function queueAll(guildID, queues) {
+    return Promise.all(queues.map((id, i) => db.Queue.update({ order: i }, {
+        where: { id }
+    })))
         .then(() => emitStateUpdate(guildID));
 }
