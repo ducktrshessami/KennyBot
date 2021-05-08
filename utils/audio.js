@@ -94,7 +94,20 @@ function parsePlaylist(url) {
 }
 
 function parseYoutube(url) {
-
+    return ytpl.getPlaylistID(url)
+        .then(id => ytpl(id, { limit: Infinity }))
+        .then(res => {
+            if (res.items) {
+                return res.items.map(item => ({
+                    title: item.title,
+                    url: `https://youtube.com/watch?v=${item.id}`,
+                    source: "youtube"
+                }));
+            }
+            else {
+                return [];
+            }
+        });
 }
 
 function parseSoundcloud(url) {
