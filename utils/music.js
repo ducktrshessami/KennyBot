@@ -27,7 +27,7 @@ function findGuild(guildID) {
 function handleSongEnd(guildID, skip = false) {
     return db.Guild.findByPk(guildID, {
         include: [db.Queue, db.State],
-        order: [[db.Queue, "createdAt"]]
+        order: [[db.Queue, "order"]]
     })
         .then(guild => {
             if (guild.Queues.length) {
@@ -49,7 +49,7 @@ function handleSongEnd(guildID, skip = false) {
 function playNextQueue(guildID) {
     return db.Guild.findByPk(guildID, {
         include: db.Queue,
-        order: [[db.Queue, "createdAt"]]
+        order: [[db.Queue, "order"]]
     })
         .then(guild => {
             return playSong(guildID, guild.Queues[0].SongId, true)

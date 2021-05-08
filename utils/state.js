@@ -33,14 +33,14 @@ function getNewState(guildID) {
                 attributes: ["id"],
                 include: {
                     model: db.Song,
-                    attributes: ["id", "title", "url", "source", "PlaylistId"]
+                    attributes: ["id", "title", "url", "source", "order", "PlaylistId"]
                 }
             }
         ],
         order: [
             [db.Playlist, "name"],
             [db.Playlist, db.Song, "order"],
-            [db.Queue, db.Song, "createdAt"]
+            [db.Queue, "order"]
         ]
     })
         .then(dbGuild => {
