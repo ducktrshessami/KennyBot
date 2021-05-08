@@ -347,11 +347,15 @@ function queueSong(guildID, songID) {
     })
         .then(song => {
             if (song && !song.Queue && song.Playlist.GuildId === guildID) {
-                return db.Queue.create({
-                    GuildId: guildID,
-                    SongId: songID
+                return db.Queue.findAll({
+                    where: { GuildId: guildID },
+                    order: [["order"]]
                 })
-                    .then(queue => queueLast(guildID, [queue.id]))
+                    .then(queues => db.Queue.create({
+                        GuildId: guildID,
+                        SongId: songID,
+                        order: queues && queues[queues.length - 1] ? queues[queues.length - 1].order + 1 : 0
+                    }))
                     .then(() => emitStateUpdate(guildID));
             }
         });
