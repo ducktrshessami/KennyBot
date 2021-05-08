@@ -7,7 +7,8 @@ const API = {
     updatePlaylist,
     deletePlaylist,
     deleteSong,
-    addSong
+    addSong,
+    importPlaylist
 };
 
 function gotoLogin() {
@@ -67,6 +68,14 @@ function addSong(guildId, playlistId, url) {
         headers: { "Content-Type": "application/json" }
     })
         .then(resJSON);
+}
+
+function importPlaylist(guildId, playlistId, url) {
+    return fetch(`/api/guild/import/${guildId}/${playlistId}`, {
+        method: "post",
+        body: JSON.stringify({ url }),
+        headers: { "Content-Type": "application/json" }
+    });
 }
 
 export default API;
