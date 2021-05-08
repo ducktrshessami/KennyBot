@@ -1,12 +1,15 @@
 import { Component, createRef } from "react";
+import API from "../../utils/API";
+import Toast from "../../utils/Toast";
+import isDescendent from "../../utils/isDescendent";
+
 import ContextMenu from "../ContextMenu";
 import Confirm from "../Confirm";
 import SongList from "./SongList";
 import EditForm from "./EditForm";
 import AddSong from "./AddSong";
-import API from "../../utils/API";
-import Toast from "../../utils/Toast";
-import isDescendent from "../../utils/isDescendent";
+import Import from "./Import";
+
 import "./Playlist.css";
 
 export default class Playlist extends Component {
@@ -14,7 +17,8 @@ export default class Playlist extends Component {
         active: false,
         editing: false,
         deleting: false,
-        adding: false
+        adding: false,
+        importing: false
     }
     menuRef = createRef();
     editRef = createRef();
@@ -121,11 +125,26 @@ export default class Playlist extends Component {
         }
     }
 
+    setImporting() {
+        this.setState({
+            ...this.state,
+            importing: true
+        });
+    }
+
+    closeImporting() {
+        this.setState({
+            ...this.state,
+            importing: false
+        });
+    }
+
     render() {
         return (
             <li>
                 {this.state.deleting ? <Confirm title={`Delete ${this.props.name}?`} onOk={() => this.deletePlaylist()} onCancel={() => this.cancelDeleting()} /> : undefined}
                 {this.state.adding ? <AddSong guildId={this.props.GuildId} playlistId={this.props.id} playlist={this.props.name} close={() => this.closeAdding()} /> : undefined}
+                {this.state.importing ? <Import guildId={this.props.GuildId} playlistId={this.props.id} playlist={this.props.name} close={() => this.closeImporting()} /> : undefined}
                 <div className={`playlist ${this.state.active ? "open" : ""}`.trim()}>
                     <div className="playlist-title-wrapper">
                         <div className="playlist-title kenny-bg focus-lighten" role="button" onClick={event => this.clickActive(event)}>
@@ -147,6 +166,10 @@ export default class Playlist extends Component {
                             <i className="kebab-menu" />
                         </div>
                         <ContextMenu className="playlist-context-menu" optionClassName="kenny-bg focus-lighten" options={[
+                            {
+                                name: "Import",
+                                callback: () => this.setImporting()
+                            },
                             {
                                 name: "Rename",
                                 callback: () => this.editPlaylistName()

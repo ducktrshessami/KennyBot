@@ -1,0 +1,17 @@
+.import-input-field {
+    margin-top: 5vh!important;
+    margin-bottom: 0!important;
+}
+
+.import-input {
+    margin: 0!important;
+}
+
+.import-input:focus, .import-input.valid {
+    border-bottom-color: #9C2B2F!important;
+    box-shadow: 0 1px 0 0 #9C2B2F!important;
+}
+
+.import-input-label {
+    pointer-events: none;
+}
