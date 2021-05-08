@@ -1,6 +1,6 @@
 const auth = require("../middleware/auth");
 const db = require("../../../models");
-const { getTitle, getSource, formatUrl } = require("../../../utils/audio");
+const audio = require("../../../utils/audio");
 const { emitStateUpdate } = require("../../../utils/state");
 
 module.exports = function (router) {
@@ -111,17 +111,55 @@ module.exports = function (router) {
                 .then(playlist => {
                     if (playlist) {
                         let lastSong = playlist.Songs[playlist.Songs.length - 1];
-                        return getTitle(req.body.url)
+                        return audio.getTitle(req.body.url)
                             .then(title => db.Song.create({
                                 title,
-                                url: formatUrl(req.body.url),
-                                source: getSource(req.body.url),
+                                url: audio.formatUrl(req.body.url),
+                                source: audio.getSource(req.body.url),
                                 order: lastSong ? lastSong.order + 1 : 0,
                                 PlaylistId: req.params.playlistId
                             }))
                             .then(song => {
                                 emitStateUpdate(req.params.guildId);
                                 res.status(200).json(song);
+                            });
+                    }
+                    else {
+                        res.status(404).end();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).end();
+                });
+        }
+        else {
+            res.status(404).end();
+        }
+    });
+
+    router.post("/api/guild/import/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
+        if (req.authGuilds.find(server => server.id === req.params.guildId)) {
+            db.Playlist.findByPk(req.params.playlistId, {
+                include: db.Song,
+                order: [[db.Song, "order"]]
+            })
+                .then(playlist => {
+                    if (playlist) {
+                        let lastSong = playlist.Songs[playlist.Songs.length - 1];
+                        let lastOrder = -1;
+                        if (lastSong) {
+                            lastOrder = lastSong.order;
+                        }
+                        return audio.parsePlaylist(req.body.url)
+                            .then(tracks => Promise.all(tracks.map((track, i) => db.Song.create({
+                                ...track,
+                                order: lastOrder + i + 1,
+                                PlaylistId: req.params.playlistId
+                            }))))
+                            .then(() => {
+                                emitStateUpdate(req.params.guildId);
+                                res.status(200).end();
                             });
                     }
                     else {
