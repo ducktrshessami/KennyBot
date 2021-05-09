@@ -38,7 +38,7 @@ function getNewState(guildID) {
             }
         ],
         order: [
-            [db.Playlist, "name"],
+            [db.Sequelize.fn("lower", db.Sequelize.col(`${db.Playlist.getTableName()}.name`))],
             [db.Playlist, db.Song, "order"],
             [db.Queue, "order"]
         ]
