@@ -53,7 +53,8 @@ function playNextQueue(guildID) {
     })
         .then(guild => {
             return playSong(guildID, guild.Queues[0].SongId, true)
-                .then(() => guild.Queues[0].destroy());
+                .then(() => guild.Queues[0].destroy())
+                .then(() => emitStateUpdate(guildID));
         });
 }
 
@@ -265,6 +266,7 @@ function resume(guildID) {
 }
 
 function skip(guildID) {
+    stopCurrentSong(guildID);
     return handleSongEnd(guildID, true);
 }
 
@@ -405,4 +407,11 @@ function queueAll(guildID, queues) {
         where: { id }
     })))
         .then(() => emitStateUpdate(guildID));
+}
+
+function stopCurrentSong(guildID) {
+    let guild = findGuild(guildID);
+    if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
+        guild.voice.connection.dispatcher.destroy();
+    }
 }
