@@ -388,7 +388,7 @@ function queueFirst(guildID, queues = []) {
     })
         .then(current => queues.concat(current.filter(queue => !queues.includes(queue.id))
             .map(queue => queue.id)))
-        .then(queueAll);
+        .then(finalOrder => queueAll(guildID, finalOrder));
 }
 
 function queueLast(guildID, queues = []) {
@@ -399,7 +399,7 @@ function queueLast(guildID, queues = []) {
         .then(current => current.filter(queue => !queues.includes(queue.id))
             .map(queue => queue.id)
             .concat(queues))
-        .then(queueAll);
+        .then(finalOrder => queueAll(guildID, finalOrder));
 }
 
 function queueAll(guildID, queues) {
