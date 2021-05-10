@@ -30,11 +30,11 @@ function handleSongEnd(guildID, skip = false) {
         order: [[db.Queue, "order"]]
     })
         .then(guild => {
-            if (guild.Queues.length) {
-                return playNextQueue(guildID);
-            }
-            else if (!skip && guild.State.repeat === 1) {
+            if (!skip && guild.State.repeat === 1) {
                 return playSong(guildID, guild.State.SongId, guild.State.SongId === guild.State.lastNotQueue);
+            }
+            else if (guild.Queues.length) {
+                return playNextQueue(guildID);
             }
             else if (guild.State.shuffle) {
                 return playRandomInCurrentPlaylist(guildID);
