@@ -8,4 +8,12 @@ module.exports = function (socket) {
                 socket.emit("error", err);
             });
     });
+
+    socket.on("songDequeue", function (songID) {
+        music.dequeueSong(socket.handshake.auth.guildID, songID)
+            .catch(err => {
+                console.error(err);
+                socket.emit("error", err);
+            });
+    })
 };

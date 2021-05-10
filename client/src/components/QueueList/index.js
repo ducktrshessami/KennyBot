@@ -7,7 +7,7 @@ export default function QueueList(props) {
         <section>
             <h5 className="queue-title nqb-bg">Queued:</h5>
             <ul>
-                {props.queue.map(item => <Queue key={item.id} id={item.id} title={item.Song.title} url={item.Song.url} />)}
+                {props.queue.map(item => <Queue key={item.id} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} />)}
             </ul>
         </section>
     );
