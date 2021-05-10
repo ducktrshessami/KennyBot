@@ -1,13 +1,18 @@
+import { useState } from "react";
+
 export default function Queue(props) {
+    const [ghost, setGhost] = useState(false);
+
     function dequeue() {
         if (props.socket) {
             props.socket.emit("songDequeue", props.id);
+            setGhost(true);
         }
     }
 
     console.log(props);
 
-    return (
+    return ghost ? null : (
         <li className="queued-song">
             <i role="button" className="queue-draggable-icon queue-button-icon" />
             <div className="queued-title center">
