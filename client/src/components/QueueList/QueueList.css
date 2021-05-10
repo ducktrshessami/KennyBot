@@ -1,0 +1,31 @@
+.queue-list {
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
+.queue-title {
+    margin-top: 0;
+    padding-bottom: 0.656rem;
+    border-bottom: 2px solid #99AAB5;
+}
+
+.queued-song {
+    display: flex;
+    width: 100%;
+}
+
+.queue-draggable-icon {
+    content: url("../../images/draggable-white.png");
+    height: 1rem;
+    margin-right: 1ch;
+}
+
+.queue-remove-icon {
+    content: url("../../images/remove-icon.png");
+    height: 1rem;
+    margin-left: 1ch;
+}
+
+.queued-title {
+    flex: 1 1 auto;
+}
