@@ -31,7 +31,7 @@ function handleSongEnd(guildID, skip = false) {
     })
         .then(guild => {
             if (!skip && guild.State.repeat === 1) {
-                return playSong(guildID, guild.State.SongId, guild.State.SongId === guild.State.lastNotQueue);
+                return playSong(guildID, guild.State.SongId, true);
             }
             else if (guild.Queues.length) {
                 return playNextQueue(guildID);
