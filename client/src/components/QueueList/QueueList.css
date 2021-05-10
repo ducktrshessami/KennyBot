@@ -1,28 +1,40 @@
-.queue-list {
-    padding: 1.5rem;
-    border-radius: 10px;
-}
-
 .queue-title {
-    margin-top: 0;
-    padding-bottom: 0.656rem;
+    margin: 0;
+    padding: 1.5rem 1.5rem 0.656rem 1.5rem;
     border-bottom: 2px solid #99AAB5;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .queued-song {
     display: flex;
     width: 100%;
+    background-color: #1c1f21;
+    padding: 1rem 1.5rem;
+}
+
+.queued-song:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.queued-song:nth-child(even) {
+    background-color: #23272A;
+}
+
+.queue-button-icon {
+    height: 1rem;
+    position: relative;
+    top: 0.1rem;
 }
 
 .queue-draggable-icon {
     content: url("../../images/draggable-white.png");
-    height: 1rem;
     margin-right: 1ch;
 }
 
 .queue-remove-icon {
     content: url("../../images/remove-icon.png");
-    height: 1rem;
     margin-left: 1ch;
 }
 

@@ -2,11 +2,11 @@ export default function Queue(props) {
     console.log(props);
     return (
         <li className="queued-song">
-            <i role="button" className="queue-draggable-icon" />
+            <i role="button" className="queue-draggable-icon queue-button-icon" />
             <div className="queued-title center">
                 <a href={props.url} target="_blank" rel="noreferrer" className="greyple-text">{props.title} <i /></a>
             </div>
-            <i role="button" className="queue-remove-icon" />
+            <i role="button" className="queue-remove-icon queue-button-icon" />
         </li>
     );
 }
