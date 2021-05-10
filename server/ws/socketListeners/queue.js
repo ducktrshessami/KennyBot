@@ -15,5 +15,21 @@ module.exports = function (socket) {
                 console.error(err);
                 socket.emit("error", err);
             });
-    })
+    });
+
+    socket.on("queueOrderFirst", function (queues) {
+        music.queueFirst(socket.handshake.auth.guildID, queues)
+            .catch(err => {
+                console.error(err);
+                socket.emit("error", err);
+            });
+    });
+
+    socket.on("queueOrderLast", function (queues) {
+        music.queueLast(socket.handshake.auth.guildID, queues)
+            .catch(err => {
+                console.error(err);
+                socket.emit("error", err);
+            });
+    });
 };
