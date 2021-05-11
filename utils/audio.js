@@ -19,7 +19,8 @@ if (SCDL_CLIENT) {
 }
 else {
     fetchKey()
-        .then(client_id => scdl.setClientID(client_id));
+        .then(client_id => scdl.setClientID(client_id))
+        .catch(console.error);
 }
 
 function controller(url, source) {
