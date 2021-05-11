@@ -13,6 +13,10 @@
     padding: 1rem 1.5rem;
 }
 
+.queued-song.dragging {
+    z-index: 1;
+}
+
 .queued-song:last-child {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
