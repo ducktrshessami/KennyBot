@@ -1,6 +1,9 @@
 const db = require("../models");
 const audio = require("./audio");
 const { emitStateUpdate } = require("./state");
+const config = require("../config/audio.json");
+
+let streamTimeout = {};
 
 module.exports = {
     changeVolume,
@@ -278,6 +281,10 @@ function playUrl(guildID, url) {
                 let guild = findGuild(guildID);
                 if (source && guild && guild.voice && guild.voice.connection) {
                     let stream = audio(url, source);
+                    let timeout = idleTimeout(() => handleSongEnd(guildID), config.streamTimeout);
+                    if (streamTimeout[guildID]) {
+                        clearTimeout(streamTimeout[guildID]);
+                    }
                     guild.voice.connection.play(stream, { volume: dbGuild.State.volume })
                         .on("start", () => {
                             updateGuildState(guildID, {
@@ -286,7 +293,11 @@ function playUrl(guildID, url) {
                             });
                             resolve(true);
                         })
-                        .on("finish", () => handleSongEnd(guildID));
+                        .on("speaking", speaking => {
+                            if (speaking) {
+                                streamTimeout[guildID] = timeout();
+                            }
+                        });
                     return;
                 }
             }
@@ -314,6 +325,10 @@ function playSong(guildID, songID, queued = false) {
                 let guild = findGuild(guildID);
                 if (guild && guild.voice && guild.voice.connection) {
                     let stream = audio(song.url, song.source);
+                    let timeout = idleTimeout(() => handleSongEnd(guildID), config.streamTimeout);
+                    if (streamTimeout[guildID]) {
+                        clearTimeout(streamTimeout[guildID]);
+                    }
                     guild.voice.connection.play(stream, { volume: song.Playlist.Guild.State.volume })
                         .on("start", () => {
                             let newState = {
@@ -328,7 +343,11 @@ function playSong(guildID, songID, queued = false) {
                                 .then(() => resolve(true))
                                 .catch(reject);
                         })
-                        .on("finish", () => handleSongEnd(guildID));
+                        .on("speaking", speaking => {
+                            if (speaking) {
+                                streamTimeout[guildID] = timeout();
+                            }
+                        });
                     return;
                 }
             }
@@ -414,4 +433,14 @@ function stopCurrentSong(guildID) {
     if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
         guild.voice.connection.dispatcher.destroy();
     }
+}
+
+function idleTimeout(callback, ms) {
+    let foo;
+    return () => {
+        if (foo) {
+            clearTimeout(foo);
+        }
+        return foo = setTimeout(callback, ms);
+    };
 }

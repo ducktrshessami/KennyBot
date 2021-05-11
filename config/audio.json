@@ -1,4 +1,5 @@
 {
+    "streamTimeout": 3000,
     "scdl": {
         "client_id": "",
         "oauth_token": ""
