@@ -1,7 +1,10 @@
 const ytdl = require("ytdl-core");
 const ytpl = require("ytpl");
 const scdl = require("scdl-core");
+const { fetchKey } = require("soundcloud-key-fetch");
 const config = require("../config/audio.json");
+
+const SCDL_CLIENT = process.env.SCDL_CLIENTID || config.scdl.client_id;
 
 module.exports = controller;
 module.exports.getSource = getSource;
@@ -10,8 +13,14 @@ module.exports.formatUrl = formatUrl;
 module.exports.parsePlaylist = parsePlaylist;
 module.exports.getPlaylistSource = getPlaylistSource;
 
-scdl.setClientID(process.env.SCDL_CLIENTID || config.scdl.client_id);
 scdl.setOauthToken(process.env.SCDL_TOKEN || config.scdl.oauth_token);
+if (SCDL_CLIENT) {
+    scdl.setClientID(SCDL_CLIENT);
+}
+else {
+    fetchKey()
+        .then(client_id => scdl.setClientID(client_id));
+}
 
 function controller(url, source) {
     let stream;
