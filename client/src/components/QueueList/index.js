@@ -10,30 +10,29 @@ function queueFromDrag(child) {
 export default function QueueList(props) {
     const listRef = createRef();
     const [active, setActive] = useState(null);
-    const [y, setY] = useState(0);
+    const [activeOffset, setOffset] = useState(0);
+    const [activeY, setY] = useState(0);
     const [bounds, setBounds] = useState(null);
     const dragBinder = useDrag(state => {
         let activeItem = queueFromDrag(state.event.target);
         if (!active && activeItem) {
             setActive({
-                id: activeItem.dataset.id,
+                index: props.queue.findIndex(item => item.id === activeItem.dataset.id),
                 height: activeItem.getBoundingClientRect().height
             });
         }
         if (state.down) {
             if (bounds && state.xy[1] > bounds.top && state.xy[1] < bounds.bottom) {
-                setY(state.movement[1]);
+                setOffset(state.movement[1]);
+                setY(state.xy[1]);
             }
         }
         else {
             setActive(null);
+            setOffset(0);
             setY(0);
         }
     }, { axis: "y" });
-    const rendered = props.queue.map(item => {
-        let activeItem = active && item.id === active.id;
-        return <Queue key={item.id} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={dragBinder} active={activeItem} y={activeItem ? y : 0} />
-    });
 
     useEffect(() => {
         if (listRef.current) {
@@ -49,7 +48,7 @@ export default function QueueList(props) {
         <section>
             <h5 className="queue-title nqb-bg">Queued:</h5>
             <ul ref={listRef}>
-                {rendered}
+                {props.queue.map((item, i) => <Queue key={item.id} index={i} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={dragBinder} activeItem={active} activeOffset={activeOffset} activeY={activeY} />)}
             </ul>
         </section>
     );
