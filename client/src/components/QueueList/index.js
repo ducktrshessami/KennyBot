@@ -1,4 +1,4 @@
-import { createRef, useEffect, useState } from "react";
+import { createRef, useCallback, useEffect, useState } from "react";
 import { useDrag } from "react-use-gesture";
 import Queue from "./Queue";
 import "./QueueList.css";
@@ -9,14 +9,23 @@ function queueFromDrag(child) {
 
 export default function QueueList(props) {
     const listRef = createRef();
+    const [rendered, setRendered] = useState(props.queue);
     const [active, setActive] = useState(null);
     const [activeOffset, setOffset] = useState(0);
     const [activeY, setY] = useState(0);
     const [bounds, setBounds] = useState(null);
+    const createDragRefs = useCallback(() => {
+        let list = [];
+        for (let i = 0; i < props.queue.length; i++) {
+            list.push(createRef());
+        }
+        return list;
+    }, [props.queue]);
     const dragBinder = useDrag(state => {
         let activeItem = queueFromDrag(state.event.target);
         if (!active && activeItem) {
             setActive({
+                id: activeItem.dataset.id,
                 index: props.queue.findIndex(item => item.id === activeItem.dataset.id),
                 height: activeItem.getBoundingClientRect().height
             });
@@ -28,11 +37,23 @@ export default function QueueList(props) {
             }
         }
         else {
+            if (active) {
+                finalizeOrder();
+            }
             setActive(null);
             setOffset(0);
             setY(0);
         }
     }, { axis: "y" });
+    const [drags, setDrags] = useState(createDragRefs);
+
+    function finalizeOrder() {
+        let list = drags.map(drag => drag.current)
+            .sort((a, b) => a.getBoundingClientRect().y - b.getBoundingClientRect().y)
+            .map(drag => queueFromDrag(drag).dataset.id);
+        props.socket.emit("queueOrderFirst", list);
+        setRendered(list.map(id => props.queue.find(queue => queue.id === id)));
+    }
 
     useEffect(() => {
         if (listRef.current) {
@@ -43,12 +64,20 @@ export default function QueueList(props) {
             }
         }
     }, [listRef, bounds]);
+    useEffect(() => {
+        if (drags.length !== props.queue.length) {
+            setDrags(createDragRefs());
+        }
+    }, [drags.length, props.queue.length, createDragRefs]);
+    useEffect(() => {
+        setRendered(props.queue);
+    }, [props.queue]);
 
     return (
         <section>
             <h5 className="queue-title nqb-bg">Queued:</h5>
             <ul ref={listRef}>
-                {props.queue.map((item, i) => <Queue key={item.id} index={i} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={dragBinder} activeItem={active} activeOffset={activeOffset} activeY={activeY} />)}
+                {rendered.map((item, i) => <Queue key={item.id} index={i} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={dragBinder} activeItem={active} activeOffset={activeOffset} activeY={activeY} dragRef={drags[i]} />)}
             </ul>
         </section>
     );
