@@ -17,7 +17,7 @@ export default function Queue(props) {
         if (active) {
             spring.start({ y: props.activeOffset });
         }
-        else if (props.dragRef.current) {
+        else if (props.dragRef && props.dragRef.current) {
             if (props.activeItem && props.activeItem.height && props.activeY) {
                 let dragRect = props.dragRef.current.getBoundingClientRect();
                 if (props.index < props.activeItem.index && dragRect.y > props.activeY) {

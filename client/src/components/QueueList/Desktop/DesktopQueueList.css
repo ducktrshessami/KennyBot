@@ -33,12 +33,12 @@
 }
 
 .queue-draggable-icon {
-    content: url("../../images/draggable-white.png");
+    content: url("../../../images/draggable-white.png");
     margin-right: 1ch;
 }
 
 .queue-remove-icon {
-    content: url("../../images/remove-icon.png");
+    content: url("../../../images/remove-icon.png");
     margin-left: 1ch;
 }
 
