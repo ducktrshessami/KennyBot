@@ -32,7 +32,10 @@ export default class Server extends Component {
         socket.on("connect_error", console.error);
         socket.once("connect_error", () => Toast("Live state connection failed", 1));
 
-        socket.on("error", console.error);
+        socket.on("error", err => {
+            Toast("Live state error");
+            console.error(err);
+        });
 
         socket.on("stateInitial", voiceState => {
             let newState = {
