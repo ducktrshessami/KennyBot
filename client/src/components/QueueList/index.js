@@ -9,7 +9,6 @@ function queueFromDrag(child) {
 
 export default function QueueList(props) {
     const listRef = createRef();
-    const [rendered, setRendered] = useState(props.queue);
     const [active, setActive] = useState(null);
     const [activeOffset, setOffset] = useState(0);
     const [activeY, setY] = useState(0);
@@ -48,11 +47,9 @@ export default function QueueList(props) {
     const [drags, setDrags] = useState(createDragRefs);
 
     function finalizeOrder() {
-        let list = drags.map(drag => drag.current)
+        props.socket.emit("queueOrderFirst", drags.map(drag => drag.current)
             .sort((a, b) => a.getBoundingClientRect().y - b.getBoundingClientRect().y)
-            .map(drag => queueFromDrag(drag).dataset.id);
-        props.socket.emit("queueOrderFirst", list);
-        setRendered(list.map(id => props.queue.find(queue => queue.id === id)));
+            .map(drag => queueFromDrag(drag).dataset.id));
     }
 
     useEffect(() => {
@@ -69,15 +66,12 @@ export default function QueueList(props) {
             setDrags(createDragRefs());
         }
     }, [drags.length, props.queue.length, createDragRefs]);
-    useEffect(() => {
-        setRendered(props.queue);
-    }, [props.queue]);
 
     return (
         <section>
             <h5 className="queue-title nqb-bg">Queued:</h5>
             <ul ref={listRef}>
-                {rendered.map((item, i) => <Queue key={item.id} index={i} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={dragBinder} activeItem={active} activeOffset={activeOffset} activeY={activeY} dragRef={drags[i]} />)}
+                {props.queue.map((item, i) => <Queue key={item.id} index={i} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={dragBinder} activeItem={active} activeOffset={activeOffset} activeY={activeY} dragRef={drags[i]} />)}
             </ul>
         </section>
     );
