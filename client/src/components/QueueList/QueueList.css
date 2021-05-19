@@ -3,6 +3,6 @@
     margin: 0;
 }
 
-.queued-song:nth-child(even) {
-    background-color: #23272A;
+.queued-song:nth-child(odd) {
+    background-color: #1c1f21;
 }
