@@ -1,0 +1,8 @@
+.queue-title {
+    border-bottom: 2px solid #99AAB5;
+    margin: 0;
+}
+
+.queued-song:nth-child(even) {
+    background-color: #23272A;
+}

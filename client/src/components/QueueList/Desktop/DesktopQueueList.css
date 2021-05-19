@@ -1,7 +1,5 @@
 .desktop-queue .queue-title {
-    margin: 0;
     padding: 1.5rem 1.5rem 0.656rem 1.5rem;
-    border-bottom: 2px solid #99AAB5;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
@@ -20,10 +18,6 @@
 .desktop-queue .queued-song:last-child {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-}
-
-.desktop-queue .queued-song:nth-child(even) {
-    background-color: #23272A;
 }
 
 .desktop-queue .queue-button-icon {

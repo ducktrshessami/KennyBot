@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Desktop from "./Desktop";
 import Mobile from "./Mobile";
+import "./QueueList.css";
 
 export default function QueueList(props) {
     const [small, setSmall] = useState(window.innerWidth < 601);
