@@ -13,7 +13,7 @@ export default function Mobile(props) {
 
     useDrag(state => {
         if (state.down) {
-            spring.start({ x: visible ? state.movement[0] : state.movement[0] - window.innerWidth });
+            spring.start({ x: visible ? Math.min(0, state.movement[0]) : Math.max(-window.innerWidth, state.movement[0] - window.innerWidth) });
         }
         else {
             switch (state.swipe[0]) {
@@ -43,7 +43,7 @@ export default function Mobile(props) {
         <animated.article className="mobile-queue nqb-bg hide-on-med-and-up" style={coords}>
             <h4 className="queue-title center">Queue</h4>
             <ul>
-                {props.queue.map(item => <Queue />)}
+                {props.queue.map(item => <Queue key={item.id} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} />)}
             </ul>
         </animated.article>
     );
