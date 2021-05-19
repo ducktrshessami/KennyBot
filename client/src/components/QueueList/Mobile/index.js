@@ -17,7 +17,7 @@ export default function Mobile(props) {
                 case -1: setVisible(false); break;
                 default: setVisible(coords.x.get() > (-window.innerWidth / 2)); break;
             }
-            spring.start({ x: visible ? 0 : -window.innerWidth });
+            spring.start({ x: visible ? 0 : -window.innerWidth - 50 });
         }
     }, {
         axis: "x",
@@ -28,7 +28,7 @@ export default function Mobile(props) {
         domTarget: document.getElementById("root")
     });
     useEffect(() => {
-        spring.start({ x: visible ? 0 : -window.innerWidth });
+        spring.start({ x: visible ? 0 : -window.innerWidth - 50 });
     });
 
     return (
