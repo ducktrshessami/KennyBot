@@ -68,11 +68,11 @@ export default function Desktop(props) {
     }, [drags.length, props.queue.length, createDragRefs]);
 
     return (
-        <section className="desktop-queue hide-on-small-only">
+        <article className="server-info-container desktop-queue hide-on-small-only">
             <h5 className="queue-title nqb-bg">Queued:</h5>
             <ul ref={listRef}>
                 {props.queue.map((item, i) => <Queue key={item.id} index={i} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={dragBinder} activeItem={active} activeOffset={activeOffset} activeY={activeY} dragRef={drags[i]} />)}
             </ul>
-        </section>
+        </article>
     );
 };
