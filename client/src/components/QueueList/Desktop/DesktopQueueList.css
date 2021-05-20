@@ -12,6 +12,7 @@
 }
 
 .desktop-queue .queued-song.dragging {
+    position: relative;
     z-index: 1;
 }
 
