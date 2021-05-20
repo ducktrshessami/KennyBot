@@ -15,7 +15,7 @@ export default function Queue(props) {
 
     useEffect(() => {
         if (active) {
-            spring.start({ y: props.activeOffset });
+            spring.set({ y: props.activeOffset });
         }
         else if (props.dragRef && props.dragRef.current) {
             if (props.activeItem && props.activeItem.height && props.activeY) {
