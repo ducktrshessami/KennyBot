@@ -1,5 +1,6 @@
 import { createRef, useCallback, useEffect, useState } from "react";
 import { useDrag } from "react-use-gesture";
+import { useSprings } from "@react-spring/core";
 import Queue from "./Queue";
 import "./DesktopQueueList.css";
 
@@ -9,9 +10,8 @@ function queueFromDrag(child) {
 
 export default function Desktop(props) {
     const listRef = createRef();
+    const [renderQueue, setRender] = useState(props.queue);
     const [active, setActive] = useState(null);
-    const [activeOffset, setOffset] = useState(0);
-    const [activeY, setY] = useState(0);
     const [bounds, setBounds] = useState(null);
     const createDragRefs = useCallback(() => {
         let list = [];
@@ -20,36 +20,57 @@ export default function Desktop(props) {
         }
         return list;
     }, [props.queue]);
-    const dragBinder = useDrag(state => {
-        let activeItem = queueFromDrag(state.event.target);
-        if (!active && activeItem) {
-            setActive({
-                id: activeItem.dataset.id,
-                index: props.queue.findIndex(item => item.id === activeItem.dataset.id),
-                height: activeItem.getBoundingClientRect().height
-            });
-        }
-        if (state.down) {
-            if (bounds && state.xy[1] > bounds.top && state.xy[1] < bounds.bottom) {
-                setOffset(state.movement[1]);
-                setY(state.xy[1]);
-            }
-        }
-        else {
-            if (active) {
-                finalizeOrder();
-            }
-            setActive(null);
-            setOffset(0);
-            setY(0);
-        }
-    }, { axis: "y" });
     const [drags, setDrags] = useState(createDragRefs);
+    const [coords, springs] = useSprings(props.queue.length, () => ({ y: 0 }));
+
+    function CreateGesture(index) {
+        return useDrag(state => {
+            if (state.down) {
+                setActive(index);
+                springs.start(i => {
+                    if (i === index) {
+                        if (bounds && bounds.top < state.xy[1] && bounds.bottom > state.xy[1]) {
+                            return { y: state.movement[1] };
+                        }
+                    }
+                    else {
+                        let activeItem = queueFromDrag(drags[index].current);
+                        if (activeItem) {
+                            let activeHeight = activeItem.getBoundingClientRect().height;
+                            let activeY = drags[index].current.getBoundingClientRect().y;
+                            let otherY = drags[i].current.getBoundingClientRect().y;
+                            if (index < i && activeY > otherY) {
+                                return { y: -activeHeight };
+                            }
+                            else if (index > i && activeY < otherY) {
+                                return { y: activeHeight };
+                            }
+                        }
+                        return { y: 0 };
+                    }
+                });
+            }
+            else {
+                finalizeOrder();
+                setActive(null);
+                springs.start(() => ({ y: 0 }));
+            }
+        }, { axis: "y" });
+    }
 
     function finalizeOrder() {
-        props.socket.emit("queueOrderFirst", drags.map(drag => drag.current)
-            .sort((a, b) => a.getBoundingClientRect().y - b.getBoundingClientRect().y)
-            .map(drag => queueFromDrag(drag).dataset.id));
+        let changed = false;
+        let newOrder = props.queue.slice()
+            .sort((a, b) => drags[props.queue.indexOf(a)].current.getBoundingClientRect().y - drags[props.queue.indexOf(b)].current.getBoundingClientRect().y);
+        for (let i = 0; i < newOrder.length; i++) {
+            if (newOrder[i] !== props.queue[i]) {
+                changed = true;
+            }
+        }
+        if (changed) {
+            setRender(newOrder);
+            props.socket.emit("queueOrderFirst", newOrder.map(queue => queue.id));
+        }
     }
 
     useEffect(() => {
@@ -66,12 +87,19 @@ export default function Desktop(props) {
             setDrags(createDragRefs());
         }
     }, [drags.length, props.queue.length, createDragRefs]);
+    useEffect(() => {
+        springs.set({ y: 1 });
+        springs.set({ y: 0 });
+    }, [springs, renderQueue]);
+    useEffect(() => {
+        setRender(props.queue);
+    }, [props.queue]);
 
     return (
         <article className="server-info-container desktop-queue hide-on-small-only">
             <h5 className="queue-title nqb-bg">Queued:</h5>
             <ul ref={listRef}>
-                {props.queue.map((item, i) => <Queue key={item.id} index={i} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={dragBinder} activeItem={active} activeOffset={activeOffset} activeY={activeY} dragRef={drags[i]} />)}
+                {renderQueue.map((item, i) => <Queue key={item.id} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={CreateGesture(i)} dragRef={drags[i]} active={active === i} style={coords[i]} />)}
             </ul>
         </article>
     );

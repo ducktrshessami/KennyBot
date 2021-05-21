@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
-import { useSpring, animated } from "react-spring";
+import { useState } from "react";
+import { animated } from "react-spring";
 
 export default function Queue(props) {
-    const active = props.activeItem && props.activeItem.index === props.index;
     const [ghost, setGhost] = useState(false);
-    const [coords, spring] = useSpring(() => ({ y: 0 }));
 
     function dequeue() {
         if (props.socket) {
@@ -13,28 +11,8 @@ export default function Queue(props) {
         }
     }
 
-    useEffect(() => {
-        if (active) {
-            spring.set({ y: props.activeOffset });
-        }
-        else if (props.dragRef && props.dragRef.current) {
-            if (props.activeItem && props.activeItem.height && props.activeY) {
-                let dragRect = props.dragRef.current.getBoundingClientRect();
-                if (props.index < props.activeItem.index && dragRect.y > props.activeY) {
-                    spring.start({ y: props.activeItem.height });
-                    return;
-                }
-                else if (props.index > props.activeItem.index && dragRect.y < props.activeY) {
-                    spring.start({ y: -props.activeItem.height });
-                    return;
-                }
-            }
-            spring.start({ y: 0 });
-        }
-    });
-
     return ghost ? null : (
-        <animated.li data-id={props.id} className={`queued-song ${active ? "dragging" : ""}`.trim()} style={coords}>
+        <animated.li className={`queued-song ${props.active ? "dragging" : ""}`.trim()} style={props.style}>
             <i role="button" className="queue-draggable-icon queue-button-icon" ref={props.dragRef} {...props.dragBinder()} />
             <div className="queued-title center">
                 <a href={props.url} target="_blank" rel="noreferrer" className="greyple-text">{props.title} <i /></a>
