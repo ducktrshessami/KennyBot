@@ -22,41 +22,39 @@ export default function Desktop(props) {
     }, [props.queue]);
     const [drags, setDrags] = useState(createDragRefs());
     const [coords, springs] = useSprings(props.queue.length, () => ({ y: 0 }));
-
-    function CreateGesture(index) {
-        return useDrag(state => {
-            if (state.down) {
-                setActive(index);
-                springs.start(i => {
-                    if (i === index) {
-                        if (bounds && bounds.top < state.xy[1] && bounds.bottom > state.xy[1]) {
-                            return { y: state.movement[1] };
-                        }
+    const dragBinder = useDrag(state => {
+        let activeItem = queueFromDrag(state.event.target);
+        let index = Array.from(activeItem.parentNode.children).indexOf(activeItem);
+        if (state.down) {
+            setActive(index);
+            springs.start(i => {
+                if (i === index) {
+                    if (bounds && bounds.top < state.xy[1] && bounds.bottom > state.xy[1]) {
+                        return { y: state.movement[1] };
+                    }
+                }
+                else {
+                    let activeHeight = activeItem.getBoundingClientRect().height;
+                    let activeY = drags[index].current.getBoundingClientRect().y;
+                    let otherY = drags[i].current.getBoundingClientRect().y;
+                    if (index < i && activeY > otherY) {
+                        return { y: -activeHeight };
+                    }
+                    else if (index > i && activeY < otherY) {
+                        return { y: activeHeight };
                     }
                     else {
-                        let activeItem = queueFromDrag(drags[index].current);
-                        if (activeItem) {
-                            let activeHeight = activeItem.getBoundingClientRect().height;
-                            let activeY = drags[index].current.getBoundingClientRect().y;
-                            let otherY = drags[i].current.getBoundingClientRect().y;
-                            if (index < i && activeY > otherY) {
-                                return { y: -activeHeight };
-                            }
-                            else if (index > i && activeY < otherY) {
-                                return { y: activeHeight };
-                            }
-                        }
                         return { y: 0 };
                     }
-                });
-            }
-            else {
-                finalizeOrder();
-                setActive(null);
-                springs.start(() => ({ y: 0 }));
-            }
-        }, { axis: "y" });
-    }
+                }
+            });
+        }
+        else {
+            finalizeOrder();
+            setActive(null);
+            springs.start(() => ({ y: 0 }));
+        }
+    }, { axis: "y" });
 
     function finalizeOrder() {
         let newOrder = props.queue.slice()
@@ -93,7 +91,7 @@ export default function Desktop(props) {
         <article className="server-info-container desktop-queue hide-on-small-only">
             <h5 className="queue-title nqb-bg">Queued:</h5>
             <ul ref={listRef}>
-                {renderQueue.map((item, i) => <Queue key={item.id} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={CreateGesture(i)} dragRef={drags[i]} active={active === i} style={coords[i]} />)}
+                {renderQueue.map((item, i) => <Queue key={item.id} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={dragBinder} dragRef={drags[i]} active={active === i} style={coords[i]} />)}
             </ul>
         </article>
     );
