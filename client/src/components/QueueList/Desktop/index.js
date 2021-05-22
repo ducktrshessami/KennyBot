@@ -20,7 +20,7 @@ export default function Desktop(props) {
         }
         return list;
     }, [props.queue]);
-    const [drags, setDrags] = useState(createDragRefs);
+    const [drags, setDrags] = useState(createDragRefs());
     const [coords, springs] = useSprings(props.queue.length, () => ({ y: 0 }));
 
     function CreateGesture(index) {
@@ -59,15 +59,9 @@ export default function Desktop(props) {
     }
 
     function finalizeOrder() {
-        let changed = false;
         let newOrder = props.queue.slice()
             .sort((a, b) => drags[props.queue.indexOf(a)].current.getBoundingClientRect().y - drags[props.queue.indexOf(b)].current.getBoundingClientRect().y);
-        for (let i = 0; i < newOrder.length; i++) {
-            if (newOrder[i] !== props.queue[i]) {
-                changed = true;
-            }
-        }
-        if (changed) {
+        if (newOrder.some((newItem, i) => newItem !== props.queue[i])) {
             setRender(newOrder);
             props.socket.emit("queueOrderFirst", newOrder.map(queue => queue.id));
         }
