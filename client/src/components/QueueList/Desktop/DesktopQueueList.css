@@ -5,38 +5,10 @@
 }
 
 .desktop-queue .queued-song {
-    display: flex;
-    width: 100%;
     background-color: #23272A;
-    padding: 1rem 1.5rem;
-}
-
-.desktop-queue .queued-song.dragging {
-    position: relative;
-    z-index: 1;
 }
 
 .desktop-queue .queued-song:last-child {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-}
-
-.desktop-queue .queue-button-icon {
-    height: 1rem;
-    position: relative;
-    top: 0.1rem;
-}
-
-.desktop-queue .queue-draggable-icon {
-    content: url("../../../images/draggable-white.png");
-    margin-right: 1ch;
-}
-
-.desktop-queue .queue-remove-icon {
-    content: url("../../../images/remove-icon.png");
-    margin-left: 1ch;
-}
-
-.desktop-queue .queued-title {
-    flex: 1 1 auto;
 }

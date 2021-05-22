@@ -3,6 +3,37 @@
     margin: 0;
 }
 
+.queued-song {
+    display: flex;
+    width: 100%;
+    padding: 1rem 1.5rem;
+}
+
+.queued-song.dragging {
+    position: relative;
+    z-index: 1;
+}
+
 .queued-song:nth-child(odd) {
     background-color: #1c1f21;
+}
+
+.queued-title {
+    flex: 1 1 auto;
+}
+
+.queue-button-icon {
+    height: 1rem;
+    position: relative;
+    top: 0.1rem;
+}
+
+.queue-draggable-icon {
+    content: url("../../images/draggable-white.png");
+    margin-right: 1ch;
+}
+
+.queue-remove-icon {
+    content: url("../../images/remove-icon.png");
+    margin-left: 1ch;
 }

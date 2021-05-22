@@ -18,3 +18,12 @@
     right: 1.5ch;
     top: 0.9rem;
 }
+
+.mobile-queue .queued-title .disabled {
+    pointer-events: none;
+}
+
+.mobile-queue .empty-icon {
+    content: none;
+    padding: 0.5rem;
+}
