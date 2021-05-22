@@ -1,3 +1,9 @@
+import { animated } from "@react-spring/web";
+
 export default function Queue(props) {
-    return null;
+    return (
+        <animated.li style={props.style}>
+            {props.title}
+        </animated.li>
+    );
 };
