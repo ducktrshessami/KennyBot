@@ -56,7 +56,8 @@ export default function Mobile(props) {
     }, {
         axis: "y",
         useTouch: true,
-        filterTaps: true
+        filterTaps: true,
+        experimental_preventWindowScrollY: true
     });
 
     function toggleEdit() {
