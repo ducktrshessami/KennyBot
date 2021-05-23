@@ -37,10 +37,10 @@ export default function Desktop(props) {
                     let activeHeight = activeItem.getBoundingClientRect().height;
                     let activeY = drags[index].current.getBoundingClientRect().y;
                     let otherY = drags[i].current.getBoundingClientRect().y;
-                    if (index < i && activeY > otherY) {
+                    if (index < i && (state.xy[1] >= Math.floor(otherY) || activeY >= otherY)) {
                         return { y: -activeHeight };
                     }
-                    else if (index > i && activeY < otherY) {
+                    else if (index > i && (state.xy[1] <= Math.floor(otherY) || activeY <= otherY)) {
                         return { y: activeHeight };
                     }
                     else {
