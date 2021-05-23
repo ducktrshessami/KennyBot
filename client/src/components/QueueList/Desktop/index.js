@@ -54,7 +54,12 @@ export default function Desktop(props) {
             setActive(null);
             springs.start(() => ({ y: 0 }));
         }
-    }, { axis: "y" });
+    }, {
+        axis: "y",
+        useTouch: true,
+        filterTaps: true,
+        experimental_preventWindowScrollY: true
+    });
 
     function finalizeOrder() {
         let newOrder = props.queue.slice()
