@@ -12,10 +12,11 @@
 .queued-song.dragging {
     position: relative;
     z-index: 1;
+    box-shadow: 0.1ch 0 1ch black;
 }
 
 .queued-song:nth-child(odd) {
-    background-color: #1c1f21;
+    background-color: #1c1f21!important;
 }
 
 .queued-title {
@@ -24,8 +25,6 @@
 
 .queue-button-icon {
     height: 1rem;
-    position: relative;
-    top: 0.1rem;
 }
 
 .queue-draggable-icon {
