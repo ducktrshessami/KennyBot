@@ -12,7 +12,6 @@ export default function Desktop(props) {
     const listRef = createRef();
     const [renderQueue, setRender] = useState(props.queue);
     const [active, setActive] = useState(null);
-    const [bounds, setBounds] = useState(null);
     const scroll = useRef(0);
     const createDragRefs = useCallback(() => {
         let list = [];
@@ -33,7 +32,8 @@ export default function Desktop(props) {
             }
             springs.start(i => {
                 if (i === index) {
-                    if (bounds && bounds.top < state.xy[1] && bounds.bottom > state.xy[1]) {
+                    let bounds = listRef.current.getBoundingClientRect();
+                    if (bounds.top < state.xy[1] && bounds.bottom > state.xy[1]) {
                         return { y: state.movement[1] + scroll.current };
                     }
                 }
@@ -76,17 +76,10 @@ export default function Desktop(props) {
     }
 
     useScroll(state => {
-        scroll.current += state.delta[1];
-    }, { domTarget: window });
-    useEffect(() => {
-        if (listRef.current) {
-            let prev = bounds || {};
-            let next = listRef.current.getBoundingClientRect();
-            if (prev.top !== next.top || prev.bottom !== next.bottom) {
-                setBounds(next);
-            }
+        if (state.last) {
+            scroll.current += state.movement[1];
         }
-    }, [listRef, bounds]);
+    }, { domTarget: window });
     useEffect(() => {
         if (drags.length !== props.queue.length) {
             setDrags(createDragRefs());
