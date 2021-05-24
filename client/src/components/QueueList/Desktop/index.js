@@ -1,5 +1,5 @@
-import { createRef, useCallback, useEffect, useState } from "react";
-import { useDrag } from "react-use-gesture";
+import { createRef, useCallback, useEffect, useRef, useState } from "react";
+import { useDrag, useScroll } from "react-use-gesture";
 import { useSprings } from "@react-spring/core";
 import Queue from "./Queue";
 import "./DesktopQueueList.css";
@@ -13,6 +13,7 @@ export default function Desktop(props) {
     const [renderQueue, setRender] = useState(props.queue);
     const [active, setActive] = useState(null);
     const [bounds, setBounds] = useState(null);
+    const scroll = useRef(0);
     const createDragRefs = useCallback(() => {
         let list = [];
         for (let i = 0; i < props.queue.length; i++) {
@@ -26,11 +27,14 @@ export default function Desktop(props) {
         let activeItem = queueFromDrag(state.event.target);
         let index = Array.from(activeItem.parentNode.children).indexOf(activeItem);
         if (state.down) {
-            setActive(index);
+            if (state.first) {
+                scroll.current = 0;
+                setActive(index);
+            }
             springs.start(i => {
                 if (i === index) {
                     if (bounds && bounds.top < state.xy[1] && bounds.bottom > state.xy[1]) {
-                        return { y: state.movement[1] };
+                        return { y: state.movement[1] + scroll.current };
                     }
                 }
                 else {
@@ -51,6 +55,7 @@ export default function Desktop(props) {
         }
         else {
             finalizeOrder();
+            scroll.current = 0;
             setActive(null);
             springs.start(() => ({ y: 0 }));
         }
@@ -70,6 +75,9 @@ export default function Desktop(props) {
         }
     }
 
+    useScroll(state => {
+        scroll.current += state.delta[1];
+    }, { domTarget: window });
     useEffect(() => {
         if (listRef.current) {
             let prev = bounds || {};
