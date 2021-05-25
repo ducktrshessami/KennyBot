@@ -1,10 +1,10 @@
 const music = require("../../../utils/music");
-const { logAction } = require("../../../utils/user");
+const audit = require("../../../utils/audit");
 
 module.exports = function (socket) {
     socket.on("volumeChange", function (volume) {
         music.changeVolume(socket.handshake.auth.guildID, volume)
-            .then(() => logAction(socket.handshake.auth.userID, socket.handshake.auth.guildID, `Changed volume to ${volume}`))
+            .then(() => audit.log(socket.handshake.auth.userID, socket.handshake.auth.guildID, `Changed volume to ${volume}`))
             .catch(err => {
                 console.error(err);
                 socket.emit("error", err);
@@ -13,7 +13,7 @@ module.exports = function (socket) {
 
     socket.on("shuffleChange", function (shuffle) {
         music.setShuffle(socket.handshake.auth.guildID, shuffle)
-            .then(() => logAction(socket.handshake.auth.userID, socket.handshake.auth.guildID, `Toggled shuffle ${shuffle ? "on" : "off"}`))
+            .then(() => audit.log(socket.handshake.auth.userID, socket.handshake.auth.guildID, `Toggled shuffle ${shuffle ? "on" : "off"}`))
             .catch(err => {
                 console.error(err);
                 socket.emit("error", err);
@@ -30,7 +30,7 @@ module.exports = function (socket) {
         }
         if (actionMessage) {
             music.setRepeat(socket.handshake.auth.guildID, repeat)
-                .then(() => logAction(socket.handshake.auth.userID, socket.handshake.auth.guildID, actionMessage))
+                .then(() => audit.log(socket.handshake.auth.userID, socket.handshake.auth.guildID, actionMessage))
                 .catch(err => {
                     console.error(err);
                     socket.emit("error", err);

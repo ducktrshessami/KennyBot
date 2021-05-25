@@ -3,8 +3,7 @@ const discord = require("./discord");
 
 module.exports = {
     initUser,
-    getAuthGuilds,
-    logAction
+    getAuthGuilds
 };
 
 function initUser(userData) {
@@ -38,12 +37,4 @@ function getAuthGuilds(access_token) {
                     .map(({ id, name, icon, owner }) => ({ id, name, icon, owner }));
             }
         });
-}
-
-function logAction(userID, guildID, action) {
-    return db.UserAction.create({
-        action: action.trim(),
-        UserId: userID,
-        GuildId: guildID
-    });
 }
