@@ -1,6 +1,6 @@
-import { createRef, useCallback, useEffect, useState } from "react";
+import { createRef, useCallback, useEffect, useRef, useState } from "react";
 import { animated, useSpring, useSprings } from "react-spring";
-import { useDrag } from "react-use-gesture";
+import { useDrag, useScroll } from "react-use-gesture";
 import Queue from "./Queue";
 import "./MobileQueueList.css"
 
@@ -9,6 +9,9 @@ function queueFromDrag(child) {
 }
 
 export default function Mobile(props) {
+    const queueRef = createRef();
+    const scroll = useRef(0);
+    const interval = useRef(null);
     const [visible, setVisible] = useState(false);
     const [editing, setEditing] = useState(false);
     const [active, setActive] = useState(null);
@@ -27,10 +30,20 @@ export default function Mobile(props) {
         let activeItem = queueFromDrag(state.event.target);
         let index = Array.from(activeItem.parentNode.children).indexOf(activeItem);
         if (state.down) {
-            setActive(index);
+            if (state.first) {
+                scroll.current = 0;
+                setActive(index);
+            }
+            if (state.xy[1] < 0 || state.xy[1] > window.innerHeight) {
+                scrollInterval(state.xy[1] < 0);
+            }
+            else {
+                clearInterval(interval.current);
+                interval.current = null;
+            }
             api.start(i => {
                 if (i === index) {
-                    return { y: state.movement[1] };
+                    return { y: state.movement[1] + scroll.current };
                 }
                 else {
                     let activeHeight = activeItem.getBoundingClientRect().height;
@@ -50,6 +63,9 @@ export default function Mobile(props) {
         }
         else {
             editOrder();
+            clearInterval(interval.current);
+            interval.current = null;
+            scroll.current = 0;
             setActive(null);
             api.start(() => ({ y: 0 }));
         }
@@ -57,8 +73,19 @@ export default function Mobile(props) {
         axis: "y",
         useTouch: true,
         filterTaps: true,
+
         experimental_preventWindowScrollY: true
     });
+
+    function scrollInterval(up) {
+        if (interval.current === null) {
+            interval.current = setInterval(() => {
+                if (queueRef.current) {
+                    queueRef.current.scrollBy(0, Math.ceil(window.innerHeight / 500) * (up ? -1 : 1))
+                }
+            }, 5);
+        }
+    }
 
     function toggleEdit() {
         if (editing) {
@@ -86,6 +113,11 @@ export default function Mobile(props) {
         }
     }
 
+    useScroll(state => {
+        if (state.last) {
+            scroll.current += state.movement[1];
+        }
+    }, { domTarget: queueRef });
     useDrag(state => {
         if (state.down) {
             spring.start({ x: visible ? Math.min(0, state.movement[0]) : Math.max(-window.innerWidth, state.movement[0] - window.innerWidth) });
@@ -126,9 +158,13 @@ export default function Mobile(props) {
         api.set({ y: 1 });
         api.set({ y: 0 });
     }, [api, renderQueue]);
+    useEffect(() => () => {
+        clearInterval(interval.current);
+        interval.current = null;
+    });
 
     return (
-        <animated.article className="mobile-queue nqb-bg hide-on-med-and-up" style={coords}>
+        <animated.article className="mobile-queue nqb-bg hide-on-med-and-up" style={coords} ref={queueRef}>
             <button className="queue-edit btn kenny-bg focus-lighten" onClick={toggleEdit}>{editing ? "Save" : "Edit"}</button>
             <h4 className="queue-title center">Queue</h4>
             <ul>
