@@ -18,6 +18,7 @@ module.exports = {
     shufflePlayPlaylist,
     queueSong,
     dequeueSong,
+    dequeueSongBulk,
     clearQueue,
     queueFirst,
     queueLast
@@ -391,6 +392,17 @@ function dequeueSong(guildID, queueID) {
                     .then(() => emitStateUpdate(guildID));
             }
         });
+}
+
+function dequeueSongBulk(guildID, idList) {
+    return Promise.all(idList.map(queueID => db.Queue.findByPk(queueID)
+        .then(queue => {
+            if (queue && queue.GuildId === guildID) {
+                return queue.destroy();
+            }
+        })))
+        .then(() => queueFirst(guildID))
+        .then(() => emitStateUpdate(guildID));
 }
 
 function clearQueue(guildID) {
