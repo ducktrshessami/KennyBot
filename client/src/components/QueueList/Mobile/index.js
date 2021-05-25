@@ -13,6 +13,7 @@ export default function Mobile(props) {
     const queueRef = createRef();
     const scroll = useRef(0);
     const interval = useRef(null);
+    const [infoToasted, setToasted] = useState(false);
     const [visible, setVisible] = useState(false);
     const [editing, setEditing] = useState(false);
     const [active, setActive] = useState(null);
@@ -170,12 +171,13 @@ export default function Mobile(props) {
         interval.current = null;
     });
     useEffect(() => {
-        if (props.queue.length && !localStorage.getItem("mobileQueueSwiped")) {
+        if (!infoToasted && props.queue.length && !localStorage.getItem("mobileQueueSwiped")) {
+            setToasted(true);
             Toast("Swipe right to view queued songs!")
                 .then(() => localStorage.setItem("mobileQueueSwiped", true))
                 .catch(console.error);
         }
-    });
+    }, [infoToasted, props.queue.length]);
 
     return (
         <animated.article className="mobile-queue nqb-bg hide-on-med-and-up" style={coords} ref={queueRef}>
