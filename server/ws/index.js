@@ -3,6 +3,7 @@ const socketListeners = require("./socketListeners");
 const session = require("./middleware/session");
 const authCheck = require("./middleware/authCheck");
 const guildCheck = require("./middleware/guildCheck");
+const userInfo = require("./middleware/userInfo");
 const { getNewState } = require("../../utils/state");
 
 module.exports = function (server) {
@@ -11,6 +12,7 @@ module.exports = function (server) {
     ws.use(session);
     ws.use(authCheck);
     ws.use(guildCheck);
+    ws.use(userInfo);
 
     ws.on("connection", function (socket) {
         socket.join(socket.handshake.auth.guildID);
