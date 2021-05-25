@@ -10,6 +10,10 @@
     padding-bottom: 4rem;
 }
 
+.mobile-queue .queued-song.hidden {
+    display: none;
+}
+
 .mobile-queue .queue-title {
     padding: 1rem 1rem 0.8rem 1rem;
 }

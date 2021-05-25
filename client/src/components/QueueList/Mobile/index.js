@@ -13,6 +13,7 @@ export default function Mobile(props) {
     const queueRef = createRef();
     const scroll = useRef(0);
     const interval = useRef(null);
+    const deleted = useRef([]);
     const [infoToasted, setToasted] = useState(false);
     const [visible, setVisible] = useState(false);
     const [editing, setEditing] = useState(false);
@@ -92,18 +93,29 @@ export default function Mobile(props) {
 
     function toggleEdit() {
         if (editing) {
-            finalizeOrder();
+            let newOrder = getOrder();
+            props.socket.emit("songDequeueBulk", deleted.current);
+            deleted.current = [];
+            if (newOrder.some((newItem, i) => newItem !== props.queue[i])) {
+                props.socket.emit("queueOrderFirst", newOrder.map(queue => queue.id));
+            }
         }
         setEditing(!editing);
     }
 
     function cancelEdit() {
+        deleted.current = [];
         setRender(props.queue);
         setEditing(false);
     }
 
+    function addDeleted(id) {
+        deleted.current.push(id);
+    }
+
     function getOrder() {
         return renderQueue.slice()
+            .filter(queue => !deleted.current.includes(queue.id))
             .sort((a, b) => drags[renderQueue.indexOf(a)].current.getBoundingClientRect().y - drags[renderQueue.indexOf(b)].current.getBoundingClientRect().y)
     }
 
@@ -111,13 +123,6 @@ export default function Mobile(props) {
         let newOrder = getOrder();
         if (newOrder.some((newItem, i) => newItem !== renderQueue[i])) {
             setRender(newOrder);
-        }
-    }
-
-    function finalizeOrder() {
-        let newOrder = getOrder();
-        if (newOrder.some((newItem, i) => newItem !== props.queue[i])) {
-            props.socket.emit("queueOrderFirst", newOrder.map(queue => queue.id));
         }
     }
 
@@ -185,7 +190,7 @@ export default function Mobile(props) {
             <button className="queue-edit btn kenny-bg focus-lighten" onClick={toggleEdit}>{editing ? "Save" : "Edit"}</button>
             <h4 className="queue-title center">Queue</h4>
             <ul>
-                {renderQueue.map((item, i) => <Queue key={item.id} editing={editing} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} dragBinder={reorderBinder} dragRef={drags[i]} active={active === i} style={order[i]} />)}
+                {renderQueue.map((item, i) => <Queue key={item.id} editing={editing} id={item.id} socket={props.socket} title={item.Song.title} url={item.Song.url} addDeleteQueue={addDeleted} dragBinder={reorderBinder} dragRef={drags[i]} active={active === i} style={order[i]} />)}
             </ul>
         </animated.article>
     );
