@@ -42,7 +42,7 @@ function getAuthGuilds(access_token) {
 
 function logAction(userID, guildID, action) {
     return db.UserAction.create({
-        action,
+        action: action.trim(),
         UserId: userID,
         GuildId: guildID
     });
