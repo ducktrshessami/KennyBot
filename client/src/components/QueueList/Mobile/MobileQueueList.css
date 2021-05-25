@@ -14,6 +14,12 @@
     padding: 1rem 1rem 0.8rem 1rem;
 }
 
+.mobile-queue .queue-edit-cancel {
+    position: absolute;
+    left: 1.5ch;
+    top: 0.9rem;
+}
+
 .mobile-queue .queue-edit {
     position: absolute;
     right: 1.5ch;

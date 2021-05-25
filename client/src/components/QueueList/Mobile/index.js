@@ -95,6 +95,11 @@ export default function Mobile(props) {
         setEditing(!editing);
     }
 
+    function cancelEdit() {
+        setRender(props.queue);
+        setEditing(false);
+    }
+
     function getOrder() {
         return renderQueue.slice()
             .sort((a, b) => drags[renderQueue.indexOf(a)].current.getBoundingClientRect().y - drags[renderQueue.indexOf(b)].current.getBoundingClientRect().y)
@@ -166,6 +171,7 @@ export default function Mobile(props) {
 
     return (
         <animated.article className="mobile-queue nqb-bg hide-on-med-and-up" style={coords} ref={queueRef}>
+            {editing ? <button className="queue-edit-cancel btn greyple-bg focus-lighten" onClick={cancelEdit}>Cancel</button> : undefined}
             <button className="queue-edit btn kenny-bg focus-lighten" onClick={toggleEdit}>{editing ? "Save" : "Edit"}</button>
             <h4 className="queue-title center">Queue</h4>
             <ul>
