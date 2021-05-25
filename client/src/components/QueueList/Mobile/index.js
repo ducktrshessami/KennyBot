@@ -2,6 +2,7 @@ import { createRef, useCallback, useEffect, useRef, useState } from "react";
 import { animated, useSpring, useSprings } from "react-spring";
 import { useDrag, useScroll } from "react-use-gesture";
 import Queue from "./Queue";
+import Toast from "../../../utils/Toast";
 import "./MobileQueueList.css"
 
 function queueFromDrag(child) {
@@ -167,6 +168,13 @@ export default function Mobile(props) {
     useEffect(() => () => {
         clearInterval(interval.current);
         interval.current = null;
+    });
+    useEffect(() => {
+        if (props.queue.length && !localStorage.getItem("mobileQueueSwiped")) {
+            Toast("Swipe right to view queued songs!")
+                .then(() => localStorage.setItem("mobileQueueSwiped", true))
+                .catch(console.error);
+        }
     });
 
     return (
