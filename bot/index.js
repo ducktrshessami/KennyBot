@@ -7,6 +7,7 @@ const helpCmd = require("./helpCmd");
 const initGuild = require("./utils/initGuild");
 const { emitStateUpdate } = require("../utils/state");
 const { clearQueue } = require("../utils/music");
+const { prune } = require("../utils/audit");
 
 var client;
 
@@ -30,6 +31,8 @@ client = new DiscordBot(config, commands, responses);
 client.on("ready", function () {
     console.log(`Logged in as ${client.user.username}#${client.user.discriminator}`);
     client.guilds.cache.each(initGuild);
+    prune()
+        .catch(console.error);
 });
 
 client.on("shardDisconnect", function () {
