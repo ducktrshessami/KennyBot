@@ -77,7 +77,6 @@ export default function Mobile(props) {
         axis: "y",
         useTouch: true,
         filterTaps: true,
-
         experimental_preventWindowScrollY: true
     });
 
