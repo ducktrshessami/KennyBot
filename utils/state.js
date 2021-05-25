@@ -13,7 +13,7 @@ function getNewState(guildID) {
                 attributes: ["volume", "playing", "paused", "shuffle", "repeat"],
                 include: {
                     model: db.Song,
-                    attributes: ["id", "title", "url", "source", "PlaylistId"],
+                    attributes: ["id", "title", "url", "source"],
                     include: {
                         model: db.Playlist,
                         attributes: ["id", "name"]
@@ -25,7 +25,7 @@ function getNewState(guildID) {
                 attributes: ["id", "name", "GuildId"],
                 include: {
                     model: db.Song,
-                    attributes: ["id", "title", "url", "source", "order", "PlaylistId"]
+                    attributes: ["id", "title", "url", "source", "order"]
                 }
             },
             {
@@ -33,14 +33,14 @@ function getNewState(guildID) {
                 attributes: ["id"],
                 include: {
                     model: db.Song,
-                    attributes: ["id", "title", "url", "source", "PlaylistId"]
+                    attributes: ["id", "title", "url", "source", "order"]
                 }
             }
         ],
         order: [
-            [db.Playlist, "name"],
+            [db.Sequelize.fn("lower", db.Sequelize.col(`${db.Playlist.getTableName()}.name`))],
             [db.Playlist, db.Song, "order"],
-            [db.Queue, db.Song, "createdAt"]
+            [db.Queue, "order"]
         ]
     })
         .then(dbGuild => {

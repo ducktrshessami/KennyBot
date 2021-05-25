@@ -1,0 +1,40 @@
+.mobile-queue {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    overflow: scroll;
+    box-shadow: 0.1ch 0 1ch black;
+    padding-bottom: 4rem;
+}
+
+.mobile-queue .queued-song.hidden {
+    display: none;
+}
+
+.mobile-queue .queue-title {
+    padding: 1rem 1rem 0.8rem 1rem;
+}
+
+.mobile-queue .queue-edit-cancel {
+    position: absolute;
+    left: 1.5ch;
+    top: 0.9rem;
+}
+
+.mobile-queue .queue-edit {
+    position: absolute;
+    right: 1.5ch;
+    top: 0.9rem;
+}
+
+.mobile-queue .queued-title .disabled {
+    pointer-events: none;
+}
+
+.mobile-queue .empty-icon {
+    content: none;
+    padding: 0.5rem;
+}

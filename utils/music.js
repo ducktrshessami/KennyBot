@@ -1,6 +1,9 @@
 const db = require("../models");
 const audio = require("./audio");
 const { emitStateUpdate } = require("./state");
+const config = require("../config/audio.json");
+
+let streamTimeout = {};
 
 module.exports = {
     changeVolume,
@@ -15,7 +18,10 @@ module.exports = {
     shufflePlayPlaylist,
     queueSong,
     dequeueSong,
-    clearQueue
+    dequeueSongBulk,
+    clearQueue,
+    queueFirst,
+    queueLast
 };
 
 function findGuild(guildID) {
@@ -25,14 +31,14 @@ function findGuild(guildID) {
 function handleSongEnd(guildID, skip = false) {
     return db.Guild.findByPk(guildID, {
         include: [db.Queue, db.State],
-        order: [[db.Queue, "createdAt"]]
+        order: [[db.Queue, "order"]]
     })
         .then(guild => {
-            if (guild.Queues.length) {
-                return playNextQueue(guildID);
+            if (!skip && guild.State.repeat === 1) {
+                return playSong(guildID, guild.State.SongId, true);
             }
-            else if (!skip && guild.State.repeat === 1) {
-                return playSong(guildID, guild.State.SongId, guild.State.SongId === guild.State.lastNotQueue);
+            else if (guild.Queues.length) {
+                return playNextQueue(guildID);
             }
             else if (guild.State.shuffle) {
                 return playRandomInCurrentPlaylist(guildID);
@@ -47,11 +53,12 @@ function handleSongEnd(guildID, skip = false) {
 function playNextQueue(guildID) {
     return db.Guild.findByPk(guildID, {
         include: db.Queue,
-        order: [[db.Queue, "createdAt"]]
+        order: [[db.Queue, "order"]]
     })
         .then(guild => {
             return playSong(guildID, guild.Queues[0].SongId, true)
-                .then(() => guild.Queues[0].destroy());
+                .then(() => guild.Queues[0].destroy())
+                .then(() => emitStateUpdate(guildID));
         });
 }
 
@@ -263,6 +270,7 @@ function resume(guildID) {
 }
 
 function skip(guildID) {
+    stopCurrentSong(guildID);
     return handleSongEnd(guildID, true);
 }
 
@@ -274,6 +282,10 @@ function playUrl(guildID, url) {
                 let guild = findGuild(guildID);
                 if (source && guild && guild.voice && guild.voice.connection) {
                     let stream = audio(url, source);
+                    let timeout = idleTimeout(() => handleSongEnd(guildID), config.streamTimeout);
+                    if (streamTimeout[guildID]) {
+                        clearTimeout(streamTimeout[guildID]);
+                    }
                     guild.voice.connection.play(stream, { volume: dbGuild.State.volume })
                         .on("start", () => {
                             updateGuildState(guildID, {
@@ -282,7 +294,11 @@ function playUrl(guildID, url) {
                             });
                             resolve(true);
                         })
-                        .on("finish", () => handleSongEnd(guildID));
+                        .on("speaking", speaking => {
+                            if (speaking) {
+                                streamTimeout[guildID] = timeout();
+                            }
+                        });
                     return;
                 }
             }
@@ -310,6 +326,10 @@ function playSong(guildID, songID, queued = false) {
                 let guild = findGuild(guildID);
                 if (guild && guild.voice && guild.voice.connection) {
                     let stream = audio(song.url, song.source);
+                    let timeout = idleTimeout(() => handleSongEnd(guildID), config.streamTimeout);
+                    if (streamTimeout[guildID]) {
+                        clearTimeout(streamTimeout[guildID]);
+                    }
                     guild.voice.connection.play(stream, { volume: song.Playlist.Guild.State.volume })
                         .on("start", () => {
                             let newState = {
@@ -324,7 +344,11 @@ function playSong(guildID, songID, queued = false) {
                                 .then(() => resolve(true))
                                 .catch(reject);
                         })
-                        .on("finish", () => handleSongEnd(guildID));
+                        .on("speaking", speaking => {
+                            if (speaking) {
+                                streamTimeout[guildID] = timeout();
+                            }
+                        });
                     return;
                 }
             }
@@ -345,10 +369,15 @@ function queueSong(guildID, songID) {
     })
         .then(song => {
             if (song && !song.Queue && song.Playlist.GuildId === guildID) {
-                return db.Queue.create({
-                    GuildId: guildID,
-                    SongId: songID
+                return db.Queue.findAll({
+                    where: { GuildId: guildID },
+                    order: [["order"]]
                 })
+                    .then(queues => db.Queue.create({
+                        GuildId: guildID,
+                        SongId: songID,
+                        order: queues && queues[queues.length - 1] ? queues[queues.length - 1].order + 1 : 0
+                    }))
                     .then(() => emitStateUpdate(guildID));
             }
         });
@@ -359,9 +388,21 @@ function dequeueSong(guildID, queueID) {
         .then(queue => {
             if (queue && queue.GuildId === guildID) {
                 return queue.destroy()
+                    .then(() => queueFirst(guildID))
                     .then(() => emitStateUpdate(guildID));
             }
         });
+}
+
+function dequeueSongBulk(guildID, idList) {
+    return Promise.all(idList.map(queueID => db.Queue.findByPk(queueID)
+        .then(queue => {
+            if (queue && queue.GuildId === guildID) {
+                return queue.destroy();
+            }
+        })))
+        .then(() => queueFirst(guildID))
+        .then(() => emitStateUpdate(guildID));
 }
 
 function clearQueue(guildID) {
@@ -369,4 +410,49 @@ function clearQueue(guildID) {
         where: { GuildId: guildID }
     })
         .then(() => emitStateUpdate(guildID));
+}
+
+function queueFirst(guildID, queues = []) {
+    return db.Queue.findAll({
+        where: { GuildId: guildID },
+        order: [["order"]]
+    })
+        .then(current => queues.concat(current.filter(queue => !queues.includes(queue.id))
+            .map(queue => queue.id)))
+        .then(finalOrder => queueAll(guildID, finalOrder));
+}
+
+function queueLast(guildID, queues = []) {
+    return db.Queue.findAll({
+        where: { GuildId: guildID },
+        order: [["order"]]
+    })
+        .then(current => current.filter(queue => !queues.includes(queue.id))
+            .map(queue => queue.id)
+            .concat(queues))
+        .then(finalOrder => queueAll(guildID, finalOrder));
+}
+
+function queueAll(guildID, queues) {
+    return Promise.all(queues.map((id, i) => db.Queue.update({ order: i }, {
+        where: { id }
+    })))
+        .then(() => emitStateUpdate(guildID));
+}
+
+function stopCurrentSong(guildID) {
+    let guild = findGuild(guildID);
+    if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
+        guild.voice.connection.dispatcher.destroy();
+    }
+}
+
+function idleTimeout(callback, ms) {
+    let foo;
+    return () => {
+        if (foo) {
+            clearTimeout(foo);
+        }
+        return foo = setTimeout(callback, ms);
+    };
 }

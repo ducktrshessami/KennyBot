@@ -58,6 +58,10 @@ client.on("voiceStateUpdate", (before, after) => {
             .then(() => emitStateUpdate(after.guild.id))
             .catch(console.error);
     }
+    else if (after.member.id === client.user.id) {
+        emitStateUpdate(after.guild.id)
+            .catch(console.error);
+    }
 });
 
 module.exports = client;
