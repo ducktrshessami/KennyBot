@@ -27,12 +27,13 @@ export default function Desktop(props) {
         let activeItem = queueFromDrag(state.event.target);
         let index = Array.from(activeItem.parentNode.children).indexOf(activeItem);
         if (state.down) {
+            let heightThreshold = Math.ceil(2 * window.innerHeight / 100);
             if (state.first) {
                 scroll.current = 0;
                 setActive(index);
             }
-            if (state.xy[1] < 0 || state.xy[1] > window.innerHeight) {
-                scrollInterval(state.xy[1] < 0);
+            if (state.xy[1] < heightThreshold || state.xy[1] > window.innerHeight - heightThreshold) {
+                scrollInterval(state.xy[1] < heightThreshold);
             }
             else {
                 clearInterval(interval.current);
