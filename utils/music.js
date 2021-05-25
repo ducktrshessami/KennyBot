@@ -1,6 +1,7 @@
 const db = require("../models");
 const audio = require("./audio");
 const { emitStateUpdate } = require("./state");
+const audit = require("./audit");
 const config = require("../config/audio.json");
 
 let streamTimeout = {};
@@ -209,7 +210,7 @@ function updateGuildState(guildID, stateData) {
         .then(() => emitStateUpdate(guildID));
 }
 
-function changeVolume(guildID, volume) {
+function changeVolume(guildID, volume, userID) {
     let vol = Math.max(0, Math.min(1.5, volume));
     return db.Guild.findByPk(guildID, { include: db.State })
         .then(guild => {
@@ -222,27 +223,49 @@ function changeVolume(guildID, volume) {
                 guild.voice.connection.dispatcher.setVolume(vol);
             }
         })
-        .then(() => emitStateUpdate(guildID));
+        .then(() => emitStateUpdate(guildID))
+        .then(() => {
+            if (userID) {
+                return audit.log(userID, guildID, `Changed volume to ${vol}`);
+            }
+        });
 }
 
-function setShuffle(guildID, shuffle) {
+function setShuffle(guildID, shuffle, userID) {
     return db.Guild.findByPk(guildID, { include: db.State })
         .then(guild => {
             if (guild) {
                 return guild.State.update({ shuffle });
             }
         })
-        .then(() => emitStateUpdate(guildID));
+        .then(() => emitStateUpdate(guildID))
+        .then(() => {
+            if (userID) {
+                return audit.log(userID, guildID, `Toggled shuffle ${shuffle ? "on" : "off"}`);
+            }
+        });
 }
 
-function setRepeat(guildID, repeat) {
+function setRepeat(guildID, repeat, userID) {
     return db.Guild.findByPk(guildID, { include: db.State })
         .then(guild => {
             if (guild) {
                 return guild.State.update({ repeat });
             }
         })
-        .then(() => emitStateUpdate(guildID));
+        .then(() => emitStateUpdate(guildID))
+        .then(() => {
+            if (userID) {
+                let actionMessage;
+                switch (repeat) {
+                    case 0: actionMessage = "Turned off repeat"; break;
+                    case 1: actionMessage = "Turned on repeat one"; break;
+                    case 2: actionMessage = "Turned on repeat all"; break;
+                    default: return;
+                }
+                return audit.log(userID, guildID, actionMessage);
+            }
+        });
 }
 
 function pause(guildID) {
