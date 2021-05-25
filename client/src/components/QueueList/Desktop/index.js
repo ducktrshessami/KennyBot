@@ -13,6 +13,7 @@ export default function Desktop(props) {
     const [renderQueue, setRender] = useState(props.queue);
     const [active, setActive] = useState(null);
     const scroll = useRef(0);
+    const interval = useRef(null);
     const createDragRefs = useCallback(() => {
         let list = [];
         for (let i = 0; i < props.queue.length; i++) {
@@ -29,6 +30,13 @@ export default function Desktop(props) {
             if (state.first) {
                 scroll.current = 0;
                 setActive(index);
+            }
+            if (state.xy[1] < 0 || state.xy[1] > window.innerHeight) {
+                scrollInterval(state.xy[1] < 0);
+            }
+            else {
+                clearInterval(interval.current);
+                interval.current = null;
             }
             springs.start(i => {
                 if (i === index) {
@@ -55,6 +63,8 @@ export default function Desktop(props) {
         }
         else {
             finalizeOrder();
+            clearInterval(interval.current);
+            interval.current = null;
             scroll.current = 0;
             setActive(null);
             springs.start(() => ({ y: 0 }));
@@ -65,6 +75,12 @@ export default function Desktop(props) {
         filterTaps: true,
         experimental_preventWindowScrollY: true
     });
+
+    function scrollInterval(up) {
+        if (interval.current === null) {
+            interval.current = setInterval(() => window.scrollBy(0, Math.ceil(window.innerHeight / 500) * (up ? -1 : 1)), 5);
+        }
+    }
 
     function finalizeOrder() {
         let newOrder = props.queue.slice()
@@ -92,6 +108,10 @@ export default function Desktop(props) {
     useEffect(() => {
         setRender(props.queue);
     }, [props.queue]);
+    useEffect(() => () => {
+        clearInterval(interval.current);
+        interval.current = null;
+    });
 
     return (
         <article className="server-info-container desktop-queue hide-on-small-only">
