@@ -226,7 +226,7 @@ function changeVolume(guildID, volume, userID) {
         .then(() => emitStateUpdate(guildID))
         .then(() => {
             if (userID) {
-                return audit.log(userID, guildID, `Changed volume to ${vol}`);
+                return audit.log(userID, guildID, 2, [vol]);
             }
         });
 }
@@ -241,7 +241,7 @@ function setShuffle(guildID, shuffle, userID) {
         .then(() => emitStateUpdate(guildID))
         .then(() => {
             if (userID) {
-                return audit.log(userID, guildID, `Toggled shuffle ${shuffle ? "on" : "off"}`);
+                return audit.log(userID, guildID, 1, [shuffle ? "on" : "off"]);
             }
         });
 }
@@ -256,14 +256,7 @@ function setRepeat(guildID, repeat, userID) {
         .then(() => emitStateUpdate(guildID))
         .then(() => {
             if (userID) {
-                let actionMessage;
-                switch (repeat) {
-                    case 0: actionMessage = "Turned off repeat"; break;
-                    case 1: actionMessage = "Turned on repeat one"; break;
-                    case 2: actionMessage = "Turned on repeat all"; break;
-                    default: return;
-                }
-                return audit.log(userID, guildID, actionMessage);
+                return audit.log(userID, guildID, 0, [repeat]);
             }
         });
 }
