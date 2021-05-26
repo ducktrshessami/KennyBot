@@ -47,8 +47,7 @@
     "start": "node index.js"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0",
-    "sqlite3": "^5.0.2"
+    "dotenv": "^8.2.0"
   },
   "main": "index.js",
   "keywords": []
