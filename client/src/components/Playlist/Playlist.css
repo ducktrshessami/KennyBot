@@ -25,7 +25,7 @@
 }
 
 .playlist-arrow {
-    content: url("./collapse-arrow.png");
+    content: url("../../images/collapse-arrow.png");
     height: 1rem;
     position: relative;
     top: 0.1rem;
@@ -33,7 +33,7 @@
 }
 
 .open .playlist-arrow {
-    content: url("./collapse-arrow-down.png");
+    content: url("../../images/collapse-arrow-down.png");
 }
 
 .playlist-play-icon {

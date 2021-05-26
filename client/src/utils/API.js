@@ -79,8 +79,15 @@ function importPlaylist(guildId, playlistId, url) {
     });
 }
 
-function getAudit(guildId) {
-    return fetch(`/api/guild/audit/${guildId}`)
+function getAudit(guildId, userFilter, actionFilter) {
+    let query = new URLSearchParams();
+    if (userFilter) {
+        query.set("user", userFilter.id);
+    }
+    if (actionFilter) {
+        query.set("action", actionFilter.code);
+    }
+    return fetch(`/api/guild/audit/${guildId}${query}`)
         .then(resJSON);
 }
 
