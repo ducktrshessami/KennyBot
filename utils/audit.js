@@ -6,9 +6,10 @@ module.exports = {
     prune
 };
 
-function log(userID, guildID, action) {
+function log(userID, guildID, actionType, vars = []) {
     return db.UserAction.create({
-        action: action.trim(),
+        type: actionType,
+        vars,
         UserId: userID,
         GuildId: guildID
     });
