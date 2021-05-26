@@ -58,7 +58,7 @@ class App extends Component {
             <Route path="/dashboard" render={() => <Dashboard {...this.state} />} />
             <Route path="/disclaimer" component={Disclaimer} />
             <Route path="/server" render={() => <Server {...this.state} />} />
-            <Route path="/audit" component={Audit} />
+            <Route path="/audit" render={() => <Audit {...this.state} />} />
             <Route path="/" render={() => <Home {...this.state} />} />
           </Switch>
           <Footer user={this.state.user} />
