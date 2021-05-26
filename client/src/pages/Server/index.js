@@ -116,6 +116,7 @@ export default class Server extends Component {
                 {!this.props.user && this.props.ready ? <Redirect to="/" /> : undefined}
                 <div className="server-wrapper">
                     <Link to="/dashboard" className="greyple-bg focus-darken white-text btn">❮ Back</Link>
+                    <Link to={`/audit/${this.guildID}`} className="blurple-bg focus-lighten white-text btn right">Audit ❯</Link>
                     <div className="server-container row">
                         <section className="col s12 m6 l4">
                             <h4>
