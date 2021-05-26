@@ -1,4 +1,5 @@
 const auth = require("../middleware/auth");
+const audit = require("../../../utils/audit");
 const db = require("../../../models");
 const audio = require("../../../utils/audio");
 const { emitStateUpdate } = require("../../../utils/state");
@@ -166,6 +167,20 @@ module.exports = function (router) {
                         res.status(404).end();
                     }
                 })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).end();
+                });
+        }
+        else {
+            res.status(404).end();
+        }
+    });
+
+    router.get("/api/guild/audit/:guildId", auth.authCheck, auth.authGuilds, function (req, res) {
+        if (req.authGuilds.find(server => server.id === req.params.guildId)) {
+            audit.get(req.params.guildId)
+                .then(auditLog => res.status(200).json(auditLog))
                 .catch(err => {
                     console.error(err);
                     res.status(500).end();
