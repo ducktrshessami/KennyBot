@@ -36,6 +36,6 @@ module.exports = function (guild) {
     return Promise.all([
         initGuild(guild),
         initState(guild.id),
-        clearQueue(guild.id)
-    ]);
+    ])
+        .then(() => clearQueue(guild.id))
 };
