@@ -266,7 +266,8 @@ function pause(guildID) {
     if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
         if (!guild.voice.connection.dispatcher.paused) {
             guild.voice.connection.dispatcher.pause(true);
-            updateGuildState(guildID, { paused: true });
+            updateGuildState(guildID, { paused: true })
+                .catch(console.error);
             return true;
         }
     }
@@ -278,7 +279,8 @@ function resume(guildID) {
     if (guild && guild.voice && guild.voice.connection && guild.voice.connection.dispatcher) {
         if (guild.voice.connection.dispatcher.paused) {
             guild.voice.connection.dispatcher.resume();
-            updateGuildState(guildID, { paused: false });
+            updateGuildState(guildID, { paused: false })
+                .catch(console.error);
             return true;
         }
     }
@@ -298,7 +300,10 @@ function playUrl(guildID, url) {
                 let guild = findGuild(guildID);
                 if (source && guild && guild.voice && guild.voice.connection) {
                     let stream = audio(url, source);
-                    let timeout = idleTimeout(() => handleSongEnd(guildID), config.streamTimeout);
+                    let timeout = idleTimeout(() => {
+                        handleSongEnd(guildID)
+                            .catch(console.error);
+                    }, config.streamTimeout);
                     if (streamTimeout[guildID]) {
                         clearTimeout(streamTimeout[guildID]);
                     }
@@ -307,7 +312,8 @@ function playUrl(guildID, url) {
                             updateGuildState(guildID, {
                                 SongId: null,
                                 playing: true
-                            });
+                            })
+                                .catch(console.error);
                             resolve(true);
                         })
                         .on("speaking", speaking => {
@@ -315,6 +321,7 @@ function playUrl(guildID, url) {
                                 streamTimeout[guildID] = timeout();
                             }
                         });
+                    streamTimeout[guildID] = timeout();
                     return;
                 }
             }
@@ -322,7 +329,8 @@ function playUrl(guildID, url) {
                 SongId: null,
                 playing: false,
                 lastNotQueue: null
-            });
+            })
+                .catch(console.error);
             resolve(false);
         }));
 }
@@ -342,7 +350,10 @@ function playSong(guildID, songID, queued = false) {
                 let guild = findGuild(guildID);
                 if (guild && guild.voice && guild.voice.connection) {
                     let stream = audio(song.url, song.source);
-                    let timeout = idleTimeout(() => handleSongEnd(guildID), config.streamTimeout);
+                    let timeout = idleTimeout(() => {
+                        handleSongEnd(guildID)
+                            .catch(console.error);
+                    }, config.streamTimeout);
                     if (streamTimeout[guildID]) {
                         clearTimeout(streamTimeout[guildID]);
                     }
