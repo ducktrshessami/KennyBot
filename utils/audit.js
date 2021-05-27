@@ -6,9 +6,9 @@ module.exports = {
     prune
 };
 
-function log(userID, guildID, actionType, vars = []) {
+function log(userID, guildID, actionCode, vars = []) {
     return db.UserAction.create({
-        type: actionType,
+        code: actionCode,
         vars,
         UserId: userID,
         GuildId: guildID
@@ -18,7 +18,7 @@ function log(userID, guildID, actionType, vars = []) {
 function get(guildID) {
     return db.UserAction.findAll({
         where: { GuildId: guildID },
-        attributes: ["id", "type", "vars", "createdAt"],
+        attributes: ["id", "code", "vars", "createdAt"],
         include: {
             model: db.User,
             attributes: ["username", "discriminator", "avatar"]
