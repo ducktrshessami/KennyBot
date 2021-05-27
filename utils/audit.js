@@ -18,7 +18,7 @@ function log(userID, guildID, actionType, vars = []) {
 function get(guildID) {
     return db.UserAction.findAll({
         where: { GuildId: guildID },
-        attributes: ["type", "vars", "createdAt"],
+        attributes: ["id", "type", "vars", "createdAt"],
         include: {
             model: db.User,
             attributes: ["username", "discriminator", "avatar"]

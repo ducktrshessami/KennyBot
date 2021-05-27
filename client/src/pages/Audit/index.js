@@ -1,4 +1,4 @@
-import { Component, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import Action from "../../components/Action";
 import Loading from "../../components/Loading";
@@ -14,16 +14,20 @@ export default function Audit(props) {
     const [actionFilter, setAction] = useState(null);
 
     useEffect(() => {
+        let mounted = true;
         setReady(false);
         API.getAudit(guildID, userFilter, actionFilter)
             .then(newLog => {
-                setLog(newLog);
-                setReady(true);
+                if (mounted) {
+                    setLog(newLog);
+                    setReady(true);
+                }
             })
             .catch(err => {
                 Toast("Failed to get audit log", 1);
                 console.error(err);
             });
+        return () => mounted = false;
     }, [guildID, userFilter, actionFilter]);
 
     return (
@@ -48,7 +52,9 @@ export default function Audit(props) {
                         </div>
                         <hr />
                         <br />
-                        {!ready || !props.ready ? <Loading className="audit-loader center" size="big" /> : undefined}
+                        <ul className="action-list">
+                            {ready && props.ready ? log.map(action => <Action key={action.id} {...action} />) : <Loading className="center" size="big" />}
+                        </ul>
                     </div>
                 </div>
             </div>
