@@ -39,6 +39,10 @@ module.exports = function (socket) {
     });
 
     socket.on("playNext", function () {
-        music.skip(socket.handshake.auth.guildID);
+        music.skip(socket.handshake.auth.guildID, socket.handshake.auth.userID)
+            .catch(err => {
+                console.error(err);
+                socket.emit("error", err);
+            });
     });
 };
