@@ -425,7 +425,7 @@ function playSong(guildID, songID, queued = false, userID) {
         }));
 }
 
-function queueSong(guildID, songID) {
+function queueSong(guildID, songID, userID) {
     return db.Song.findByPk(songID, {
         include: [db.Playlist, db.Queue]
     })
@@ -440,31 +440,48 @@ function queueSong(guildID, songID) {
                         SongId: songID,
                         order: queues && queues[queues.length - 1] ? queues[queues.length - 1].order + 1 : 0
                     }))
-                    .then(() => state.emitStateUpdate(guildID));
+                    .then(() => state.emitStateUpdate(guildID))
+                    .then(() => {
+                        if (userID) {
+                            return audit.log(userID, guildID, 9, [song.title]);
+                        }
+                    });
             }
         });
 }
 
-function dequeueSong(guildID, queueID) {
-    return db.Queue.findByPk(queueID)
+function dequeueSong(guildID, queueID, userID) {
+    return db.Queue.findByPk(queueID, { include: db.Song })
         .then(queue => {
             if (queue && queue.GuildId === guildID) {
                 return queue.destroy()
                     .then(() => queueFirst(guildID))
-                    .then(() => state.emitStateUpdate(guildID));
+                    .then(() => state.emitStateUpdate(guildID))
+                    .then(() => {
+                        if (userID) {
+                            return audit.log(userID, guildID, 10, [queue.Song.title]);
+                        }
+                    });
             }
         });
 }
 
-function dequeueSongBulk(guildID, idList) {
-    return Promise.all(idList.map(queueID => db.Queue.findByPk(queueID)
+function dequeueSongBulk(guildID, idList, userID) {
+    let titles = [];
+    return Promise.all(idList.map(queueID => db.Queue.findByPk(queueID, { include: db.Song })
         .then(queue => {
             if (queue && queue.GuildId === guildID) {
+                titles.push(queue.Song.title);
                 return queue.destroy();
             }
         })))
         .then(() => queueFirst(guildID))
-        .then(() => state.emitStateUpdate(guildID));
+        .then(() => state.emitStateUpdate(guildID))
+        .then(() => {
+            if (userID) {
+                return audit.log(userID, guildID, 10, titles);
+            }
+        });
 }
 
 function clearQueue(guildID) {

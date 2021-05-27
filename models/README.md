@@ -14,7 +14,7 @@ Code|Action|Variables
 7|Play Playlist|[playlistName]
 8|Shuffle Play Playlist|[playlistName]
 9|Queue Song|[songTitle]
-10|Dequeue Song|[songTitle]
+10|Dequeue Song(s)|[...songTitles]
 11|Create Playlist|[playlistName]
 12|Rename Playlist|[oldPlaylistName, newPlaylistName]
 13|Delete Playlist|[playlistName]
