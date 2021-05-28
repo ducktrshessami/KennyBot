@@ -12,7 +12,8 @@ module.exports = function (router) {
                 GuildId: req.params.guildId
             })
                 .then(playlist => {
-                    emitStateUpdate(req.params.guildId);
+                    emitStateUpdate(req.params.guildId)
+                        .catch(console.error);
                     res.status(200).json({
                         id: playlist.id,
                         name: playlist.name
@@ -35,7 +36,8 @@ module.exports = function (router) {
                     if (playlist) {
                         return playlist.update(req.body)
                             .then(updated => {
-                                emitStateUpdate(req.params.guildId);
+                                emitStateUpdate(req.params.guildId)
+                                    .catch(console.error);
                                 res.status(200).json(updated);
                             });
                     }
@@ -60,7 +62,8 @@ module.exports = function (router) {
                     if (playlist) {
                         return playlist.destroy()
                             .then(() => {
-                                emitStateUpdate(req.params.guildId);
+                                emitStateUpdate(req.params.guildId)
+                                    .catch(console.error);
                                 res.status(200).end();
                             });
                     }
@@ -85,7 +88,8 @@ module.exports = function (router) {
                     if (song) {
                         return song.destroy()
                             .then(() => {
-                                emitStateUpdate(req.params.guildId);
+                                emitStateUpdate(req.params.guildId)
+                                    .catch(console.error);
                                 res.status(200).end();
                             });
                     }
@@ -121,7 +125,8 @@ module.exports = function (router) {
                                 PlaylistId: req.params.playlistId
                             }))
                             .then(song => {
-                                emitStateUpdate(req.params.guildId);
+                                emitStateUpdate(req.params.guildId)
+                                    .catch(console.error);
                                 res.status(200).json(song);
                             });
                     }
@@ -159,7 +164,8 @@ module.exports = function (router) {
                                 PlaylistId: req.params.playlistId
                             }))))
                             .then(() => {
-                                emitStateUpdate(req.params.guildId);
+                                emitStateUpdate(req.params.guildId)
+                                    .catch(console.error);
                                 res.status(200).end();
                             });
                     }
