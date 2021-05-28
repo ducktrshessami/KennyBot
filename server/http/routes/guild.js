@@ -12,6 +12,8 @@ module.exports = function (router) {
                 GuildId: req.params.guildId
             })
                 .then(playlist => {
+                    audit.log(req.session.discord.userID, req.params.guildId, 11, [playlist.name])
+                        .catch(console.error);
                     emitStateUpdate(req.params.guildId)
                         .catch(console.error);
                     res.status(200).json({
@@ -36,6 +38,8 @@ module.exports = function (router) {
                     if (playlist) {
                         return playlist.update(req.body)
                             .then(updated => {
+                                audit.log(req.session.discord.userID, req.params.guildId, 12, [updated.name])
+                                    .catch(console.error);
                                 emitStateUpdate(req.params.guildId)
                                     .catch(console.error);
                                 res.status(200).json(updated);
@@ -62,6 +66,8 @@ module.exports = function (router) {
                     if (playlist) {
                         return playlist.destroy()
                             .then(() => {
+                                audit.log(req.session.discord.userID, req.params.guildId, 13, [playlist.name])
+                                    .catch(console.error);
                                 emitStateUpdate(req.params.guildId)
                                     .catch(console.error);
                                 res.status(200).end();
@@ -83,11 +89,13 @@ module.exports = function (router) {
 
     router.delete("/api/guild/song/:guildId/:songId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(server => server.id === req.params.guildId)) {
-            db.Song.findByPk(req.params.songId)
+            db.Song.findByPk(req.params.songId, { include: db.Playlist })
                 .then(song => {
                     if (song) {
                         return song.destroy()
                             .then(() => {
+                                audit.log(req.session.discord.userID, req.params.guildId, 15, [song.Playlist.name, song.title])
+                                    .catch(console.error);
                                 emitStateUpdate(req.params.guildId)
                                     .catch(console.error);
                                 res.status(200).end();
@@ -125,6 +133,8 @@ module.exports = function (router) {
                                 PlaylistId: req.params.playlistId
                             }))
                             .then(song => {
+                                audit.log(req.session.discord.userID, req.params.guildId, 14, [playlist.name, title])
+                                    .catch(console.error);
                                 emitStateUpdate(req.params.guildId)
                                     .catch(console.error);
                                 res.status(200).json(song);
@@ -152,18 +162,24 @@ module.exports = function (router) {
             })
                 .then(playlist => {
                     if (playlist) {
+                        let titles;
                         let lastSong = playlist.Songs[playlist.Songs.length - 1];
                         let lastOrder = -1;
                         if (lastSong) {
                             lastOrder = lastSong.order;
                         }
                         return audio.parsePlaylist(req.body.url)
-                            .then(tracks => Promise.all(tracks.map((track, i) => db.Song.create({
-                                ...track,
-                                order: lastOrder + i + 1,
-                                PlaylistId: req.params.playlistId
-                            }))))
+                            .then(tracks => {
+                                titles = tracks.map(track => track.title);
+                                return Promise.all(tracks.map((track, i) => db.Song.create({
+                                    ...track,
+                                    order: lastOrder + i + 1,
+                                    PlaylistId: req.params.playlistId
+                                })))
+                            })
                             .then(() => {
+                                audit.log(req.session.discord.userID, req.params.guildId, 14, [playlist.name, ...titles])
+                                    .catch(console.error);
                                 emitStateUpdate(req.params.guildId)
                                     .catch(console.error);
                                 res.status(200).end();
