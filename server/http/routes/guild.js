@@ -133,7 +133,7 @@ module.exports = function (router) {
                                 PlaylistId: req.params.playlistId
                             }))
                             .then(song => {
-                                audit.log(req.session.discord.userID, req.params.guildId, 14, [playlist.name, title])
+                                audit.log(req.session.discord.userID, req.params.guildId, 14, [playlist.name, song.title])
                                     .catch(console.error);
                                 emitStateUpdate(req.params.guildId)
                                     .catch(console.error);
