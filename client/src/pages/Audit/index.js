@@ -10,23 +10,30 @@ export default function Audit(props) {
     const guildID = ((window.location.pathname.match(/audit\/[0-9]+/gi) || [""])[0].match(/[0-9]+/g) || [""])[0];
     const [ready, setReady] = useState(false);
     const [log, setLog] = useState([]);
+    const [users, setUserList] = useState([]);
     const [userFilter, setUser] = useState(null);
     const [actionFilter, setAction] = useState(null);
 
     useEffect(() => {
         let mounted = true;
         setReady(false);
-        API.getAudit(guildID, userFilter, actionFilter)
-            .then(newLog => {
+        Promise.all([
+            API.getAudit(guildID, userFilter, actionFilter),
+            API.getMembers(guildID)
+        ])
+            .then((newLog, members) => {
                 if (mounted) {
-                    setLog(newLog);
+                    if (newLog && members) {
+                        setLog(newLog);
+                        setUserList(members);
+                    }
+                    else {
+                        Toast("Failed to get audit log", 1);
+                    }
                     setReady(true);
                 }
             })
-            .catch(err => {
-                Toast("Failed to get audit log", 1);
-                console.error(err);
-            });
+            .catch(console.error);
         return () => mounted = false;
     }, [guildID, userFilter, actionFilter]);
 

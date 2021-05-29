@@ -9,7 +9,8 @@ const API = {
     deleteSong,
     addSong,
     importPlaylist,
-    getAudit
+    getAudit,
+    getMembers
 };
 
 function gotoLogin() {
@@ -88,6 +89,11 @@ function getAudit(guildId, userFilter, actionFilter) {
         query.set("action", actionFilter.code);
     }
     return fetch(`/api/guild/audit/${guildId}?${query}`)
+        .then(resJSON);
+}
+
+function getMembers(guildId) {
+    return fetch(`/api/guild/members/${guildId}`)
         .then(resJSON);
 }
 
