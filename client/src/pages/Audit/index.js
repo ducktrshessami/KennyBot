@@ -51,7 +51,6 @@ export default function Audit(props) {
                             </div>
                         </div>
                         <hr />
-                        <br />
                         <ul className="action-list">
                             {ready && props.ready ? log.map(action => <Action key={action.id} {...action} />) : <Loading className="center" size="big" />}
                         </ul>
