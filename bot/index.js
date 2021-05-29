@@ -25,6 +25,9 @@ catch {
 helpCmd(commands);
 
 config.token = process.env.BOT_TOKEN || config.token;
+config.options = {
+    ws: { intents: [DiscordBot.Discord.Intents.NON_PRIVILEGED, "GUILD_MEMBERS"] }
+};
 client = new DiscordBot(config, commands, responses);
 
 // Event handlers
