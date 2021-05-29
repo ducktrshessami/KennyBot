@@ -15,9 +15,22 @@ function log(userID, guildID, actionCode, vars = []) {
     });
 }
 
-function get(guildID) {
+function get(guildID, userFilter, actionFilter) {
+    let where = { GuildId: guildID };
+    let codeFilter = actionFilter ? actionFilter + 7 : null;
+    switch (actionFilter) {
+        case 0: codeFilter = { [db.Sequelize.Op.between]: [0, 5] }; break;
+        case 1: codeFilter = { [db.Sequelize.Op.between]: [6, 8] }; break;
+        default:
+    }
+    if (userFilter) {
+        where.UserId = userFilter;
+    }
+    if (codeFilter) {
+        where.code = codeFilter;
+    }
     return db.UserAction.findAll({
-        where: { GuildId: guildID },
+        where,
         attributes: ["id", "code", "vars", "createdAt"],
         include: {
             model: db.User,
