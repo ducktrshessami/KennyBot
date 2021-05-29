@@ -3,6 +3,7 @@ const db = require("../models");
 module.exports = {
     log,
     get,
+    getUsers,
     prune
 };
 
@@ -37,6 +38,38 @@ function get(guildID, userFilter, actionFilter) {
             attributes: ["username", "discriminator", "avatar"]
         },
         order: [["createdAt", "desc"]],
+    });
+}
+
+function getUsers(guildID) {
+    return new Promise((resolve, reject) => {
+        let guild = process.bot.guilds.cache.get(guildID);
+        if (guild) {
+            guild.members.fetch()
+                .then(members => members.map(({ user }) => ({
+                    id: user.id,
+                    username: user.username,
+                    discriminator: user.discriminator,
+                    avatar: user.avatar
+                })))
+                .then(resolve)
+                .catch(reject);
+        }
+        else {
+            db.UserAction.findAll({
+                where: { GuildId: guildID },
+                include: {
+                    model: db.User,
+                    attributes: ["id", "username", "discriminator", "avatar"]
+                }
+            })
+                .then(actions => {
+                    let obj = {};
+                    actions.forEach(action => obj[action.User.id] = action.User);
+                    resolve(Object.values(obj));
+                })
+                .catch(reject);
+        }
     });
 }
 

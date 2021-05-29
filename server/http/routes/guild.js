@@ -212,4 +212,18 @@ module.exports = function (router) {
             res.status(404).end();
         }
     });
+
+    router.get("/api/guild/members/:guildId", auth.authCheck, auth.authGuilds, function (req, res) {
+        if (req.authGuilds.find(server => server.id === req.params.guildId)) {
+            audit.getUsers(req.params.guildId)
+                .then(users => res.status(200).json(users))
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).end();
+                });
+        }
+        else {
+            res.status(404).end();
+        }
+    });
 };
