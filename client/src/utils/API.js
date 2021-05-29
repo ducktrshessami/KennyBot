@@ -87,7 +87,7 @@ function getAudit(guildId, userFilter, actionFilter) {
     if (actionFilter) {
         query.set("action", actionFilter.code);
     }
-    return fetch(`/api/guild/audit/${guildId}${query}`)
+    return fetch(`/api/guild/audit/${guildId}?${query}`)
         .then(resJSON);
 }
 
