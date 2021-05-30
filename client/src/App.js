@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, createRef } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -24,6 +24,7 @@ import "./Discord.css";
 import "./Kenny.css";
 
 class App extends Component {
+  ref = createRef();
   state = {
     ready: false,
     guilds: []
@@ -48,7 +49,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App dbnb-bg white-text">
+      <div className="App dbnb-bg white-text" ref={this.ref}>
         <Router>
           <Status />
           {this.state.user ? <Navbar /> : undefined}
@@ -57,8 +58,8 @@ class App extends Component {
             <Route path="/logout" component={Logout} />
             <Route path="/dashboard" render={() => <Dashboard {...this.state} />} />
             <Route path="/disclaimer" component={Disclaimer} />
-            <Route path="/server" render={() => <Server {...this.state} />} />
-            <Route path="/audit" render={() => <Audit {...this.state} />} />
+            <Route path="/server" render={() => <Server {...this.state} />} appRef={this.ref} />
+            <Route path="/audit" render={() => <Audit {...this.state} appRef={this.ref} />} />
             <Route path="/" render={() => <Home {...this.state} />} />
           </Switch>
           <Footer user={this.state.user} />
