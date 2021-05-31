@@ -174,8 +174,8 @@ function shufflePlayPlaylist(guildID, playlistID, userID) {
             include: db.Song,
             order: [[db.Song, "order"]]
         }))
-        .then(playlist => pickNewRandomFromList(playlist.Songs))
-        .then(song => {
+        .then(playlist => {
+            let song = pickNewRandomFromList(playlist.Songs);
             if (song) {
                 return playSong(guildID, song.id)
                     .then(() => {
