@@ -7,13 +7,78 @@ module.exports = {
     prune
 };
 
-function log(userID, guildID, actionCode, vars = []) {
+function createActionLog(userID, guildID, actionCode, vars) {
     return db.UserAction.create({
         code: actionCode,
         vars,
         UserId: userID,
         GuildId: guildID
     });
+}
+
+function checkLast(userID, guildID, actionCode) {
+    return db.UserAction.findOne({
+        where: { GuildId: guildID },
+        order: [["createdAt", "desc"]]
+    })
+        .then(last => {
+            if (last && last.UserId === userID && last.code === actionCode && Date.now() - last.updatedAt < process.env.AUDIT_RECENT) {
+                return last;
+            }
+        });
+}
+
+function replaceable(userID, guildID, actionCode, vars) {
+    return checkLast(userID, guildID, actionCode)
+        .then(last => {
+            if (last) {
+                return last.update({ vars });
+            }
+            else {
+                return createActionLog(userID, guildID, actionCode, vars);
+            }
+        });
+}
+
+function appendable(userID, guildID, actionCode, vars) {
+    return checkLast(userID, guildID, actionCode)
+        .then(last => {
+            if (last) {
+                return last.update({ vars: db.Sequelize.fn("array_cat", db.Sequelize.col("vars"), db.Sequelize.cast(vars, "character varying[]")) });
+            }
+            else {
+                return createActionLog(userID, guildID, actionCode, vars);
+            }
+        });
+}
+
+function uniqueUpdatable(userID, guildID, actionCode, vars) {
+    return checkLast(userID, guildID, actionCode)
+        .then(last => {
+            if (last) {
+                switch (actionCode) {
+                    case 14:
+                    case 15: return last.update({ vars: db.Sequelize.fn("array_cat", db.Sequelize.col("vars"), db.Sequelize.cast(vars.slice(1), "character varying[]")) });
+                    default:
+                }
+            }
+            else {
+                return createActionLog(userID, guildID, actionCode, vars);
+            }
+        });
+}
+
+function log(userID, guildID, actionCode, vars = []) {
+    switch (actionCode) {
+        case 3:
+        case 4:
+        case 5: return replaceable(userID, guildID, actionCode, vars);
+        case 9:
+        case 10: return appendable(userID, guildID, actionCode, vars)
+        case 14:
+        case 15: return uniqueUpdatable(userID, guildID, actionCode, vars);
+        default: return createActionLog(userID, guildID, actionCode, vars);
+    }
 }
 
 function get(guildID, userFilter, actionFilter) {
