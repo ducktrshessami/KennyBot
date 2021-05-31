@@ -1,18 +1,44 @@
-import { useEffect, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import Action from "../../components/Action";
 import Loading from "../../components/Loading";
+import FilterDropdown from "../../components/FilterDropdown";
 import API from "../../utils/API";
 import Toast from "../../utils/Toast";
+import isDescendent from "../../utils/isDescendent";
 import "./Audit.css";
 
 export default function Audit(props) {
     const guildID = ((window.location.pathname.match(/audit\/[0-9]+/gi) || [""])[0].match(/[0-9]+/g) || [""])[0];
+    const userRef = createRef();
+    const actionRef = createRef();
+    const dropRef = createRef();
     const [ready, setReady] = useState(false);
     const [log, setLog] = useState([]);
     const [users, setUserList] = useState([]);
     const [userFilter, setUser] = useState(null);
     const [actionFilter, setAction] = useState(null);
+    const [picking, setPicking] = useState(0);
+
+    function toggleDropdown(event, value) {
+        if (!isDescendent(event.target, dropRef.current)) {
+            setPicking(picking && picking === value ? 0 : value);
+        }
+    }
+
+    function isOut(child) {
+        return (child === userRef.current || child === actionRef.current) ? false : child === props.appRef.current ? true : isOut(child.parentNode);
+    }
+
+    function selectUser(userID) {
+        setUser(userID);
+        setPicking(0);
+    }
+
+    function selectAction(actionCode) {
+        setAction(actionCode);
+        setPicking(0);
+    }
 
     useEffect(() => {
         let mounted = true;
@@ -21,7 +47,7 @@ export default function Audit(props) {
             API.getAudit(guildID, userFilter, actionFilter),
             API.getMembers(guildID)
         ])
-            .then((newLog, members) => {
+            .then(([newLog, members]) => {
                 if (mounted) {
                     if (newLog && members) {
                         setLog(newLog);
@@ -36,6 +62,20 @@ export default function Audit(props) {
             .catch(console.error);
         return () => mounted = false;
     }, [guildID, userFilter, actionFilter]);
+    useEffect(() => {
+        function outClick(event) {
+            if (isOut(event.target)) {
+                setPicking(0);
+            }
+        }
+
+        props.appRef.current.addEventListener("click", outClick);
+        return () => {
+            if (props.appRef.current) {
+                props.appRef.current.removeEventListener("click", outClick);
+            }
+        };
+    });
 
     return (
         <main>
@@ -47,14 +87,16 @@ export default function Audit(props) {
                         <div className="audit-header">
                             <h4 className="audit-title">Audit Log</h4>
                             <span className="audit-desktop-filter greyple-text hide-on-small-only">Filter by User</span>
-                            <div role="button" className="audit-desktop-filter hide-on-small-only">
+                            <div role="button" className="audit-desktop-filter hide-on-small-only" onClick={event => toggleDropdown(event, 1)} ref={userRef}>
                                 {userFilter ? userFilter.username : "All"}
                                 <i className="audit-filter-dropdown-icon" />
+                                {picking === 1 ? <FilterDropdown users={users} select={selectUser} ref={dropRef} /> : undefined}
                             </div>
                             <span className="audit-desktop-filter greyple-text hide-on-small-only">Filter by Action</span>
-                            <div role="button" className="audit-desktop-filter hide-on-small-only">
+                            <div role="button" className="audit-desktop-filter hide-on-small-only" onClick={event => toggleDropdown(event, 2)} ref={actionRef}>
                                 {actionFilter ? actionFilter.name : "All"}
                                 <i className="audit-filter-dropdown-icon" />
+                                {picking === 2 ? <FilterDropdown select={selectAction} ref={dropRef} /> : undefined}
                             </div>
                         </div>
                         <hr />

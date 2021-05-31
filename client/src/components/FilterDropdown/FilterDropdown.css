@@ -1,4 +1,19 @@
 .filter-dropdown {
     border-radius: 3px;
     border: #42454A solid 1px;
+    position: absolute;
+    padding: 0.5rem;
+    box-shadow: 0.1ch 0.1ch 0.1ch black;
+    overflow: scroll;
+    cursor: initial;
+    z-index: 1;
+    width: 25ch;
+    height: 20rem;
+    left: -7rem;
+    top: 1.5rem;
+}
+
+.filter-dropdown::-webkit-scrollbar, .filter-dropdown::-webkit-scrollbar-corner {
+    width: 0;
+    height: 0;
 }
