@@ -10,9 +10,9 @@ export default function Action(props) {
         case 4: header += `toggled shuffle ${props.vars[0]}`; break;
         case 5:
             switch (props.vars[0]) {
-                case 0: header += "turned off repeat"; break;
-                case 1: header += "turned on repeat one"; break;
-                case 2: header += "turned on repeat all"; break;
+                case "0": header += "turned off repeat"; break;
+                case "1": header += "turned on repeat one"; break;
+                case "2": header += "turned on repeat all"; break;
                 default:
             }
             break;
