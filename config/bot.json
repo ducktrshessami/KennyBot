@@ -1,6 +1,7 @@
 {
     "token": null,
     "admin": [],
+    "presenceDuration": 30,
     "embedColor": "9c2b2f",
     "cmdOptions": {
         "help": {
