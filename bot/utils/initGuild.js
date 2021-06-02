@@ -5,6 +5,7 @@ function initGuild(guild) {
     return db.Guild.findByPk(guild.id)
         .then(dbGuild => {
             if (dbGuild) {
+                this.client.config.servers[guild.id].prefix = dbGuild.prefix;
                 return dbGuild.update(guild);
             }
             else {
