@@ -3,6 +3,7 @@ const db = require("../models");
 const config = require("../config/bot.json");
 const commands = require("./commands");
 const responses = require("./responses");
+const activities = require("./activities");
 const helpCmd = require("./helpCmd");
 const initGuild = require("./utils/initGuild");
 const { emitStateUpdate } = require("../utils/state");
@@ -29,6 +30,7 @@ client = new DiscordBot(config, commands, responses);
 // Event handlers
 client.on("ready", function () {
     console.log(`Logged in as ${client.user.username}#${client.user.discriminator}`);
+    client.loopPresences(activities, process.env.BOT_PRESDURATION || config.presenceDuration);
     client.guilds.cache.each(initGuild);
 });
 
