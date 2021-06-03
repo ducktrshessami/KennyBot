@@ -50,5 +50,8 @@
     "dotenv": "^8.2.0"
   },
   "main": "index.js",
-  "keywords": []
+  "keywords": [],
+  "engines": {
+    "node": "<14.17.0"
+  }
 }
