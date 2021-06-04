@@ -3,7 +3,7 @@ const { getSource, getTitle } = require("../../utils/audio");
 const { playUrl } = require("../../utils/music");
 
 module.exports = new Command("play", function (message, args) {
-    let source = getSource(args[1]);
+    let source = getSource(args[1] || "");
     if (args.length > 1 && source) {
         Promise.all([
             getTitle(args[1]),
@@ -21,7 +21,20 @@ module.exports = new Command("play", function (message, args) {
             })
             .catch(console.error);
     }
+    else {
+        utils.sendVerbose(message.channel, [
+            message.author.toString(),
+            `\`${this.usage}\``,
+            this.description,
+            this.subtitle
+        ]
+            .filter(line => line)
+            .join("\n")
+        )
+            .catch(console.error);
+    }
 }, {
     usage: "@kennybot play <url>",
-    description: "Play a single song from URL"
+    description: "Play a single song from URL",
+    subtitle: `You may be looking for ${process.env.CLIENT_ORIGIN}`
 });
