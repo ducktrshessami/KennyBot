@@ -43,22 +43,26 @@ function soundcloud(url) {
 }
 
 function getSource(url) {
-    if (ytdl.validateURL(url)) {
-        return "youtube";
-    }
-    else if (scdl.validateURL(url)) {
-        return "soundcloud";
+    if (url) {
+        if (ytdl.validateURL(url)) {
+            return "youtube";
+        }
+        else if (scdl.validateURL(url)) {
+            return "soundcloud";
+        }
     }
 }
 
 async function getPlaylistSource(url) {
-    try {
-        await ytpl.getPlaylistID(url);
-        return "youtube";
-    }
-    catch {
-        if (scdl.playlist.validateURL(url)) {
-            return "soundcloud";
+    if (url) {
+        try {
+            await ytpl.getPlaylistID(url);
+            return "youtube";
+        }
+        catch {
+            if (scdl.playlist.validateURL(url)) {
+                return "soundcloud";
+            }
         }
     }
 }

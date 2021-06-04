@@ -3,7 +3,7 @@ const { getSource, getTitle } = require("../../utils/audio");
 const { playUrl } = require("../../utils/music");
 
 module.exports = new Command("play", function (message, args) {
-    let source = getSource(args[1]);
+    let source = getSource(args[1] || "");
     if (args.length > 1 && source) {
         Promise.all([
             getTitle(args[1]),
