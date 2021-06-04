@@ -24,7 +24,8 @@ const pageTemplates = {
         "pause",
         "resume",
         "play",
-        "skip"
+        "skip",
+        "player"
     ]
 };
 
