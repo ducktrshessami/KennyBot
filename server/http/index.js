@@ -7,7 +7,7 @@ const app = express();
 const cycler = Cycle({
     origin: process.env.API_ORIGIN,
     ms: 1500000,
-    verbose: true
+    verbose: false
 });
 
 app.use(cycler);
