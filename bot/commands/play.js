@@ -36,5 +36,5 @@ module.exports = new Command("play", function (message, args) {
 }, {
     usage: "@kennybot play <url>",
     description: "Play a single song from URL",
-    subtitle: "You may be looking for https://discord-kennybot.herokuapp.com/"
+    subtitle: `You may be looking for ${process.env.CLIENT_ORIGIN}`
 });
