@@ -21,7 +21,20 @@ module.exports = new Command("play", function (message, args) {
             })
             .catch(console.error);
     }
+    else {
+        utils.sendVerbose(message.channel, [
+            message.author.toString(),
+            `\`${this.usage}\``,
+            this.description,
+            this.subtitle
+        ]
+            .filter(line => line)
+            .join("\n")
+        )
+            .catch(console.error);
+    }
 }, {
     usage: "@kennybot play <url>",
-    description: "Play a single song from URL"
+    description: "Play a single song from URL",
+    subtitle: "You may be looking for https://discord-kennybot.herokuapp.com/"
 });
