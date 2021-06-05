@@ -31,7 +31,7 @@ export default forwardRef(function FilterDropdown(props, ref) {
         <div className={`filter-dropdown dbnb-bg ${props.className ? props.className : ""}`.trim()} ref={ref}>
             <input className="filter-search dtnqb-bg white-text browser-default" type="text" placeholder={`Search ${props.users ? "Members" : "Actions"}`} onChange={event => setSearch(event.target.value.trim())} />
             <ul>
-                {items.map((item, i) => <FilterItem key={i} {...item} />)}
+                {items.map((item, i) => <FilterItem key={i} {...item} ref={itemRefs[i]} />)}
             </ul>
         </div>
     );
