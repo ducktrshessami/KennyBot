@@ -7,9 +7,9 @@
     overflow: scroll;
     cursor: initial;
     z-index: 1;
-    width: 25ch;
+    width: 32ch;
     height: 20rem;
-    left: -7rem;
+    left: -8rem;
     top: 1.5rem;
 }
 
@@ -23,9 +23,20 @@
     border: none;
     border-radius: 3px;
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    position: sticky;
+    top: 0;
 }
 
 .filter-search::placeholder {
     color: #5F6369;
+}
+
+.filter-item {
+    padding: 1.25rem;
+}
+
+.filter-item.active {
+    background-color: #5865F2;
 }
