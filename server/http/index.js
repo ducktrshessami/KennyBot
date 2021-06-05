@@ -1,4 +1,5 @@
 const express = require("express");
+const secure = require("express-force-https");
 const Cycle = require("express-cycle");
 const session = require("./middleware/session");
 const auth = require("./middleware/auth");
@@ -10,6 +11,7 @@ const cycler = Cycle({
     verbose: false
 });
 
+app.use(secure);
 app.use(cycler);
 app.use(session);
 app.use(auth.init);
