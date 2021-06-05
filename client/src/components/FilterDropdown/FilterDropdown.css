@@ -8,7 +8,7 @@
     cursor: initial;
     z-index: 1;
     width: 32ch;
-    height: 20rem;
+    height: 20.5rem;
     left: -8rem;
     top: 1.5rem;
 }
@@ -27,6 +27,7 @@
     position: sticky;
     top: 0;
     z-index: 2;
+    margin-bottom: 0.5rem;
 }
 
 .filter-search::placeholder {
@@ -49,6 +50,10 @@
     height: 2.5rem;
     border-radius: 2.5rem;
     position: relative;
-    top: 0.9rem;
     margin-right: 1.25ch;
+}
+
+.filter-text {
+    position: relative;
+    bottom: 0.9rem;
 }
