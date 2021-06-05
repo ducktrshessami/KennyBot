@@ -111,6 +111,7 @@ function getUsers(guildID) {
         let guild = process.bot.guilds.cache.get(guildID);
         if (guild) {
             guild.members.fetch()
+                .then(members => members.filter(member => !member.user.bot))
                 .then(members => members.map(({ user }) => ({
                     id: user.id,
                     username: user.username,
