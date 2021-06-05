@@ -1,6 +1,8 @@
-export default function FilterItem(props) {
+import { forwardRef } from "react";
+
+export default forwardRef(function FilterItem(props, ref) {
     console.log(props);
     return (
-        <li></li>
+        <li ref={ref}></li>
     );
-};
+});
