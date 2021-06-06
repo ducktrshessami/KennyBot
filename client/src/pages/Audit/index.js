@@ -90,13 +90,13 @@ export default function Audit(props) {
                             <div role="button" className="audit-desktop-filter hide-on-small-only" onClick={event => toggleDropdown(event, 1)} ref={userRef}>
                                 {userFilter ? userFilter.name : "All"}
                                 <i className="audit-filter-dropdown-icon" />
-                                {picking === 1 ? <FilterDropdown users={users} select={selectUser} ref={dropRef} /> : undefined}
+                                {picking === 1 ? <FilterDropdown users={users} activeValue={userFilter ? userFilter.value : null} select={selectUser} ref={dropRef} /> : undefined}
                             </div>
                             <span className="audit-desktop-filter greyple-text hide-on-small-only">Filter by Action</span>
                             <div role="button" className="audit-desktop-filter hide-on-small-only" onClick={event => toggleDropdown(event, 2)} ref={actionRef}>
                                 {actionFilter ? actionFilter.name : "All"}
                                 <i className="audit-filter-dropdown-icon" />
-                                {picking === 2 ? <FilterDropdown select={selectAction} ref={dropRef} /> : undefined}
+                                {picking === 2 ? <FilterDropdown activeValue={actionFilter ? actionFilter.value : null} select={selectAction} ref={dropRef} /> : undefined}
                             </div>
                         </div>
                         <hr />
