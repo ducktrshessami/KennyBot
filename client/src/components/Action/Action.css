@@ -13,19 +13,28 @@
     height: 3rem;
     position: relative;
     bottom: 0.25rem;
+    margin-right: 0.5ch;
 }
 
 .action-avatar {
     height: 3.5rem;
     border-radius: 3.5rem;
+    margin-right: 1ch;
 }
 
 .action-info {
     position: relative;
     bottom: 0.66rem;
-    margin-left: 1ch;
 }
 
 .action-details {
     margin-bottom: 0.5rem;
+}
+
+.action-discriminator, .action-timestamp {
+    color: #6b767e;
+}
+
+.action-text {
+    display: inline-block;
 }
