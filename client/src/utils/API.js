@@ -83,10 +83,10 @@ function importPlaylist(guildId, playlistId, url) {
 function getAudit(guildId, userFilter, actionFilter) {
     let query = new URLSearchParams();
     if (userFilter) {
-        query.set("user", userFilter.id);
+        query.set("user", userFilter.value);
     }
     if (actionFilter) {
-        query.set("action", actionFilter.code);
+        query.set("action", actionFilter.value);
     }
     return fetch(`/api/guild/audit/${guildId}?${query}`)
         .then(resJSON);

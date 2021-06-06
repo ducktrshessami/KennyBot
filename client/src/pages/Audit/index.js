@@ -88,7 +88,7 @@ export default function Audit(props) {
                             <h4 className="audit-title">Audit Log</h4>
                             <span className="audit-desktop-filter greyple-text hide-on-small-only">Filter by User</span>
                             <div role="button" className="audit-desktop-filter hide-on-small-only" onClick={event => toggleDropdown(event, 1)} ref={userRef}>
-                                {userFilter ? userFilter.username : "All"}
+                                {userFilter ? userFilter.name : "All"}
                                 <i className="audit-filter-dropdown-icon" />
                                 {picking === 1 ? <FilterDropdown users={users} select={selectUser} ref={dropRef} /> : undefined}
                             </div>
