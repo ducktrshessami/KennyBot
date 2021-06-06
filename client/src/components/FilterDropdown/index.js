@@ -6,7 +6,10 @@ import actionIcon from "../../images/action-filter.png";
 import "./FilterDropdown.css";
 
 const actionList = [
-
+    {
+        primary: "Updated Player",
+        value: 0
+    }
 ];
 
 export default forwardRef(function FilterDropdown(props, ref) {
@@ -14,7 +17,6 @@ export default forwardRef(function FilterDropdown(props, ref) {
     const items = [
         {
             primary: `All ${props.users ? "Users" : "Actions"}`,
-            secondary: "",
             image: props.users ? userIcon : actionIcon,
             value: null
         },
@@ -25,16 +27,16 @@ export default forwardRef(function FilterDropdown(props, ref) {
             value: user.id
         })) : actionList)
     ]
-        .filter(item => `${item.primary}${item.secondary}`.includes(search));
+        .filter(item => `${item.primary}${item.secondary ? item.secondary : ""}`.includes(search));
     const itemRefs = items.map(() => createRef());
 
     function selectFilter(event) {
         let i = itemRefs.findIndex(ref => isDescendent(event.target, ref.current));
         if (i !== -1) {
-            props.select(items[i].value ? {
+            props.select(items[i].value === null ? null : {
                 name: items[i].primary,
                 value: items[i].value
-            } : null);
+            });
         }
     }
 
