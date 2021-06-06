@@ -1,6 +1,31 @@
 .audit-action {
     border-radius: 3px;
     border: #202225 solid 1px;
-    padding: 1rem;
+    padding: 0.75rem;
     margin: 0.5rem 0;
+}
+
+.audit-action > * {
+    display: inline-block;
+}
+
+.action-icon {
+    height: 3rem;
+    position: relative;
+    bottom: 0.25rem;
+}
+
+.action-avatar {
+    height: 3.5rem;
+    border-radius: 3.5rem;
+}
+
+.action-info {
+    position: relative;
+    bottom: 0.66rem;
+    margin-left: 1ch;
+}
+
+.action-details {
+    margin-bottom: 0.5rem;
 }
