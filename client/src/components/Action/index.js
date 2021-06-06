@@ -5,8 +5,9 @@ import OneTwoOne from "./OneTwoOne";
 import "./Action.css";
 
 export default function Action(props) {
-    const timestamp = new Date(props.createdAt);
     var actionElements;
+    var activatable = false;
+    const timestamp = new Date(props.createdAt);
     switch (props.code) {
         case 0: actionElements = <OneTwo values={["paused ", props.vars[0]]} />; break;
         case 1: actionElements = <OneTwo values={["unpaused ", props.vars[0]]} />; break;
@@ -17,17 +18,17 @@ export default function Action(props) {
         case 6: actionElements = <OneTwo values={["played song: ", props.vars[0]]} />; break;
         case 7: actionElements = <OneTwo values={["played playlist: ", props.vars[0]]} />; break;
         case 8: actionElements = <OneTwo values={["shuffle played playlist: ", props.vars[0]]} />; break;
-        case 9: actionElements = <OneTwo values={["queued ", props.vars[0]]} />; break;
-        case 10: actionElements = <OneTwoOne values={["dequeued ", props.vars.length, ` song${props.vars.length > 1 ? "s" : ""}`]} />; break;
+        case 9: actionElements = <OneTwoOne values={["queued ", props.vars.length, ` song${props.vars.length > 1 ? "s" : ""}`]} />; activatable = true; break;
+        case 10: actionElements = <OneTwoOne values={["dequeued ", props.vars.length, ` song${props.vars.length > 1 ? "s" : ""}`]} />; activatable = true; break;
         case 11: actionElements = <OneTwo values={["created playlist: ", props.vars[0]]} />; break;
         case 12: actionElements = <OneTwoOneTwo values={["renamed ", props.vars[0], " to ", props.vars[1]]} />; break;
         case 13: actionElements = <OneTwo values={["deleted playlist: ", props.vars[0]]} />; break;
-        case 14: actionElements = <OneTwoOneTwo values={["added ", props.vars.length - 1, ` song${props.vars.length > 2 ? "s" : ""} to `, props.vars[0]]} />; break;
-        case 15: actionElements = <OneTwoOneTwo values={["deleted ", props.vars[1], " from ", props.vars[0]]} />; break;
+        case 14: actionElements = <OneTwoOneTwo values={["added ", props.vars.length - 1, ` song${props.vars.length > 2 ? "s" : ""} to `, props.vars[0]]} />; activatable = true; break;
+        case 15: actionElements = <OneTwoOneTwo values={["deleted ", props.vars.length - 1, ` song${props.vars.length > 2 ? "s" : ""} from `, props.vars[0]]} />; activatable = true; break;
         default:
     }
     return (
-        <li className="audit-action nqb-bg">
+        <li className="audit-action nqb-bg" role={activatable ? "button" : undefined}>
             <img className="action-icon" alt="placeholder" src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
             <img className="action-avatar" alt={`${props.User.username}'s avatar`} src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
             <div className="action-info">
