@@ -1,5 +1,7 @@
 import OneTwo from "./OneTwo";
 import Repeat from "./Repeat";
+import OneTwoOneTwo from "./OneTwoOneTwo";
+import OneTwoOne from "./OneTwoOne";
 import "./Action.css";
 
 export default function Action(props) {
@@ -16,12 +18,12 @@ export default function Action(props) {
         case 7: actionElements = <OneTwo values={["played playlist: ", props.vars[0]]} />; break;
         case 8: actionElements = <OneTwo values={["shuffle played playlist: ", props.vars[0]]} />; break;
         case 9: actionElements = <OneTwo values={["queued ", props.vars[0]]} />; break;
-        case 10: actionElements = `dequeued ${props.vars.length} song${props.vars > 1 ? "s" : ""}`; break;
+        case 10: actionElements = <OneTwoOne values={["dequeued ", props.vars.length, ` song${props.vars.length > 1 ? "s" : ""}`]} />; break;
         case 11: actionElements = <OneTwo values={["created playlist: ", props.vars[0]]} />; break;
-        case 12: actionElements = `renamed ${props.vars[0]} to ${props.vars[1]}`; break;
+        case 12: actionElements = <OneTwoOneTwo values={["renamed ", props.vars[0], " to ", props.vars[1]]} />; break;
         case 13: actionElements = <OneTwo values={["deleted playlist: ", props.vars[0]]} />; break;
-        case 14: actionElements = `added ${props.vars.length - 1} song${props.vars.length > 2 ? "s" : ""} to ${props.vars[0]}`; break;
-        case 15: actionElements = `deleted ${props.vars[1]} from ${props.vars[0]}`; break;
+        case 14: actionElements = <OneTwoOneTwo values={["added ", props.vars.length - 1, ` song${props.vars.length > 2 ? "s" : ""} to `, props.vars[0]]} />; break;
+        case 15: actionElements = <OneTwoOneTwo values={["deleted ", props.vars[1], " from ", props.vars[0]]} />; break;
         default:
     }
     return (
@@ -34,6 +36,6 @@ export default function Action(props) {
                 </div>
                 <div className="action-timestamp">{timestamp.toLocaleDateString()} {timestamp.toLocaleTimeString()}</div>
             </div>
-        </li>
+        </li >
     );
 };
