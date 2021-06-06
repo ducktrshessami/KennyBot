@@ -65,7 +65,10 @@ export default forwardRef(function FilterDropdown(props, ref) {
     function selectFilter(event) {
         let i = itemRefs.findIndex(ref => isDescendent(event.target, ref.current));
         if (i !== -1) {
-            props.select(items[i].value === null ? null : {
+            props.select(items[i].value === null ? {
+                name: "All",
+                value: null
+            } : {
                 name: items[i].primary,
                 value: items[i].value
             });

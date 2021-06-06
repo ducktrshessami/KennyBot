@@ -16,8 +16,14 @@ export default function Audit(props) {
     const [ready, setReady] = useState(false);
     const [log, setLog] = useState([]);
     const [users, setUserList] = useState([]);
-    const [userFilter, setUser] = useState(null);
-    const [actionFilter, setAction] = useState(null);
+    const [userFilter, setUser] = useState({
+        name: "All",
+        value: null
+    });
+    const [actionFilter, setAction] = useState({
+        name: "All",
+        value: null
+    });
     const [picking, setPicking] = useState(0);
 
     function toggleDropdown(event, value) {
@@ -44,7 +50,7 @@ export default function Audit(props) {
         let mounted = true;
         setReady(false);
         Promise.all([
-            API.getAudit(guildID, userFilter, actionFilter),
+            API.getAudit(guildID, userFilter.value, actionFilter.value),
             API.getMembers(guildID)
         ])
             .then(([newLog, members]) => {
@@ -88,13 +94,13 @@ export default function Audit(props) {
                             <h4 className="audit-title">Audit Log</h4>
                             <span className="audit-desktop-filter greyple-text hide-on-small-only">Filter by User</span>
                             <div role="button" className="audit-desktop-filter hide-on-small-only" onClick={event => toggleDropdown(event, 1)} ref={userRef}>
-                                {userFilter ? userFilter.name : "All"}
+                                {userFilter.name}
                                 <i className="audit-filter-dropdown-icon" />
                                 {picking === 1 ? <FilterDropdown users={users} activeValue={userFilter ? userFilter.value : null} select={selectUser} ref={dropRef} /> : undefined}
                             </div>
                             <span className="audit-desktop-filter greyple-text hide-on-small-only">Filter by Action</span>
                             <div role="button" className="audit-desktop-filter hide-on-small-only" onClick={event => toggleDropdown(event, 2)} ref={actionRef}>
-                                {actionFilter ? actionFilter.name : "All"}
+                                {actionFilter.name}
                                 <i className="audit-filter-dropdown-icon" />
                                 {picking === 2 ? <FilterDropdown activeValue={actionFilter ? actionFilter.value : null} select={selectAction} ref={dropRef} /> : undefined}
                             </div>
