@@ -36,9 +36,10 @@ module.exports = function (router) {
             db.Playlist.findByPk(req.params.playlistId)
                 .then(playlist => {
                     if (playlist) {
+                        let old = playlist.name;
                         return playlist.update(req.body)
                             .then(updated => {
-                                audit.log(req.session.discord.userID, req.params.guildId, 12, [updated.name])
+                                audit.log(req.session.discord.userID, req.params.guildId, 12, [old, updated.name])
                                     .catch(console.error);
                                 emitStateUpdate(req.params.guildId)
                                     .catch(console.error);
