@@ -7,8 +7,40 @@ import "./FilterDropdown.css";
 
 const actionList = [
     {
-        primary: "Updated Player",
+        primary: "Update Player",
         value: 0
+    },
+    {
+        primary: "Play Music",
+        value: 1
+    },
+    {
+        primary: "Queue Song",
+        value: 2
+    },
+    {
+        primary: "Dequeue Song",
+        value: 3
+    },
+    {
+        primary: "Create Playlist",
+        value: 4
+    },
+    {
+        primary: "Rename Playlist",
+        value: 5
+    },
+    {
+        primary: "Delete Playlist",
+        value: 6
+    },
+    {
+        primary: "Add Song",
+        value: 7
+    },
+    {
+        primary: "Delete Song",
+        value: 8
     }
 ];
 
