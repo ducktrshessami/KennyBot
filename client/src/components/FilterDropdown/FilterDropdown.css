@@ -8,7 +8,7 @@
     cursor: initial;
     z-index: 1;
     width: 32ch;
-    height: 20.5rem;
+    height: 21.75rem;
     left: -8rem;
     top: 1.5rem;
 }
@@ -37,10 +37,12 @@
 .filter-item {
     padding: 0.75rem;
     border-radius: 6px;
+    margin: 0.15rem 0;
 }
 
-.filter-item.active {
-    background-color: #5865F2;
+.filter-item:last-child {
+    margin-top: 0.15rem;
+    margin-bottom: 0;
 }
 
 .filter-item > * {

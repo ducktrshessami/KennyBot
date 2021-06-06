@@ -36,13 +36,17 @@ export default function Audit(props) {
         return (child === userRef.current || child === actionRef.current) ? false : child === props.appRef.current ? true : isOut(child.parentNode);
     }
 
-    function selectUser(userID) {
-        setUser(userID);
+    function selectUser(userData) {
+        if (userData.value !== userFilter.value) {
+            setUser(userData);
+        }
         setPicking(0);
     }
 
-    function selectAction(actionCode) {
-        setAction(actionCode);
+    function selectAction(actionData) {
+        if (actionData.value !== actionFilter.value) {
+            setAction(actionData);
+        }
         setPicking(0);
     }
 
