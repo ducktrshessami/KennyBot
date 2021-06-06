@@ -11,13 +11,7 @@ export default function Action(props) {
         case 2: actionElements = <OneTwo values={["skipped ", props.vars[0]]} />; break;
         case 3: actionElements = <OneTwo values={["set the volume to ", props.vars[0]]} />; break;
         case 4: actionElements = <OneTwo values={["toggled shuffle ", props.vars[0]]} />; break;
-        case 5: actionElements = <Repeat value={props.vars[0]} />; break;
-        //     switch (props.vars[0]) {
-        //         case "0": actionElements = [<span className="greyple-text">turned </span>, "off", <span className="greyple-text"> repeat</span>]; break;
-        //         case "1": actionElements = [<span className="greyple-text">turned </span>, "on", <span className="greyple-text"> repeat </span>, "one"]; break;
-        //         case "2": actionElements = [<span className="greyple-text">turned </span>, "on", <span className="greyple-text"> repeat </span>, "all"]; break;
-        //         default:
-        //     }
+        case 5: actionElements = <Repeat value={Number(props.vars[0])} />; break;
         case 6: actionElements = <OneTwo values={["played song: ", props.vars[0]]} />; break;
         case 7: actionElements = <OneTwo values={["played playlist: ", props.vars[0]]} />; break;
         case 8: actionElements = <OneTwo values={["shuffle played playlist: ", props.vars[0]]} />; break;
