@@ -59,7 +59,7 @@ export default forwardRef(function FilterDropdown(props, ref) {
             value: user.id
         })) : actionList)
     ]
-        .filter(item => `${item.primary}${item.secondary ? item.secondary : ""}`.includes(search));
+        .filter(item => `${item.primary}${item.secondary ? item.secondary : ""}`.toLowerCase().includes(search.trim().toLowerCase()));
     const itemRefs = items.map(() => createRef());
 
     function selectFilter(event) {
