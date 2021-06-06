@@ -100,7 +100,7 @@ function get(guildID, userFilter, actionFilter) {
         attributes: ["id", "code", "vars", "createdAt"],
         include: {
             model: db.User,
-            attributes: ["username", "discriminator", "avatar"]
+            attributes: ["id", "username", "discriminator", "avatar"]
         },
         order: [["createdAt", "desc"]],
     });
