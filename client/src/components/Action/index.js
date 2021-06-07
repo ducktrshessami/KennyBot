@@ -1,13 +1,18 @@
+import { useState } from "react";
 import OneTwo from "./OneTwo";
 import Repeat from "./Repeat";
 import OneTwoOneTwo from "./OneTwoOneTwo";
 import OneTwoOne from "./OneTwoOne";
+import arrow from "../../images/grey-arrow.png";
+import arrowDown from "../../images/grey-arrow-down.png";
 import "./Action.css";
 
 export default function Action(props) {
     var actionElements;
     var activatable = false;
+    const [active, setActive] = useState(false);
     const timestamp = new Date(props.createdAt);
+
     switch (props.code) {
         case 0: actionElements = <OneTwo values={["paused ", props.vars[0]]} />; break;
         case 1: actionElements = <OneTwo values={["unpaused ", props.vars[0]]} />; break;
@@ -27,8 +32,9 @@ export default function Action(props) {
         case 15: actionElements = <OneTwoOneTwo values={["deleted ", props.vars.length - 1, ` song${props.vars.length > 2 ? "s" : ""} from `, props.vars[0]]} />; activatable = true; break;
         default:
     }
+
     return (
-        <li className="audit-action nqb-bg" role={activatable ? "button" : undefined}>
+        <li className="audit-action nqb-bg" role={activatable ? "button" : undefined} onClick={activatable ? () => setActive(!active) : undefined}>
             <img className="action-icon" alt="placeholder" src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
             <div className="action-details">
                 <img className="action-avatar" alt={`${props.User.username}'s avatar`} src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
@@ -39,6 +45,7 @@ export default function Action(props) {
                     <div className="action-timestamp">{timestamp.toLocaleDateString()} {timestamp.toLocaleTimeString()}</div>
                 </div>
             </div>
-        </li >
+            {activatable ? <img className="action-collapse" alt="collapsible arrow" src={active ? arrowDown : arrow} /> : undefined}
+        </li>
     );
 };

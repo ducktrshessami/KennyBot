@@ -44,3 +44,10 @@
 .action-discriminator, .action-timestamp {
     color: #6b767e;
 }
+
+.action-collapse {
+    height: 1.25rem;
+    position: relative;
+    top: 1rem;
+    right: 1ch;
+}
