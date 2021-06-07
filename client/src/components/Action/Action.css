@@ -3,6 +3,7 @@
     border: #202225 solid 1px;
     padding: 0.75rem;
     margin: 0.5rem 0;
+    display: flex;
 }
 
 .audit-action > * {
@@ -12,8 +13,16 @@
 .action-icon {
     height: 3rem;
     position: relative;
-    bottom: 0.25rem;
+    top: 0.25rem;
     margin-right: 0.5ch;
+}
+
+.action-details {
+    flex: 1 1 auto;
+}
+
+.action-details > * {
+    display: inline-block;
 }
 
 .action-avatar {
@@ -27,14 +36,11 @@
     bottom: 0.66rem;
 }
 
-.action-details {
-    margin-bottom: 0.5rem;
+.action-text {
+    margin-bottom: 0.25rem;
+    display: inline-block;
 }
 
 .action-discriminator, .action-timestamp {
     color: #6b767e;
-}
-
-.action-text {
-    display: inline-block;
 }

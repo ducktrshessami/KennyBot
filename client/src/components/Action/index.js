@@ -30,12 +30,14 @@ export default function Action(props) {
     return (
         <li className="audit-action nqb-bg" role={activatable ? "button" : undefined}>
             <img className="action-icon" alt="placeholder" src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
-            <img className="action-avatar" alt={`${props.User.username}'s avatar`} src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
-            <div className="action-info">
-                <div className="action-details">
-                    {props.User.username}<span className="action-discriminator">#{props.User.discriminator}</span> {actionElements}
+            <div className="action-details">
+                <img className="action-avatar" alt={`${props.User.username}'s avatar`} src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
+                <div className="action-info">
+                    <div className="action-text">
+                        {props.User.username}<span className="action-discriminator">#{props.User.discriminator}</span> {actionElements}
+                    </div>
+                    <div className="action-timestamp">{timestamp.toLocaleDateString()} {timestamp.toLocaleTimeString()}</div>
                 </div>
-                <div className="action-timestamp">{timestamp.toLocaleDateString()} {timestamp.toLocaleTimeString()}</div>
             </div>
         </li >
     );
