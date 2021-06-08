@@ -22,7 +22,7 @@ function checkLast(userID, guildID, actionCode) {
         order: [["createdAt", "desc"]]
     })
         .then(last => {
-            if (last && last.UserId === userID && last.code === actionCode && Date.now() - last.updatedAt < process.env.AUDIT_RECENT) {
+            if (last && last.UserId === userID && last.code === actionCode && Date.now() - last.updatedAt < (Number(process.env.AUDIT_RECENT) || 30000)) {
                 return last;
             }
         });
@@ -141,10 +141,11 @@ function getUsers(guildID) {
 
 function prune() {
     return new Promise((resolve, reject) => {
-        if (process.env.AUDIT_LIFE) {
+        let life = Number(process.env.AUDIT_LIFE);
+        if (life) {
             db.UserAction.destroy({
                 where: {
-                    createdAt: { [db.Sequelize.Op.lt]: new Date(Date.now() - process.env.AUDIT_LIFE) }
+                    createdAt: { [db.Sequelize.Op.lt]: new Date(Date.now() - life) }
                 }
             })
                 .then(resolve)
