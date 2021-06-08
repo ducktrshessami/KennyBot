@@ -4,6 +4,9 @@ import isDescendent from "../../utils/isDescendent";
 import userIcon from "../../images/user-filter.png";
 import actionIcon from "../../images/action-filter.png";
 import playIcon from "../../images/red-play-icon.png";
+import createPlaylistIcon from "../../images/create-playlist.png";
+import editPlaylistIcon from "../../images/edit-playlist.png";
+import deletePlaylistIcon from "../../images/delete-playlist.png";
 import "./FilterDropdown.css";
 
 const actionList = [
@@ -26,15 +29,18 @@ const actionList = [
     },
     {
         primary: "Create Playlist",
-        value: 4
+        value: 4,
+        image: createPlaylistIcon
     },
     {
         primary: "Rename Playlist",
-        value: 5
+        value: 5,
+        image: editPlaylistIcon
     },
     {
         primary: "Delete Playlist",
-        value: 6
+        value: 6,
+        image: deletePlaylistIcon
     },
     {
         primary: "Add Song",
