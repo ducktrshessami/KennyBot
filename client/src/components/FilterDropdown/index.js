@@ -3,6 +3,7 @@ import FilterItem from "./FilterItem";
 import isDescendent from "../../utils/isDescendent";
 import userIcon from "../../images/user-filter.png";
 import actionIcon from "../../images/action-filter.png";
+import playIcon from "../../images/red-play-icon.png";
 import "./FilterDropdown.css";
 
 const actionList = [
@@ -12,7 +13,8 @@ const actionList = [
     },
     {
         primary: "Play Music",
-        value: 1
+        value: 1,
+        image: playIcon
     },
     {
         primary: "Queue Song",
@@ -76,7 +78,7 @@ export default forwardRef(function FilterDropdown(props, ref) {
     }
 
     return (
-        <div className={`filter-dropdown dbnb-bg ${props.className ? props.className : ""}`.trim()} ref={ref}>
+        <div className={`filter-dropdown dbnb-bg ${props.users ? "user-filter" : ""} ${props.className ? props.className : ""}`.trim()} ref={ref}>
             <input className="filter-search dtnqb-bg white-text browser-default" type="text" placeholder={`Search ${props.users ? "Members" : "Actions"}`} onChange={event => setSearch(event.target.value.trim())} />
             <ul>
                 {items.map((item, i) => <FilterItem key={item.value} active={item.value === props.activeValue} {...item} ref={itemRefs[i]} onClick={selectFilter} />)}
