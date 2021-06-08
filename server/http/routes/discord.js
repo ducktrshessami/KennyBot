@@ -26,7 +26,6 @@ module.exports = function (router) {
                     req.session.discord.access_token = tokenRes.body.access_token;
                     req.session.discord.expiry = new Date(Date.now() + (tokenRes.body.expires_in * 1000));
                     req.session.discord.refresh_token = tokenRes.body.refresh_token;
-                    req.session.cookie.expires = req.session.discord.expiry;
                     return discord.getUser(req.session.discord.access_token)
                         .then(userRes => {
                             if (userRes.statusCode === 200) {
