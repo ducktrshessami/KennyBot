@@ -4,13 +4,15 @@ const db = require("../../../models");
 
 const store = new SequelizeStore({
     db: db.sequelize,
-    checkExpirationInterval: 86400000
+    checkExpirationInterval: Number(process.env.SESSION_CHECK) || 86400000
 });
 const middleware = session({
-    secret: process.env.API_SECRET,
+    secret: process.env.SESSION_SECRET,
     store: store,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    rolling: true,
+    cookie: { maxAge: Number(process.env.SESSION_LIFE) || 604800000 }
 });
 
 store.sync({ force: process.env.DB_FORCE && process.env.DB_FORCE.trim().toLowerCase() !== "false" })
