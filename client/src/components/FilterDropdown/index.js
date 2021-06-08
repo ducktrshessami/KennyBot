@@ -8,6 +8,8 @@ import createPlaylistIcon from "../../images/create-playlist.png";
 import editPlaylistIcon from "../../images/edit-playlist.png";
 import deletePlaylistIcon from "../../images/delete-playlist.png";
 import playerIcon from "../../images/speaker-icon.png";
+import queueIcon from "../../images/create-queue.png";
+import dequeueIcon from "../../images/delete-queue.png";
 import "./FilterDropdown.css";
 
 const actionList = [
@@ -23,11 +25,13 @@ const actionList = [
     },
     {
         primary: "Queue Song",
-        value: 2
+        value: 2,
+        image: queueIcon
     },
     {
         primary: "Dequeue Song",
-        value: 3
+        value: 3,
+        image: dequeueIcon
     },
     {
         primary: "Create Playlist",
