@@ -7,12 +7,14 @@ import playIcon from "../../images/red-play-icon.png";
 import createPlaylistIcon from "../../images/create-playlist.png";
 import editPlaylistIcon from "../../images/edit-playlist.png";
 import deletePlaylistIcon from "../../images/delete-playlist.png";
+import playerIcon from "../../images/speaker-icon.png";
 import "./FilterDropdown.css";
 
 const actionList = [
     {
         primary: "Update Player",
-        value: 0
+        value: 0,
+        image: playerIcon
     },
     {
         primary: "Play Music",
