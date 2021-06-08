@@ -3,6 +3,7 @@ import OneTwo from "./OneTwo";
 import Repeat from "./Repeat";
 import OneTwoOneTwo from "./OneTwoOneTwo";
 import OneTwoOne from "./OneTwoOne";
+import Extended from "./Extended";
 import arrow from "../../images/grey-arrow.png";
 import arrowDown from "../../images/grey-arrow-down.png";
 import "./Action.css";
@@ -34,18 +35,21 @@ export default function Action(props) {
     }
 
     return (
-        <li className="audit-action nqb-bg" role={activatable ? "button" : undefined} onClick={activatable ? () => setActive(!active) : undefined}>
-            <img className="action-icon" alt="placeholder" src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
-            <div className="action-details">
-                <img className="action-avatar" alt={`${props.User.username}'s avatar`} src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
-                <div className="action-info">
-                    <div className="action-text">
-                        {props.User.username}<span className="action-discriminator">#{props.User.discriminator}</span> {actionElements}
+        <li className="audit-item">
+            <div className={`audit-action nqb-bg ${active ? "active" : ""}`.trim()} role={activatable ? "button" : undefined} onClick={activatable ? () => setActive(!active) : undefined}>
+                <img className="action-icon" alt="placeholder" src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
+                <div className="action-details">
+                    <img className="action-avatar" alt={`${props.User.username}'s avatar`} src={`https://cdn.discordapp.com/avatars/${props.User.id}/${props.User.avatar}.png`} />
+                    <div className="action-info">
+                        <div className="action-text">
+                            {props.User.username}<span className="action-discriminator">#{props.User.discriminator}</span> {actionElements}
+                        </div>
+                        <div className="action-timestamp">{timestamp.toLocaleDateString()} {timestamp.toLocaleTimeString()}</div>
                     </div>
-                    <div className="action-timestamp">{timestamp.toLocaleDateString()} {timestamp.toLocaleTimeString()}</div>
                 </div>
+                {activatable ? <img className="action-collapse" alt="collapsible arrow" src={active ? arrowDown : arrow} /> : undefined}
             </div>
-            {activatable ? <img className="action-collapse" alt="collapsible arrow" src={active ? arrowDown : arrow} /> : undefined}
+            {active ? <Extended code={props.code} vars={props.vars} /> : undefined}
         </li>
     );
 };
