@@ -36,6 +36,9 @@ client.on("ready", function () {
     console.log(`Logged in as ${client.user.username}#${client.user.discriminator}`);
     client.loopPresences(activities, process.env.BOT_PRESDURATION || config.presenceDuration);
     client.guilds.cache.each(initGuild); // Initialize guilds in database
+
+    // Old audit log pruning
+    setInterval(() => prune().catch(console.error), Number(process.env.AUDIT_CHECK) || 86400000);
     prune()
         .catch(console.error);
 });
