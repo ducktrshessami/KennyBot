@@ -24,10 +24,10 @@
 }
 
 .action-icon {
-    height: 3rem;
+    max-height: 1.75rem;
     position: relative;
-    top: 0.25rem;
-    margin-right: 0.5ch;
+    top: 0.9rem;
+    margin: 0 0.5ch;
 }
 
 .action-details {
