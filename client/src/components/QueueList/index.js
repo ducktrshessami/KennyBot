@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import Empty from "../Empty";
 import "./QueueList.css";
 
 const Desktop = lazy(() => import("./Desktop"));
@@ -18,7 +17,7 @@ export default function QueueList(props) {
     });
 
     return (
-        <Suspense fallback={<Empty />}>
+        <Suspense fallback={null}>
             {small ? <Mobile queue={props.queue || []} socket={props.socket} /> : props.voice && Boolean(props.queue.length) ? <Desktop queue={props.queue || []} socket={props.socket} /> : null}
         </Suspense>
     );
