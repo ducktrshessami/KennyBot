@@ -8,8 +8,7 @@ export default function Home(props) {
         <main>
             {props.user && props.ready ? <Redirect to="/dashboard" /> : undefined}
             <div className="home-button-wrapper">
-                <LoginButton />
-                {!props.ready ? <Loading className="home-loader" size="small" /> : undefined}
+                {props.ready ? <LoginButton /> : <Loading size="big" />}
             </div>
         </main>
     );
