@@ -9,7 +9,7 @@ const store = new SequelizeStore({
 const middleware = session({
     secret: process.env.SESSION_SECRET,
     store: store,
-    resave: true,
+    resave: false,
     saveUninitialized: true,
     rolling: true,
     cookie: { maxAge: Number(process.env.SESSION_LIFE) || 604800000 }

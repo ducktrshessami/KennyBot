@@ -2,3 +2,10 @@
     padding: 40vh 0;
     text-align: center;
 }
+
+.home-loader {
+    display: inline-block;
+    margin-left: 1ch;
+    position: relative;
+    top: 1rem;
+}
