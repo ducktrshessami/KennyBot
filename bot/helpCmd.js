@@ -31,7 +31,9 @@ const pageTemplates = {
 
 module.exports = function (commandList) {
     let pages;
+    // Add help command to the end of the list
     commandList.push(new Command("help", function (message, args) {
+        // Searching for specific command help
         if (args[1]) {
             let target = commandList.find(command => command.name.toLowerCase() === args[1].toLowerCase());
             if (target) {
@@ -41,7 +43,7 @@ module.exports = function (commandList) {
                     target.description,
                     target.subtitle
                 ]
-                    .filter(line => line)
+                    .filter(line => line) // Filter empty lines
                     .join("\n")
                 )
                     .catch(console.error);
@@ -51,6 +53,7 @@ module.exports = function (commandList) {
                     .catch(console.error);
             }
         }
+        // Command list
         else {
             utils.sendPages(message.channel, pages, config.cmdOptions.help.ms)
                 .catch(console.error);
@@ -60,6 +63,7 @@ module.exports = function (commandList) {
         description: "Display a command list or a specific command's info"
     }));
 
+    // Generate command list embeds
     pages = Object.keys(pageTemplates)
         .map(template => ({
             options: new MessageEmbed({
