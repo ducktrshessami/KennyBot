@@ -79,4 +79,9 @@ client.on("voiceStateUpdate", (before, after) => {
     }
 });
 
+// Clean up voice connections before exiting
+process.on("exit", () => {
+    client.voice.connections.each(connection => connection.disconnect());
+});
+
 module.exports = client;
