@@ -17,6 +17,8 @@ import dequeueIcon from "../../images/delete-queue.png";
 import createPlaylistIcon from "../../images/create-playlist.png";
 import editPlaylistIcon from "../../images/edit-playlist.png";
 import deletePlaylistIcon from "../../images/delete-playlist.png";
+import addSongIcon from "../../images/create-song.png";
+import deleteSongIcon from "../../images/delete-song.png";
 import "./Action.css";
 
 export default function Action(props) {
@@ -83,11 +85,11 @@ export default function Action(props) {
             actionElements = <OneTwo values={["deleted playlist: ", props.vars[0]]} />;
             break;
         case 14:
-            // actionIcon = ;
+            actionIcon = addSongIcon;
             actionElements = <OneTwoOneTwo values={["added ", props.vars.length - 1, ` song${props.vars.length > 2 ? "s" : ""} to `, props.vars[0]]} />; activatable = true;
             break;
         case 15:
-            // actionIcon = ;
+            actionIcon = deleteSongIcon;
             actionElements = <OneTwoOneTwo values={["deleted ", props.vars.length - 1, ` song${props.vars.length > 2 ? "s" : ""} from `, props.vars[0]]} />; activatable = true;
             break;
         default:

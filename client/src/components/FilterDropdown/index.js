@@ -10,6 +10,8 @@ import deletePlaylistIcon from "../../images/delete-playlist.png";
 import playerIcon from "../../images/speaker-icon.png";
 import queueIcon from "../../images/create-queue.png";
 import dequeueIcon from "../../images/delete-queue.png";
+import addSongIcon from "../../images/create-song.png";
+import deleteSongIcon from "../../images/delete-song.png";
 import "./FilterDropdown.css";
 
 const actionList = [
@@ -50,11 +52,13 @@ const actionList = [
     },
     {
         primary: "Add Song",
-        value: 7
+        value: 7,
+        image: addSongIcon
     },
     {
         primary: "Delete Song",
-        value: 8
+        value: 8,
+        image: deleteSongIcon
     }
 ];
 
