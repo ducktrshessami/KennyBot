@@ -40,9 +40,10 @@ client.on("ready", function () {
         .catch(console.error);
 });
 
-client.on("shardDisconnect", function () {
+client.on("shardDisconnect", function (event) {
+    console.log(event.reason);
     console.log("Logged off");
-    process.exit();
+    process.exit(event.code === 1000 ? 0 : event.code);
 });
 
 client.on("error", console.error);
