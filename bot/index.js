@@ -15,7 +15,7 @@ var client;
 try {
     let parsedAdmins = JSON.parse(process.env.BOT_ADMINS);
     if (parsedAdmins) {
-        config.admin = parsedAdmins;
+        config.admin = (config.admin || []).concat(parsedAdmins);
     }
 }
 catch {
