@@ -87,3 +87,11 @@
     margin-left: 6ch;
     margin-right: 1ch;
 }
+
+.dash.adding {
+    color: #57F287;
+}
+
+.dash.removing {
+    color: #ED4245;
+}

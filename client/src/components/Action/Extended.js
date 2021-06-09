@@ -9,7 +9,7 @@ export default function Extended(props) {
     }
     return (
         <ul className="audit-action-extended nqb-bg">
-            {list.map((item, i) => <li key={i} className="extended-item"><span className="dash greyple-text">—</span> {item}</li>)}
+            {list.map((item, i) => <li key={i} className="extended-item"><span className={`dash ${props.adding ? "adding" : "removing"}`}>—</span> {item}</li>)}
         </ul>
     );
 };

@@ -110,7 +110,7 @@ export default function Action(props) {
                 </div>
                 {activatable ? <img className="action-collapse" alt="collapsible arrow" src={active ? arrowDown : arrow} /> : undefined}
             </div>
-            {active ? <Extended code={props.code} vars={props.vars} /> : undefined}
+            {active ? <Extended code={props.code} vars={props.vars} adding={props.code === 9 || props.code === 14} /> : undefined}
         </li>
     );
 };
