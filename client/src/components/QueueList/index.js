@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import Desktop from "./Desktop";
-import Mobile from "./Mobile";
+import { lazy, Suspense, useEffect, useState } from "react";
 import "./QueueList.css";
+
+const Desktop = lazy(() => import("./Desktop"));
+const Mobile = lazy(() => import("./Mobile"));
 
 export default function QueueList(props) {
     const [small, setSmall] = useState(window.innerWidth < 601);
@@ -15,5 +16,9 @@ export default function QueueList(props) {
         return () => window.removeEventListener("resize", handler);
     });
 
-    return small ? <Mobile {...props} /> : Boolean(props.queue.length) ? <Desktop {...props} /> : null;
+    return (
+        <Suspense fallback={null}>
+            {small ? <Mobile queue={props.queue || []} socket={props.socket} /> : props.voice && Boolean(props.queue.length) ? <Desktop queue={props.queue || []} socket={props.socket} /> : null}
+        </Suspense>
+    );
 };
