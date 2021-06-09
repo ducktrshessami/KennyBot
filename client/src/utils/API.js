@@ -8,7 +8,9 @@ const API = {
     deletePlaylist,
     deleteSong,
     addSong,
-    importPlaylist
+    importPlaylist,
+    getAudit,
+    getMembers
 };
 
 function gotoLogin() {
@@ -76,6 +78,23 @@ function importPlaylist(guildId, playlistId, url) {
         body: JSON.stringify({ url }),
         headers: { "Content-Type": "application/json" }
     });
+}
+
+function getAudit(guildId, userFilter, actionFilter) {
+    let query = new URLSearchParams();
+    if (userFilter !== null) {
+        query.set("user", userFilter);
+    }
+    if (actionFilter !== null) {
+        query.set("action", actionFilter);
+    }
+    return fetch(`/api/guild/audit/${guildId}?${query}`)
+        .then(resJSON);
+}
+
+function getMembers(guildId) {
+    return fetch(`/api/guild/members/${guildId}`)
+        .then(resJSON);
 }
 
 export default API;

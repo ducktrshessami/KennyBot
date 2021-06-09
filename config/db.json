@@ -1,11 +1,17 @@
 {
   "development": {
-    "storage": "db/dev_db.sqlite",
-    "dialect": "sqlite"
+    "username": "postgres",
+    "password": null,
+    "database": "kennybot_dev",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
   },
   "test": {
-    "storage": "db/test_db.sqlite",
-    "dialect": "sqlite"
+    "username": "postgres",
+    "password": null,
+    "database": "kennybot_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
   },
   "production": {
     "use_env_variable": "DATABASE_URL",

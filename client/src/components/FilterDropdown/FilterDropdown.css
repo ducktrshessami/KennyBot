@@ -1,0 +1,70 @@
+.filter-dropdown {
+    border-radius: 3px;
+    border: #42454A solid 1px;
+    position: absolute;
+    padding: 0.5rem;
+    box-shadow: 0.1ch 0.1ch 0.1ch black;
+    overflow: scroll;
+    cursor: initial;
+    z-index: 1;
+    width: 32ch;
+    height: 21.75rem;
+    left: -8rem;
+    top: 1.5rem;
+}
+
+.filter-dropdown::-webkit-scrollbar, .filter-dropdown::-webkit-scrollbar-corner {
+    width: 0;
+    height: 0;
+}
+
+.filter-search {
+    outline: none;
+    border: none;
+    border-radius: 3px;
+    width: 100%;
+    padding: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    margin-bottom: 0.5rem;
+}
+
+.filter-search::placeholder {
+    color: #5F6369;
+}
+
+.filter-item {
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin: 0.15rem 0;
+}
+
+.filter-item:last-child {
+    margin-top: 0.15rem;
+    margin-bottom: 0;
+}
+
+.filter-item > * {
+    display: inline-block;
+}
+
+.filter-image {
+    height: 1.5rem;
+    position: relative;
+    margin-right: 1.25ch;
+}
+
+.user-filter .filter-image {
+    height: 2.5rem;
+    border-radius: 2.5rem;
+}
+
+.filter-text {
+    position: relative;
+    bottom: 0.35rem;
+}
+
+.user-filter .filter-text {
+    bottom: 0.9rem;
+}

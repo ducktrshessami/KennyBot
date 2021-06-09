@@ -1,0 +1,97 @@
+.audit-item {
+    margin: 0.5rem 0;
+}
+
+.audit-item > * {
+    border: #202225 solid 1px;
+    padding: 0.75rem;
+}
+
+.audit-action {
+    border-radius: 4px;
+    display: flex;
+    transition: background-color 0.2s;
+}
+
+.audit-action.active {
+    background-color: #1c1f21!important;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.audit-action > * {
+    display: inline-block;
+}
+
+.action-icon {
+    max-height: 1.75rem;
+    position: relative;
+    top: 0.9rem;
+    margin: 0 0.5ch;
+}
+
+.action-details {
+    flex: 1 1 auto;
+}
+
+.action-details > * {
+    display: inline-block;
+}
+
+.action-avatar {
+    height: 3.5rem;
+    border-radius: 3.5rem;
+    margin-right: 1ch;
+}
+
+.action-info {
+    position: relative;
+    bottom: 0.66rem;
+}
+
+.action-text {
+    margin-bottom: 0.25rem;
+    display: inline-block;
+}
+
+.action-discriminator, .action-timestamp {
+    color: #6b767e;
+}
+
+.action-collapse {
+    height: 1.25rem;
+    position: relative;
+    top: 1rem;
+    right: 1ch;
+}
+
+.audit-action-extended {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.extended-item {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.extended-item:first-child {
+    margin-top: 0;
+}
+
+.extended-item:last-child {
+    margin-bottom: 0;
+}
+
+.extended-item .dash {
+    margin-left: 6ch;
+    margin-right: 1ch;
+}
+
+.dash.adding {
+    color: #57F287;
+}
+
+.dash.removing {
+    color: #ED4245;
+}

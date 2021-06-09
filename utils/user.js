@@ -1,6 +1,11 @@
 const db = require("../models");
 const discord = require("./discord");
 
+module.exports = {
+    initUser,
+    getAuthGuilds
+};
+
 function initUser(userData) {
     return db.User.findByPk(userData.id)
         .then(user => {
@@ -33,8 +38,3 @@ function getAuthGuilds(access_token) {
             }
         });
 }
-
-module.exports = {
-    initUser,
-    getAuthGuilds
-};

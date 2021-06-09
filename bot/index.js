@@ -8,6 +8,7 @@ const helpCmd = require("./helpCmd");
 const initGuild = require("./utils/initGuild");
 const { emitStateUpdate } = require("../utils/state");
 const { clearQueue } = require("../utils/music");
+const { prune } = require("../utils/audit");
 
 var client;
 
@@ -25,6 +26,9 @@ catch {
 helpCmd(commands);
 
 config.token = process.env.BOT_TOKEN || config.token;
+config.options = {
+    ws: { intents: [DiscordBot.Discord.Intents.NON_PRIVILEGED, "GUILD_MEMBERS"] }
+};
 client = new DiscordBot(config, commands, responses);
 
 // Event handlers
@@ -32,6 +36,8 @@ client.on("ready", function () {
     console.log(`Logged in as ${client.user.username}#${client.user.discriminator}`);
     client.loopPresences(activities, process.env.BOT_PRESDURATION || config.presenceDuration);
     client.guilds.cache.each(initGuild);
+    prune()
+        .catch(console.error);
 });
 
 client.on("shardDisconnect", function () {

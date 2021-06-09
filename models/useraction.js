@@ -20,9 +20,13 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
-    action: {
-      type: DataTypes.STRING,
+    code: {
+      type: DataTypes.INTEGER,
       allowNull: false
+    },
+    vars: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      defaultValue: []
     }
   }, {
     sequelize,

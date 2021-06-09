@@ -26,7 +26,13 @@ module.exports = function (router) {
                     req.session.discord.access_token = tokenRes.body.access_token;
                     req.session.discord.expiry = new Date(Date.now() + (tokenRes.body.expires_in * 1000));
                     req.session.discord.refresh_token = tokenRes.body.refresh_token;
-                    res.status(200).redirect(process.env.API_REDIRECT + "?status=0");
+                    return discord.getUser(req.session.discord.access_token)
+                        .then(userRes => {
+                            if (userRes.statusCode === 200) {
+                                req.session.discord.userID = userRes.body.id;
+                                res.status(200).redirect(process.env.API_REDIRECT + "?status=0");
+                            }
+                        });
                 }
                 else {
                     res.redirect("/api/unauth");
