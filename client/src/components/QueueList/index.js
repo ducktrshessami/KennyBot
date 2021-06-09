@@ -15,5 +15,5 @@ export default function QueueList(props) {
         return () => window.removeEventListener("resize", handler);
     });
 
-    return small ? <Mobile {...props} /> : Boolean(props.queue.length) ? <Desktop {...props} /> : null;
+    return small ? <Mobile queue={props.queue || []} socket={props.socket} /> : props.voice && Boolean(props.queue.length) ? <Desktop queue={props.queue || []} socket={props.socket} /> : null;
 };
