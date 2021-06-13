@@ -4,18 +4,19 @@ const timeouts = {};
 
 function createChannelTimeout(guildID) {
     return setTimeout(() => {
-
+        let voiceState = process.bot.guilds.cache.get(guildID).voice;
+        if (voiceState) {
+            voiceState.connection.disconnect();
+        }
     }, config.idleTimeout);
 }
 
 async function handleIdle(before, after) {
     let channel = after.channel || before.channel;
-    if (channel && channel.members.get(client.user.id)) {
-        clearTimeout(timeouts[after.guild.id]);
-        delete timeouts[after.guild.id];
-        if (channel.members.size <= 1) {
-            timeouts[after.guild.id] = createChannelTimeout(after.guild.id);
-        }
+    clearTimeout(timeouts[after.guild.id]);
+    delete timeouts[after.guild.id];
+    if (channel && channel.members.get(process.bot.user.id) && channel.members.size === 1) {
+        timeouts[after.guild.id] = createChannelTimeout(after.guild.id);
     }
 }
 
