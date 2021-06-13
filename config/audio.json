@@ -1,4 +1,5 @@
 {
+    "idleTimeout": 300000,
     "streamTimeout": 3000,
     "scdl": {
         "client_id": "",
