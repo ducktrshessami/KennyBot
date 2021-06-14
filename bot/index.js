@@ -6,6 +6,7 @@ const responses = require("./responses");
 const activities = require("./activities");
 const helpCmd = require("./helpCmd");
 const initGuild = require("./utils/initGuild");
+const handleIdle = require("./utils/handleIdle");
 const { emitStateUpdate } = require("../utils/state");
 const { clearQueue } = require("../utils/music");
 const { prune } = require("../utils/audit");
@@ -59,8 +60,13 @@ client.on("guildUpdate", (before, after) => initGuild(after));
 
 // Handle bot leaving voice channel
 client.on("voiceStateUpdate", (before, after) => {
-    if (!after.channel && after.member.id === client.user.id) {
-        db.Guild.findByPk(after.guild.id, { include: db.State })
+    handleVoiceDisconnect(after);
+    handleIdle(before, after);
+});
+
+async function handleVoiceDisconnect(voiceState) {
+    if (!voiceState.channel && voiceState.member.id === client.user.id) {
+        db.Guild.findByPk(voiceState.guild.id, { include: db.State })
             .then(guild => Promise.all([
                 guild.State.update({
                     playing: false,
@@ -68,16 +74,16 @@ client.on("voiceStateUpdate", (before, after) => {
                     lastNotQueue: null,
                     SongId: null
                 }),
-                clearQueue(after.guild.id)
+                clearQueue(voiceState.guild.id)
             ]))
-            .then(() => emitStateUpdate(after.guild.id))
+            .then(() => emitStateUpdate(voiceState.guild.id))
             .catch(console.error);
     }
-    else if (after.member.id === client.user.id) {
-        emitStateUpdate(after.guild.id)
+    else if (voiceState.member.id === client.user.id) {
+        emitStateUpdate(voiceState.guild.id)
             .catch(console.error);
     }
-});
+}
 
 // Clean up voice connections before exiting
 process.on("exit", () => {
