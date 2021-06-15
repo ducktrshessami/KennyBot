@@ -24,7 +24,8 @@ module.exports = {
     queueFirst,
     queueLast,
     resetOrder,
-    resetOrderAll
+    resetOrderAll,
+    createPlaylist
 };
 
 function findGuild(guildID) {
@@ -554,4 +555,16 @@ function resetOrderAll(guildID) {
                 return Promise.all(guild.Playlists.map(playlist => resetOrder(guildID, playlist.id)));
             }
         });
+}
+
+function createPlaylist(guildID, playlistName, userID) {
+    return db.Playlist.create({
+        name: playlistName,
+        GuildId: guildID
+    })
+        .then(playlist => Promise.all([
+            audit.log(userID, guildID, 11, [playlist.name]),
+            state.emitStateUpdate(guildID)
+        ])
+            .then(() => playlist));
 }

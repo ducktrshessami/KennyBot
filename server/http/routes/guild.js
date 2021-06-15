@@ -2,25 +2,17 @@ const auth = require("../middleware/auth");
 const audit = require("../../../utils/audit");
 const db = require("../../../models");
 const audio = require("../../../utils/audio");
+const music = require("../../../utils/music");
 const { emitStateUpdate } = require("../../../utils/state");
 
 module.exports = function (router) {
     router.post("/api/guild/playlist/:guildId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(server => server.id === req.params.guildId)) {
-            db.Playlist.create({
-                name: req.body.name,
-                GuildId: req.params.guildId
-            })
-                .then(playlist => {
-                    audit.log(req.session.discord.userID, req.params.guildId, 11, [playlist.name])
-                        .catch(console.error);
-                    emitStateUpdate(req.params.guildId)
-                        .catch(console.error);
-                    res.status(200).json({
-                        id: playlist.id,
-                        name: playlist.name
-                    });
-                })
+            music.createPlaylist(req.params.guildId, req.body.name, req.session.discord.userID)
+                .then(playlist => res.status(200).json({
+                    id: playlist.id,
+                    name: playlist.name
+                }))
                 .catch(err => {
                     console.error(err);
                     res.status(500).end();
