@@ -22,7 +22,9 @@ module.exports = {
     dequeueSongBulk,
     clearQueue,
     queueFirst,
-    queueLast
+    queueLast,
+    resetOrder,
+    resetOrderAll
 };
 
 function findGuild(guildID) {
@@ -534,4 +536,22 @@ function idleTimeout(callback, ms) {
         }
         return foo = setTimeout(callback, ms);
     };
+}
+
+function resetOrder(guildID, playlistID) {
+    return db.Playlist.findByPk(playlistID, { include: db.Song })
+        .then(playlist => {
+            if (playlist.GuildId === guildID) {
+                return Promise.all(playlist.Songs.map((song, i) => song.update({ order: i })));
+            }
+        });
+}
+
+function resetOrderAll(guildID) {
+    return db.Guild.findByPk(guildID, { include: db.Playlist })
+        .then(guild => {
+            if (guild) {
+                return Promise.all(guild.Playlists.map(playlist => resetOrder(guildID, playlist.id)));
+            }
+        });
 }
