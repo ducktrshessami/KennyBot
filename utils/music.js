@@ -28,7 +28,8 @@ module.exports = {
     createPlaylist,
     renamePlaylist,
     deletePlaylist,
-    addSong
+    addSong,
+    deleteSong
 };
 
 function findGuild(guildID) {
@@ -621,6 +622,19 @@ function addSong(guildID, playlistID, url, userID) {
                         state.emitStateUpdate(guildID)
                     ])
                         .then(() => song));
+            }
+        });
+}
+
+function deleteSong(guildID, songID, userID) {
+    return db.Song.findByPk(songID, { include: db.Playlist })
+        .then(song => {
+            if (song && song.Playlist.GuildId === guildID) {
+                return song.destroy()
+                    .then(() => Promise.all([
+                        audit.log(userID, guildID, 15, [song.Playlist.name, song.title]),
+                        state.emitStateUpdate(guildID)
+                    ]));
             }
         });
 }
