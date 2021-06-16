@@ -42,22 +42,8 @@ module.exports = function (router) {
 
     router.delete("/api/guild/playlist/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(server => server.id === req.params.guildId)) {
-            db.Playlist.findByPk(req.params.playlistId)
-                .then(playlist => {
-                    if (playlist) {
-                        return playlist.destroy()
-                            .then(() => {
-                                audit.log(req.session.discord.userID, req.params.guildId, 13, [playlist.name])
-                                    .catch(console.error);
-                                emitStateUpdate(req.params.guildId)
-                                    .catch(console.error);
-                                res.status(200).end();
-                            });
-                    }
-                    else {
-                        res.status(404).end();
-                    }
-                })
+            music.deletePlaylist(req.params.guildId, req.params.playlistId, req.session.discord.userID)
+                .then(() => res.status(200).end())
                 .catch(err => {
                     console.error(err);
                     res.status(500).end();

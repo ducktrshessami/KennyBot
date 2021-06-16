@@ -26,7 +26,8 @@ module.exports = {
     resetOrder,
     resetOrderAll,
     createPlaylist,
-    renamePlaylist
+    renamePlaylist,
+    deletePlaylist
 };
 
 function findGuild(guildID) {
@@ -581,6 +582,19 @@ function renamePlaylist(guildID, playlistID, newName, userID) {
                         state.emitStateUpdate(guildID)
                     ])
                         .then(() => updated))
+            }
+        });
+}
+
+function deletePlaylist(guildID, playlistID, userID) {
+    return db.Playlist.findByPk(playlistID)
+        .then(playlist => {
+            if (playlist && playlist.GuildId === guildID) {
+                return playlist.destroy()
+                    .then(() => Promise.all([
+                        audit.log(userID, guildID, 13, [playlist.name]),
+                        state.emitStateUpdate(guildID)
+                    ]));
             }
         });
 }
