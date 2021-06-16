@@ -27,7 +27,8 @@ module.exports = {
     resetOrderAll,
     createPlaylist,
     renamePlaylist,
-    deletePlaylist
+    deletePlaylist,
+    addSong
 };
 
 function findGuild(guildID) {
@@ -595,6 +596,31 @@ function deletePlaylist(guildID, playlistID, userID) {
                         audit.log(userID, guildID, 13, [playlist.name]),
                         state.emitStateUpdate(guildID)
                     ]));
+            }
+        });
+}
+
+function addSong(guildID, playlistID, url, userID) {
+    return db.Playlist.findByPk(playlistID, {
+        include: db.Song,
+        order: [[db.Song, "order"]]
+    })
+        .then(playlist => {
+            if (playlist && playlist.GuildId === guildID) {
+                let lastSong = playlist.Songs[playlist.Songs.length - 1];
+                return audio.getTitle(url)
+                    .then(title => db.Song.create({
+                        title,
+                        url: audio.formatUrl(url),
+                        source: audio.getSource(url),
+                        order: lastSong ? lastSong.order + 1 : 0,
+                        PlaylistId: playlistID
+                    }))
+                    .then(song => Promise.all([
+                        audit.log(userID, guildID, 14, [playlist.name, song.title]),
+                        state.emitStateUpdate(guildID)
+                    ])
+                        .then(() => song));
             }
         });
 }

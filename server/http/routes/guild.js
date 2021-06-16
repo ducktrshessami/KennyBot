@@ -54,6 +54,20 @@ module.exports = function (router) {
         }
     });
 
+    router.post("/api/guild/song/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
+        if (req.authGuilds.find(server => server.id === req.params.guildId)) {
+            music.addSong(req.params.guildId, req.params.playlistId, req.body.url, req.session.discord.userID)
+                .then(song => res.status(200).json(song))
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).end();
+                });
+        }
+        else {
+            res.status(404).end();
+        }
+    });
+
     router.delete("/api/guild/song/:guildId/:songId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(server => server.id === req.params.guildId)) {
             db.Song.findByPk(req.params.songId, { include: db.Playlist })
@@ -66,45 +80,6 @@ module.exports = function (router) {
                                 emitStateUpdate(req.params.guildId)
                                     .catch(console.error);
                                 res.status(200).end();
-                            });
-                    }
-                    else {
-                        res.status(404).end();
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    res.status(500).end();
-                });
-        }
-        else {
-            res.status(404).end();
-        }
-    });
-
-    router.post("/api/guild/song/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
-        if (req.authGuilds.find(server => server.id === req.params.guildId)) {
-            db.Playlist.findByPk(req.params.playlistId, {
-                include: db.Song,
-                order: [[db.Song, "order"]]
-            })
-                .then(playlist => {
-                    if (playlist) {
-                        let lastSong = playlist.Songs[playlist.Songs.length - 1];
-                        return audio.getTitle(req.body.url)
-                            .then(title => db.Song.create({
-                                title,
-                                url: audio.formatUrl(req.body.url),
-                                source: audio.getSource(req.body.url),
-                                order: lastSong ? lastSong.order + 1 : 0,
-                                PlaylistId: req.params.playlistId
-                            }))
-                            .then(song => {
-                                audit.log(req.session.discord.userID, req.params.guildId, 14, [playlist.name, song.title])
-                                    .catch(console.error);
-                                emitStateUpdate(req.params.guildId)
-                                    .catch(console.error);
-                                res.status(200).json(song);
                             });
                     }
                     else {
