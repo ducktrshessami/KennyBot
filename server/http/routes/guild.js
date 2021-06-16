@@ -25,23 +25,11 @@ module.exports = function (router) {
 
     router.put("/api/guild/playlist/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(server => server.id === req.params.guildId)) {
-            db.Playlist.findByPk(req.params.playlistId)
-                .then(playlist => {
-                    if (playlist) {
-                        let old = playlist.name;
-                        return playlist.update(req.body)
-                            .then(updated => {
-                                audit.log(req.session.discord.userID, req.params.guildId, 12, [old, updated.name])
-                                    .catch(console.error);
-                                emitStateUpdate(req.params.guildId)
-                                    .catch(console.error);
-                                res.status(200).json(updated);
-                            });
-                    }
-                    else {
-                        res.status(404).end();
-                    }
-                })
+            music.renamePlaylist(req.params.guildId, req.params.playlistId, req.body.name, req.session.discord.userID)
+                .then(playlist => res.status(200).json({
+                    id: playlist.id,
+                    name: playlist.name
+                }))
                 .catch(err => {
                     console.error(err);
                     res.status(500).end();

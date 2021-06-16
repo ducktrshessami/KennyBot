@@ -25,7 +25,8 @@ module.exports = {
     queueLast,
     resetOrder,
     resetOrderAll,
-    createPlaylist
+    createPlaylist,
+    renamePlaylist
 };
 
 function findGuild(guildID) {
@@ -542,7 +543,7 @@ function idleTimeout(callback, ms) {
 function resetOrder(guildID, playlistID) {
     return db.Playlist.findByPk(playlistID, { include: db.Song })
         .then(playlist => {
-            if (playlist.GuildId === guildID) {
+            if (playlist && playlist.GuildId === guildID) {
                 return Promise.all(playlist.Songs.map((song, i) => song.update({ order: i })));
             }
         });
@@ -567,4 +568,19 @@ function createPlaylist(guildID, playlistName, userID) {
             state.emitStateUpdate(guildID)
         ])
             .then(() => playlist));
+}
+
+function renamePlaylist(guildID, playlistID, newName, userID) {
+    return db.Playlist.findByPk(playlistID)
+        .then(playlist => {
+            if (playlist && playlist.GuildId === guildID) {
+                let oldName = playlist.name;
+                return playlist.update({ name: newName })
+                    .then(updated => Promise.all([
+                        audit.log(userID, guildID, 12, [oldName, updated.name]),
+                        state.emitStateUpdate(guildID)
+                    ])
+                        .then(() => updated))
+            }
+        });
 }
