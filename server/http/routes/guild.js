@@ -1,9 +1,6 @@
 const auth = require("../middleware/auth");
 const audit = require("../../../utils/audit");
-const db = require("../../../models");
-const audio = require("../../../utils/audio");
 const music = require("../../../utils/music");
-const { emitStateUpdate } = require("../../../utils/state");
 
 module.exports = function (router) {
     router.post("/api/guild/playlist/:guildId", auth.authCheck, auth.authGuilds, function (req, res) {
