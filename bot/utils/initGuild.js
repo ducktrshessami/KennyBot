@@ -1,5 +1,5 @@
 const db = require("../../models");
-const { clearQueue } = require("../../utils/music");
+const { clearQueue, resetOrderAll } = require("../../utils/music");
 
 function initGuild(guild) {
     return db.Guild.findByPk(guild.id)
@@ -39,4 +39,5 @@ module.exports = function (guild) {
         initState(guild.id),
     ])
         .then(() => clearQueue(guild.id))
+        .then(() => resetOrderAll(guild.id));
 };

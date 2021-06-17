@@ -22,7 +22,15 @@ module.exports = {
     dequeueSongBulk,
     clearQueue,
     queueFirst,
-    queueLast
+    queueLast,
+    resetOrder,
+    resetOrderAll,
+    createPlaylist,
+    renamePlaylist,
+    deletePlaylist,
+    addSong,
+    deleteSong,
+    importPlaylist
 };
 
 function findGuild(guildID) {
@@ -534,4 +542,127 @@ function idleTimeout(callback, ms) {
         }
         return foo = setTimeout(callback, ms);
     };
+}
+
+function resetOrder(guildID, playlistID) {
+    return db.Playlist.findByPk(playlistID, { include: db.Song })
+        .then(playlist => {
+            if (playlist && playlist.GuildId === guildID) {
+                return Promise.all(playlist.Songs.map((song, i) => song.update({ order: i })));
+            }
+        });
+}
+
+function resetOrderAll(guildID) {
+    return db.Guild.findByPk(guildID, { include: db.Playlist })
+        .then(guild => {
+            if (guild) {
+                return Promise.all(guild.Playlists.map(playlist => resetOrder(guildID, playlist.id)));
+            }
+        });
+}
+
+function createPlaylist(guildID, playlistName, userID) {
+    return db.Playlist.create({
+        name: playlistName,
+        GuildId: guildID
+    })
+        .then(playlist => Promise.all([
+            audit.log(userID, guildID, 11, [playlist.name]),
+            state.emitStateUpdate(guildID)
+        ])
+            .then(() => playlist));
+}
+
+function renamePlaylist(guildID, playlistID, newName, userID) {
+    return db.Playlist.findByPk(playlistID)
+        .then(playlist => {
+            if (playlist && playlist.GuildId === guildID) {
+                let oldName = playlist.name;
+                return playlist.update({ name: newName })
+                    .then(updated => Promise.all([
+                        audit.log(userID, guildID, 12, [oldName, updated.name]),
+                        state.emitStateUpdate(guildID)
+                    ])
+                        .then(() => updated))
+            }
+        });
+}
+
+function deletePlaylist(guildID, playlistID, userID) {
+    return db.Playlist.findByPk(playlistID)
+        .then(playlist => {
+            if (playlist && playlist.GuildId === guildID) {
+                return playlist.destroy()
+                    .then(() => Promise.all([
+                        audit.log(userID, guildID, 13, [playlist.name]),
+                        state.emitStateUpdate(guildID)
+                    ]));
+            }
+        });
+}
+
+function addSong(guildID, playlistID, url, userID) {
+    return db.Playlist.findByPk(playlistID, {
+        include: db.Song,
+        order: [[db.Song, "order"]]
+    })
+        .then(playlist => {
+            if (playlist && playlist.GuildId === guildID) {
+                let lastSong = playlist.Songs[playlist.Songs.length - 1];
+                return audio.getTitle(url)
+                    .then(title => db.Song.create({
+                        title,
+                        url: audio.formatUrl(url),
+                        source: audio.getSource(url),
+                        order: lastSong ? lastSong.order + 1 : 0,
+                        PlaylistId: playlistID
+                    }))
+                    .then(song => Promise.all([
+                        audit.log(userID, guildID, 14, [playlist.name, song.title]),
+                        state.emitStateUpdate(guildID)
+                    ])
+                        .then(() => song));
+            }
+        });
+}
+
+function deleteSong(guildID, songID, userID) {
+    return db.Song.findByPk(songID, { include: db.Playlist })
+        .then(song => {
+            if (song && song.Playlist.GuildId === guildID) {
+                return song.destroy()
+                    .then(() => Promise.all([
+                        audit.log(userID, guildID, 15, [song.Playlist.name, song.title]),
+                        state.emitStateUpdate(guildID)
+                    ]));
+            }
+        });
+}
+
+function importPlaylist(guildID, playlistID, url, userID) {
+    return db.Playlist.findByPk(playlistID, {
+        include: db.Song,
+        order: [[db.Song, "order"]]
+    })
+        .then(playlist => {
+            if (playlist && playlist.GuildId === guildID) {
+                let titles;
+                let lastSong = playlist.Songs[playlist.Songs.length - 1];
+                let lastOrder = lastSong ? lastSong.order + 1 : 0;
+                return audio.parsePlaylist(url)
+                    .then(tracks => {
+                        titles = tracks.map(track => track.title);
+                        return Promise.all(tracks.map((track, i) => db.Song.create({
+                            ...track,
+                            order: lastOrder + i,
+                            PlaylistId: playlistID
+                        })));
+                    })
+                    .then(() => Promise.all([
+                        audit.log(userID, guildID, 14, [playlist.name, ...titles]),
+                        state.emitStateUpdate(guildID)
+                    ]));
+            }
+        })
 }
