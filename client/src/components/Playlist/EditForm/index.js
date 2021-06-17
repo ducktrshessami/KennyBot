@@ -18,7 +18,7 @@ export default class EditForm extends Component {
         let value = event.target.name.value.trim();
         event.preventDefault();
         if (value) {
-            API.updatePlaylist(this.props.guildId, this.props.playlistId, { name: value })
+            API.renamePlaylist(this.props.guildId, this.props.playlistId, value)
                 .then(res => {
                     if (res) {
                         this.props.onSuccess();
