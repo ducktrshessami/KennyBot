@@ -84,39 +84,8 @@ module.exports = function (router) {
 
     router.post("/api/guild/import/:guildId/:playlistId", auth.authCheck, auth.authGuilds, function (req, res) {
         if (req.authGuilds.find(server => server.id === req.params.guildId)) {
-            db.Playlist.findByPk(req.params.playlistId, {
-                include: db.Song,
-                order: [[db.Song, "order"]]
-            })
-                .then(playlist => {
-                    if (playlist) {
-                        let titles;
-                        let lastSong = playlist.Songs[playlist.Songs.length - 1];
-                        let lastOrder = -1;
-                        if (lastSong) {
-                            lastOrder = lastSong.order;
-                        }
-                        return audio.parsePlaylist(req.body.url)
-                            .then(tracks => {
-                                titles = tracks.map(track => track.title);
-                                return Promise.all(tracks.map((track, i) => db.Song.create({
-                                    ...track,
-                                    order: lastOrder + i + 1,
-                                    PlaylistId: req.params.playlistId
-                                })))
-                            })
-                            .then(() => {
-                                audit.log(req.session.discord.userID, req.params.guildId, 14, [playlist.name, ...titles])
-                                    .catch(console.error);
-                                emitStateUpdate(req.params.guildId)
-                                    .catch(console.error);
-                                res.status(200).end();
-                            });
-                    }
-                    else {
-                        res.status(404).end();
-                    }
-                })
+            music.importPlaylist(req.params.guildId, req.params.playlistId, req.body.url, req.session.discord.userID)
+                .then(() => res.status(200).end())
                 .catch(err => {
                     console.error(err);
                     res.status(500).end();
