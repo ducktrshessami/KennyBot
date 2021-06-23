@@ -2,6 +2,7 @@
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    overflow-wrap: anywhere;
 }
 
 main {
@@ -59,4 +60,10 @@ input[type=range] + .thumb.active .value {
     font-size: 0.9rem;
     margin-left: 0.3ch;
     margin-top: 1.3ch;
+}
+
+@media only screen and (min-width: 601px) {
+    .App {
+        overflow-wrap: normal;
+    }
 }
