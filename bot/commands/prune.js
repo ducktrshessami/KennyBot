@@ -1,4 +1,5 @@
 const { Command, utils } = require("discord-bot");
+const sendAudit = require("../utils/sendAudit");
 
 function getFilteredMessages(channel, filterIDs, limit) {
     return channel.messages.cache
@@ -21,10 +22,11 @@ module.exports = new Command("prune", function (message, args) {
             targets = getFilteredMessages(message.channel, filterIDs, count);
         }
         message.channel.bulkDelete(targets, true)
-            .then(deleted => {
-                return utils.sendVerbose(message.channel, `Pruned \`${deleted.size}\` messages. This message will self-destruct in 5 seconds`)
-                    .then(response => response.delete({ timeout: 5000 }));
-            })
+            .then(deleted => Promise.all([
+                sendAudit(message.guild.id, message.author, `pruned \`${deleted.size}\` messages from <#${message.channel.id}>`),
+                utils.sendVerbose(message.channel, `Pruned \`${deleted.size}\` messages. This message will self-destruct in 5 seconds`)
+                    .then(response => response.delete({ timeout: 5000 }))
+            ]))
             .catch(err => {
                 console.error(err);
                 utils.sendVerbose(message.channel, "There was an error pruning messages")
