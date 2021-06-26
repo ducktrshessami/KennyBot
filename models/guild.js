@@ -31,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    prefix: DataTypes.STRING
+    prefix: DataTypes.STRING,
+    auditChannel: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Guild',
