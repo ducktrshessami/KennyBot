@@ -315,20 +315,12 @@ function resume(guildID, userID) {
     return false;
 }
 
-function skip(guildID, userID) {
+async function skip(guildID, userID) {
     stopCurrentSong(guildID);
-    return new Promise((resolve, reject) => {
-        if (userID) {
-            state.getNewState(guildID)
-                .then(guildState => audit.log(userID, guildID, 2, [guildState.song.title]))
-                .then(resolve)
-                .catch(err => {
-                    console.error(err);
-                    resolve();
-                });
-        }
-    })
-        .then(() => handleSongEnd(guildID, true));
+    if (userID) {
+        audit.log(userID, guildID, 2, [(await state.getNewState(guildID)).song.title]);
+    }
+    return handleSongEnd(guildID, true);
 }
 
 function playUrl(guildID, url) {
