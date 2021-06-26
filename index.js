@@ -7,12 +7,14 @@ catch {
 
 const db = require("./models");
 
+// Sync database before anything else
 db.sequelize.sync({ force: process.env.DB_FORCE && process.env.DB_FORCE.trim().toLowerCase() !== "false" })
     .then(() => {
         function failed() {
             process.exit();
         }
 
+        // Connect to Discord before start web server
         process.bot = require("./bot");
 
         process.bot.on("ready", () => {

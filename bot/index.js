@@ -16,7 +16,7 @@ var client;
 try {
     let parsedAdmins = JSON.parse(process.env.BOT_ADMINS);
     if (parsedAdmins) {
-        config.admin = parsedAdmins;
+        config.admin = (config.admin || []).concat(parsedAdmins);
     }
 }
 catch {
@@ -28,7 +28,7 @@ helpCmd(commands);
 
 config.token = process.env.BOT_TOKEN || config.token;
 config.options = {
-    ws: { intents: [DiscordBot.Discord.Intents.NON_PRIVILEGED, "GUILD_MEMBERS"] }
+    ws: { intents: [DiscordBot.Discord.Intents.NON_PRIVILEGED, "GUILD_MEMBERS"] } // GUILD_MEMBERS intent for audit log member filter
 };
 client = new DiscordBot(config, commands, responses);
 
@@ -36,13 +36,18 @@ client = new DiscordBot(config, commands, responses);
 client.on("ready", function () {
     console.log(`Logged in as ${client.user.username}#${client.user.discriminator}`);
     client.loopPresences(activities, process.env.BOT_PRESDURATION || config.presenceDuration);
-    client.guilds.cache.each(initGuild);
+    client.guilds.cache.each(initGuild); // Initialize guilds in database
+
+    // Old audit log pruning
+    setInterval(() => prune().catch(console.error), Number(process.env.AUDIT_CHECK) || 86400000);
     prune()
         .catch(console.error);
 });
 
 client.on("shardDisconnect", function (event) {
-    console.log(event.reason);
+    if (event.reason) {
+        console.log(event.reason);
+    }
     console.log("Logged off");
     process.exit(event.code === 1000 ? 0 : event.code);
 });
@@ -53,6 +58,7 @@ client.on("guildCreate", initGuild);
 
 client.on("guildUpdate", (before, after) => initGuild(after));
 
+// Handle bot leaving voice channel
 client.on("voiceStateUpdate", (before, after) => {
     handleVoiceDisconnect(after);
     handleIdle(before, after);
@@ -78,5 +84,10 @@ async function handleVoiceDisconnect(voiceState) {
             .catch(console.error);
     }
 }
+
+// Clean up voice connections before exiting
+process.on("exit", () => {
+    client.voice.connections.each(connection => connection.disconnect());
+});
 
 module.exports = client;
