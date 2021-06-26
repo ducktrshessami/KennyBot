@@ -15,8 +15,7 @@ module.exports = function (guildID, user, content) {
                             name: `${user.username}#${user.discriminator}`,
                             iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
                         },
-                        description: content,
-                        footer: { text: `User ID: ${user.id}` }
+                        description: `<@${user.id}> ${content}`
                     }));
                 }
                 else {
