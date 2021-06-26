@@ -1,7 +1,10 @@
 const { Command } = require("discord-bot");
+const db = require("../../models");
 
 module.exports = new Command("audit", function (message) {
-
+    db.Guild.findByPk(message.guild.id)
+        .then(guild => guild.update({ auditChannel: message.channel.id }))
+        .catch(console.error);
 }, {
     owner: true,
     usage: "@kennybot audit",
