@@ -1,6 +1,6 @@
 {
   "name": "kennybot",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "description": "Another music/dice bot for Discord",
   "repository": {
     "type": "git",
@@ -13,24 +13,24 @@
   },
   "homepage": "https://github.com/ducktrshessami/KennyBot#readme",
   "dependencies": {
-    "@discordjs/opus": "^0.5.0",
+    "@discordjs/opus": "^0.5.3",
     "connect-session-sequelize": "^7.1.1",
     "discord-bot": "github:ducktrshessami/discord-bot",
     "express": "^4.17.1",
     "express-cycle": "github:ducktrshessami/express-cycle",
     "express-force-https": "^1.0.0",
     "express-session": "^1.17.2",
-    "ffmpeg-static": "^4.3.0",
+    "ffmpeg-static": "^4.4.0",
     "pg": "^8.6.0",
-    "pg-hstore": "^2.3.3",
+    "pg-hstore": "^2.3.4",
     "phin": "^3.6.0",
     "roll-parser": "^2.3.2",
     "scdl-core": "github:ducktrshessami/scdl-core",
-    "sequelize": "^6.6.2",
+    "sequelize": "^6.6.4",
     "socket.io": "^4.1.2",
     "soundcloud-key-fetch": "^1.0.11",
     "with-cooldown": "^1.0.0",
-    "ytdl-core": "^4.8.2",
+    "ytdl-core": "^4.8.3",
     "ytpl": "^2.2.1"
   },
   "optionalDependencies": {
@@ -40,15 +40,15 @@
     "utf-8-validate": "^5.0.5",
     "zlib-sync": "^0.1.7"
   },
+  "devDependencies": {
+    "dotenv": "^8.6.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "cd client && npm install",
     "build": "cd client && npm run build",
     "start-react": "cd client && npm run start",
     "start": "node index.js"
-  },
-  "devDependencies": {
-    "dotenv": "^8.2.0"
   },
   "main": "index.js",
   "keywords": [],
