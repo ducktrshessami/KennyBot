@@ -6,5 +6,5 @@ module.exports = new Command("player", function (message, args) {
 }, {
     usage: "@kennybot player",
     description: "Links the music player website",
-    aliases: ["site", "link"]
+    aliases: ["site", "link", "playlist", "list"]
 });

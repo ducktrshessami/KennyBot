@@ -1,5 +1,6 @@
 const { Command, utils } = require("discord-bot");
 const db = require("../../models");
+const sendAudit = require("../utils/sendAudit");
 
 module.exports = new Command("prefix", function (message, args) {
     db.Guild.findByPk(message.guild.id)
@@ -7,6 +8,7 @@ module.exports = new Command("prefix", function (message, args) {
             if (args.length > 1 && message.author.id === message.guild.ownerID) {
                 this.client.config.servers[message.guild.id].prefix = args[1];
                 return guild.update({ prefix: args[1] })
+                    .then(() => sendAudit(message.guild.id, message.author, `set custom prefix to \`${args[1]}\``))
                     .then(() => utils.sendVerbose(message.channel, `Custom prefix set to \`${args[1]}\``));
             }
             else {
