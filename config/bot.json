@@ -1,6 +1,6 @@
 {
     "token": null,
-    "admin": [],
+    "botmins": [],
     "presenceDuration": 30,
     "embedColor": "9c2b2f",
     "cmdOptions": {
