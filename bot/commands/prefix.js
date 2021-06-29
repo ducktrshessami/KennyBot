@@ -5,7 +5,7 @@ const sendAudit = require("../utils/sendAudit");
 module.exports = new Command("prefix", function (message, args) {
     db.Guild.findByPk(message.guild.id)
         .then(guild => {
-            if (args.length > 1 && message.author.id === message.guild.ownerID) {
+            if (args.length > 1 && message.member.hasPermission("ADMINISTRATOR")) {
                 this.client.config.servers[message.guild.id].prefix = args[1];
                 return guild.update({ prefix: args[1] })
                     .then(() => sendAudit(message.guild.id, message.author, `set custom prefix to \`${args[1]}\``))
@@ -24,5 +24,5 @@ module.exports = new Command("prefix", function (message, args) {
 }, {
     usage: "@kennybot prefix [prefix]",
     description: "View or change the command prefix",
-    subtitle: "Only the server owner can change the prefix"
+    subtitle: "Only admins can change the prefix"
 });

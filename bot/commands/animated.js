@@ -17,7 +17,7 @@ module.exports = new Command("animated", function (message, args) {
             .catch(console.error);
     }
 }, {
-    admin: true,
+    botmin: true,
     usage: "@kennybot animated <emoji names>",
     description: "Get the id of an animated emoji",
     aliases: ["anim"]
