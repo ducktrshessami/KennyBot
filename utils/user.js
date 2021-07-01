@@ -33,7 +33,7 @@ function getAuthGuilds(access_token) {
         .then(([guildRes, kennyGuilds]) => {
             if (guildRes.statusCode === 200) {
                 return guildRes.body
-                    .filter(userGuild => kennyGuilds.some(kennyGuild => userGuild.id === kennyGuild.id))
+                    .filter(userGuild => process.bot.guilds.cache.has(userGuild.id) && kennyGuilds.some(kennyGuild => userGuild.id === kennyGuild.id))
                     .map(({ id, name, icon, owner }) => ({ id, name, icon, owner }));
             }
         });
