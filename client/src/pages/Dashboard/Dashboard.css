@@ -1,3 +1,16 @@
+.invite-button {
+    position: absolute;
+    top: 2rem;
+    right: 3ch;
+}
+
+.invite-logo {
+    content: url("../../images/Discord-Logo-White.svg");
+    height: 1.33rem;
+    position: relative;
+    top: 0.35rem;
+}
+
 .dashboard-header {
     padding: 2vw 2rem 2vw 2rem;
 }
@@ -8,6 +21,10 @@
 }
 
 @media only screen and (min-width: 601px) {
+    .invite-button {
+        right: 6ch;
+    }
+
     .dashboard-header {
         text-align: center;
         padding-left: 4rem;
@@ -18,5 +35,12 @@
     #server-list {
         padding-left: 8rem;
         padding-right: 8rem;
+    }
+}
+
+@media only screen and (min-width: 993px) {
+    .invite-button {
+        top: 3rem;
+        right: 10ch;
     }
 }
