@@ -1,6 +1,7 @@
 const API = {
     gotoLogin,
     gotoLogout,
+    gotoInvite,
     getUser,
     getUserGuilds,
     createPlaylist,
@@ -19,6 +20,10 @@ function gotoLogin() {
 
 function gotoLogout() {
     window.location.replace("/api/logout");
+}
+
+function gotoInvite() {
+    window.location.replace("/api/invite");
 }
 
 function resJSON(res) {
