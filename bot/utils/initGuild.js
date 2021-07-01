@@ -5,7 +5,7 @@ function initGuild(guild) {
     return db.Guild.findByPk(guild.id)
         .then(dbGuild => {
             if (dbGuild) {
-                if (dbGuild.respond) {
+                if (!dbGuild.respond) {
                     process.bot.responses.forEach(response => response.serverBlacklist.push(dbGuild.id));
                 }
                 process.bot.config.servers[guild.id].prefix = dbGuild.prefix;
