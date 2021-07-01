@@ -48,4 +48,8 @@ module.exports = function (router) {
             res.status(401).redirect(process.env.API_REDIRECT + "?status=1");
         });
     });
+
+    router.get("/api/invite", function (req, res) {
+        res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${process.bot.user.id}&permissions=3501120&scope=bot%20applications.commands`);
+    });
 };

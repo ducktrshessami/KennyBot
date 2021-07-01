@@ -21,6 +21,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Disclaimer = lazy(() => import("./pages/Disclaimer"));
 const Server = lazy(() => import("./pages/Server"));
 const Audit = lazy(() => import("./pages/Audit"));
+const Invite = lazy(() => import("./pages/Invite"));
 
 class App extends Component {
   ref = createRef();
@@ -60,6 +61,7 @@ class App extends Component {
               <Route path="/disclaimer" component={Disclaimer} />
               <Route path="/server" render={() => <Server {...this.state} />} appRef={this.ref} />
               <Route path="/audit" render={() => <Audit {...this.state} appRef={this.ref} />} />
+              <Route path="/invite" component={Invite} />
               <Route path="/" render={() => <Home {...this.state} />} />
             </Switch>
           </Suspense>

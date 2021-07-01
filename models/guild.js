@@ -32,7 +32,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     prefix: DataTypes.STRING,
-    auditChannel: DataTypes.STRING
+    auditChannel: DataTypes.STRING,
+    respond: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, {
     sequelize,
     modelName: 'Guild',
