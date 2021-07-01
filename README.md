@@ -17,7 +17,7 @@ I originally named this bot "KennyBot" following an inside joke with some of my 
 
 # Invite to Your Server
 
-### [Invite kennybot](https://discord.com/api/oauth2/authorize?client_id=632316491613863955&permissions=3501120&redirect_uri=https%3A%2F%2Fdiscord-kennybot.herokuapp.com%2Fapi%2Fauth&scope=bot%20applications.commands)
+### [Invite kennybot](https://discord.com/api/oauth2/authorize?client_id=632316491613863955&permissions=3501120&scope=bot%20applications.commands)
 
 kennybot can be invited to your server with the above link.
 
