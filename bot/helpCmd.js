@@ -9,7 +9,8 @@ const pageTemplates = {
         "prefix",
         "help",
         "audit",
-        "invite"
+        "invite",
+        "toggleresponses"
     ],
     Dice: [
         "advantage",
