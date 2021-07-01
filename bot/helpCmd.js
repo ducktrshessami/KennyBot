@@ -8,7 +8,8 @@ const pageTemplates = {
         "prune",
         "prefix",
         "help",
-        "audit"
+        "audit",
+        "invite"
     ],
     Dice: [
         "advantage",
