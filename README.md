@@ -15,14 +15,15 @@ I don't own any property associated with [The Walking Dead](https://en.wikipedia
 
 I originally named this bot "KennyBot" following an inside joke with some of my friends
 
-# Usage/Deployment
+# Invite to Your Server
 
-This bot is deployed privately at [discord-kennybot](https://discord-kennybot.herokuapp.com/)
+### [Invite kennybot](https://discord.com/api/oauth2/authorize?client_id=632316491613863955&permissions=3501120&redirect_uri=https%3A%2F%2Fdiscord-kennybot.herokuapp.com%2Fapi%2Fauth&scope=bot%20applications.commands)
 
-If this bot is in your server, use the help command for a command list:
+kennybot can be invited to your server with the above link.
 
+Use the help command to see what other commands are available:
 ```
 @kennybot help
 ```
 
-A proper public production deployment of this bot would require different presence, response, and config handling
+Site: [discord-kennybot](https://discord-kennybot.herokuapp.com/)
